@@ -93,6 +93,23 @@
         }
     });
 
+     // Show/hide date and time fields based on subject selection
+     $(document).ready(function () {
+        const assuntoSelect = $('#assunto');
+        const dateField = $('#date-field');
+        const timeField = $('#time-field');
+
+        assuntoSelect.on('change', function () {
+            if (assuntoSelect.val() === 'Agendamento') {
+                dateField.show();
+                timeField.show();
+            } else {
+                dateField.hide();
+                timeField.hide();
+            }
+        });
+    });
+
     
 })(jQuery);
 

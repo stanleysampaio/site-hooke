@@ -83,6 +83,37 @@
     font-weight: normal;
 }
 
+/* Estilo para o botão */
+.btn2 {
+    display: inline-block;
+    padding: 10px 10px;
+    text-decoration: none;
+    text-align: center;
+    color: #000000; /* Cor do texto preta */
+    background-color: #ffcf34; /* Cor de fundo */
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Estilo para quando passar o mouse */
+.btn2:hover {
+    background-color: #ffc107; /* Altera a cor de fundo ao passar o mouse */
+}
+
+/* Ícone dentro do botão */
+.btn2 i {
+    margin-right: 10px;
+}
+
+/* Estilo para o botão aberto */
+.btn2-open {
+    width: 150px; /* Largura do botão */
+    display: flex;
+    justify-content: center; /* Centraliza horizontalmente */
+    align-items: center; /* Centraliza verticalmente */
+    padding-left: 15px;
+}
+
 .logo-img {
     max-width: 170px; /* Defina o tamanho máximo da logo */
     height: auto; /* Isso garante que a proporção da imagem seja mantida */
@@ -589,4 +620,18 @@
 
 .footer .copyright a:hover {
     color: var(--primary);
+}
+
+.footer {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.footer .container {
+    max-width: 100%;
+}
+
+.bg-yellowhooke {
+    background-color: #FFD700; /* Certifique-se de definir a cor de fundo desejada */
 }
