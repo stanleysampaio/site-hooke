@@ -70,6 +70,23 @@
         ]
     });
 
+    // Alterar background da div externa conforme o item do carrossel ativo
+    var owl = $('.header-carousel');
+    owl.on('changed.owl.carousel', function(event) {
+        // Pega o índice do item ativo
+        var currentItemIndex = event.item.index;
+        
+        // Seleciona o item ativo e pega o valor do atributo 'data-bg'
+        var currentItem = $(event.target).find('.owl-carousel-item').eq(currentItemIndex);
+        var backgroundUrl = currentItem.data('bg');
+
+        // Troca o background da div externa
+        $('#carousel-wrapper').css('background-image', backgroundUrl);
+    });
+
+    // Dispara o evento ao carregar a página para ajustar o background inicial
+    owl.trigger('changed.owl.carousel', { item: { index: 0 } });
+
 
     // Testimonials carousel
     $(".testimonial-carousel").owlCarousel({
@@ -112,4 +129,3 @@
 
     
 })(jQuery);
-
