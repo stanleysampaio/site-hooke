@@ -58,7 +58,7 @@
 
     // Header carousel
     $(".header-carousel").owlCarousel({
-        autoplay: false,
+        autoplay: true,
         animateOut: 'fadeOutLeft',
         items: 1,
         dots: true,
@@ -85,12 +85,12 @@
     });
 
     // Dispara o evento ao carregar a página para ajustar o background inicial
-    owl.trigger('changed.owl.carousel', { item: { index: 0 } });
+    owl.trigger('changed.owl.carousel', { item: { index: 1 } });
 
 
     // Testimonials carousel
     $(".testimonial-carousel").owlCarousel({
-        autoplay: false,
+        autoplay: true,
         smartSpeed: 1000,
         center: true,
         dots: false,

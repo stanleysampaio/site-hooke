@@ -231,7 +231,6 @@
 }
 
 
-
 /*** Header ***/
 .header-carousel .owl-carousel-text {
     position: absolute;
@@ -255,6 +254,7 @@
     transform: translateX(-50%);
     display: flex;
     justify-content: space-between;
+    z-index: 2; /* Garante que os botões fiquem sobrepostos às imagens */
 }
 
 .header-carousel .owl-nav .owl-prev,
@@ -264,18 +264,19 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #202425;
-    background: transparent;
+    color: #fff; /* Botões em branco */
+    background: rgba(0, 0, 0, 0.5); /* Fundo semitransparente */
     border: 1px solid #FFFFFF;
     border-radius: 45px;
     font-size: 22px;
-    transition: .5s;
+    transition: 0.5s;
+    z-index: 3;
 }
 
 .header-carousel .owl-nav .owl-prev:hover,
 .header-carousel .owl-nav .owl-next:hover {
-    background: var(--light);
-    border-color: var(--primary);
+    background: #FFD700; /* Amarelo-dourado ao passar o mouse */
+    border-color: #FFD700;
 }
 
 .header-carousel .owl-dots {
@@ -296,9 +297,9 @@
     width: 15px;
     height: 15px;
     background: transparent;
-    border: 1px solid #202425;
+    border: 1px solid #fff;
     border-radius: 15px;
-    transition: .5s;
+    transition: 0.5s;
 }
 
 .header-carousel .owl-dot::after {
@@ -321,7 +322,26 @@
     height: 100vh; /* Para garantir que os itens do carrossel ocupem a altura total */
     background-size: cover;
     background-position: center;
-    
+    filter: brightness(70%); /* Adicionado para escurecer as imagens */
+    position: relative;
+}
+
+.header-carousel .owl-carousel-item::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3); /* Escurece ainda mais com uma camada preta semitransparente */
+    z-index: 1;
+}
+
+.header-carousel .owl-carousel-item h1, 
+.header-carousel .owl-carousel-item p {
+    position: relative;
+    z-index: 2; /* Garante que o texto fique acima da camada escurecida */
+    color: #fff; /* Texto branco para maior legibilidade */
 }
 
 #carousel-wrapper {
@@ -370,6 +390,10 @@
    
 }
 
+.h-80 {
+    height: 80%;
+}
+
 .service-item:hover {
     margin-top: -10px;
     box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, .08);
@@ -395,7 +419,7 @@
    
     top: 0; /* Alinha o texto na parte superior */
     left: 50%; /* Centraliza o texto horizontalmente */
-   
+    font-size: 15px;
     width: 100%; /* Garante que o texto ocupe toda a largura do card */
     text-align: center; /* Centraliza o texto */
     padding-top: 10px; /* Espaçamento ao redor do texto */
