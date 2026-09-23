@@ -377,6 +377,26 @@ body.m-body {
 .news-article-img { height: 340px; border-radius: var(--m-radius); background-size: cover; background-position: center; }
 .news-article-body p { margin-bottom: 1.1em; line-height: 1.75; }
 
+/* ===== Link desabilitado (em construção) ===== */
+.m-disabled-link { position: relative; cursor: not-allowed; opacity: 0.55; }
+.m-disabled-link:hover, .m-disabled-link:focus { color: inherit !important; }
+.m-disabled-link::after {
+  content: "Em construção";
+  position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%) translateY(-8px);
+  background: var(--m-ink); color: #fff; font-size: 0.72rem; font-weight: 600;
+  padding: 6px 10px; border-radius: 6px; white-space: nowrap;
+  opacity: 0; pointer-events: none; transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 20;
+}
+.m-disabled-link::before {
+  content: ""; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%) translateY(-2px);
+  border: 5px solid transparent; border-top-color: var(--m-ink);
+  opacity: 0; pointer-events: none; transition: opacity 0.15s ease;
+  z-index: 20;
+}
+.m-disabled-link:hover::after, .m-disabled-link:focus::after { opacity: 1; transform: translateX(-50%) translateY(-14px); }
+.m-disabled-link:hover::before, .m-disabled-link:focus::before { opacity: 1; }
+
 /* ===== Footer ===== */
 .m-footer { background: var(--m-ink); color: rgba(255,255,255,0.78); padding: 70px 0 26px; }
 .m-footer h5 { color: #fff; margin-bottom: 20px; font-size: 1rem; }

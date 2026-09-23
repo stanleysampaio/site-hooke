@@ -1,2 +1,4 @@
 User-agent: *
 Disallow: /admin/
+Disallow: /news.html
+Disallow: /noticia.html

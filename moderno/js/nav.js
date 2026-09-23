@@ -13,7 +13,6 @@
     { href: 'about.html', label: 'A Hooke' },
     { href: 'service.html', label: 'Soluções' },
     { href: 'location.html', label: 'Onde Atuamos' },
-    { href: 'news.html', label: 'Notícias' },
     { href: 'contact.html', label: 'Contato' },
   ];
 
