@@ -1,0 +1,12 @@
+name = "hooke-news"
+main = "src/index.js"
+compatibility_date = "2024-11-01"
+
+# Roda todo dia às 09:00 UTC (06:00 horário de Brasília)
+[triggers]
+crons = ["0 9 * * *"]
+
+# Depois de rodar `wrangler kv namespace create NEWS_KV`, cole o "id" gerado aqui.
+[[kv_namespaces]]
+binding = "NEWS_KV"
+id = "644af31eb80a4920bb1da76762032474"

@@ -127,5 +127,145 @@
         });
     });
 
+
+
+    // Formulário de contato: site 100% estático, sem backend — o envio abre
+    // o cliente de e-mail do visitante com os dados preenchidos, endereçado
+    // a comercial@hookengenharia.com.br.
+    document.addEventListener('DOMContentLoaded', function () {
+        var contactForm = document.getElementById('contactForm');
+        if (contactForm) {
+            contactForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                var name = document.getElementById('name').value.trim();
+                var email = document.getElementById('email').value.trim();
+                var subjectField = document.getElementById('subject').value.trim();
+                var message = document.getElementById('message').value.trim();
+
+                var subject = 'Contato pelo site — ' + (subjectField || 'Hooke');
+                var body = [
+                    'Nome: ' + name,
+                    'E-mail: ' + email,
+                    'Assunto: ' + (subjectField || 'não informado'),
+                    '',
+                    'Mensagem:',
+                    message
+                ].join('\n');
+
+                window.location.href = 'mailto:comercial@hookengenharia.com.br'
+                    + '?subject=' + encodeURIComponent(subject)
+                    + '&body=' + encodeURIComponent(body);
+            });
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+    const video = document.querySelector('.hero-video');
+    const btn = document.getElementById('hero-sound-toggle');
+    const playBtn = document.getElementById('hero-play-button');
+
+    if (!video) return;
+
+    let userRequestedPlay = false;
+
+    // Garantir que não inicia tocando (inclui retorno via BFCache / voltar do navegador)
+    const forcePaused = () => {
+        userRequestedPlay = false;
+
+        // Defesa extra caso alguma versão antiga tenha `autoplay` no HTML
+        video.autoplay = false;
+        video.removeAttribute('autoplay');
+
+        video.pause();
+        try { video.currentTime = 0; } catch (e) {}
+
+        if (playBtn) playBtn.style.display = '';
+    };
+
+    forcePaused();
+    window.addEventListener('pageshow', function (event) {
+        // Evita interromper o play no carregamento normal.
+        // Só força pausa quando a página volta do BFCache (voltar/avançar do navegador).
+        if (event && event.persisted) {
+            forcePaused();
+        }
+    });
+
+    // Não iniciar autoplay: manter mudo por padrão
+    video.muted = true;
+    video.volume = 1;
+
+    // Atualiza estado do botão de som
+    if (btn) {
+        btn.classList.remove('active');
+        btn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+        btn.addEventListener('click', function () {
+            if (video.muted) {
+                video.muted = false;
+                btn.classList.add('active');
+                btn.innerHTML = '<i class="fas fa-volume-up"></i>';
+            } else {
+                video.muted = true;
+                btn.classList.remove('active');
+                btn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+            }
+        });
+    }
+
+    // Clique no wrapper do vídeo (exceto nos botões) → toggle play/pause
+    const videoWrapper = video.closest('.hero-video-wrapper');
+    if (videoWrapper) {
+        videoWrapper.addEventListener('click', function (e) {
+            if (e.target.closest('#hero-play-button') || e.target.closest('#hero-sound-toggle')) return;
+
+            if (video.paused) {
+                userRequestedPlay = true;
+                video.play().catch(() => { userRequestedPlay = false; });
+            } else {
+                video.pause();
+            }
+        });
+    }
+
+    // Play button overlay: inicia o vídeo quando clicado
+    if (playBtn) {
+        playBtn.addEventListener('click', function () {
+            userRequestedPlay = true;
+
+            const p = video.play();
+            if (p !== undefined) {
+                p.then(() => {
+                    playBtn.style.display = 'none';
+                }).catch(() => {
+                    userRequestedPlay = false;
+                    playBtn.style.display = '';
+                });
+            } else {
+                playBtn.style.display = 'none';
+            }
+        });
+
+        // Se algo tentar dar autoplay sem clique do usuário, pausar imediatamente
+        video.addEventListener('play', function () {
+            if (!userRequestedPlay) {
+                video.pause();
+                return;
+            }
+            playBtn.style.display = 'none';
+        });
+
+        // Quando pausa/termina, mostrar botão novamente
+        video.addEventListener('pause', function () {
+            playBtn.style.display = '';
+        });
+        video.addEventListener('ended', function () {
+            userRequestedPlay = false;
+            playBtn.style.display = '';
+        });
+    }
+});
+
+
     
 })(jQuery);
+  

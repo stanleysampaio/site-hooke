@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Hooke - Admin de Notícias</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <link href="../css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    body { background: #f4f4f4; }
+    .news-item { border-left: 4px solid #ffc107; }
+  </style>
+</head>
+<body>
+  <div class="container py-5" style="max-width: 900px;">
+    <h2 class="mb-4"><i class="fa fa-newspaper me-2"></i>Admin de Notícias — Hooke</h2>
+
+    <!-- Login -->
+    <div id="login-box" class="card p-4 mb-4">
+      <label class="form-label" for="password">Senha de admin</label>
+      <div class="input-group">
+        <input type="password" id="password" class="form-control" placeholder="Senha">
+        <button class="btn btn-primary" id="login-btn">Entrar</button>
+      </div>
+      <p id="login-error" class="text-danger small mt-2 mb-0" style="display:none;">Senha inválida.</p>
+    </div>
+
+    <!-- Painel (só aparece depois do login) -->
+    <div id="panel" style="display:none;">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">Notícias pendentes de aprovação</h5>
+        <button class="btn btn-outline-secondary btn-sm" id="run-now-btn">
+          <i class="fa fa-sync me-1"></i>Rodar curadoria agora
+        </button>
+      </div>
+      <p class="small text-muted">Depois de aprovar, a notícia pode levar até ~1 minuto para aparecer no site (o banco de dados do worker leva um tempo pra propagar).</p>
+      <div id="pending-list"></div>
+
+      <h5 class="mt-5 mb-3">Notícias publicadas</h5>
+      <div id="published-list"></div>
+    </div>
+  </div>
+
+  <script>
+    // Troque pela URL real do worker depois do deploy (mesma usada em js/news-feed.js)
+    var API_BASE = "https://hooke-news.yelnalts1993.workers.dev";
+    var token = sessionStorage.getItem("hooke_admin_token");
+
+    var loginBox = document.getElementById("login-box");
+    var panel = document.getElementById("panel");
+    var pendingList = document.getElementById("pending-list");
+    var publishedList = document.getElementById("published-list");
+    var loginError = document.getElementById("login-error");
+
+    function escapeHtml(str) {
+      return String(str || "").replace(/[&<>"']/g, function (c) {
+        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+      });
+    }
+
+    function showPanel() {
+      loginBox.style.display = "none";
+      panel.style.display = "block";
+      loadPending();
+      loadPublished();
+    }
+
+    function loadPending() {
+      pendingList.innerHTML = '<p class="text-muted">Carregando...</p>';
+      fetch(API_BASE + "/api/admin/pending", {
+        headers: { Authorization: "Bearer " + token },
+      })
+        .then(function (res) {
+          if (res.status === 401) { logout(); throw new Error("sessão expirada"); }
+          return res.json();
+        })
+        .then(function (items) { renderList(pendingList, items, "pending"); })
+        .catch(function () {
+          pendingList.innerHTML = '<p class="text-danger">Não foi possível carregar os pendentes.</p>';
+        });
+    }
+
+    function loadPublished() {
+      publishedList.innerHTML = '<p class="text-muted">Carregando...</p>';
+      fetch(API_BASE + "/api/admin/published", {
+        headers: { Authorization: "Bearer " + token },
+      })
+        .then(function (res) {
+          if (res.status === 401) { logout(); throw new Error("sessão expirada"); }
+          return res.json();
+        })
+        .then(function (items) { renderList(publishedList, items, "published"); })
+        .catch(function () {
+          publishedList.innerHTML = '<p class="text-danger">Não foi possível carregar as publicadas.</p>';
+        });
+    }
+
+    function itemCard(item, list) {
+      var actions = list === "pending"
+        ? '<button class="btn btn-success btn-sm approve-btn"><i class="fa fa-check me-1"></i>Aprovar</button>' +
+          '<button class="btn btn-outline-danger btn-sm reject-btn"><i class="fa fa-times me-1"></i>Rejeitar</button>'
+        : '<button class="btn btn-outline-danger btn-sm unpublish-btn"><i class="fa fa-eye-slash me-1"></i>Despublicar</button>';
+
+      var excerpt = item.excerpt || item.summary || "";
+      var bodyText = Array.isArray(item.body) ? item.body.join("\n\n") : (item.body || "");
+      var bodyPreview = Array.isArray(item.body)
+        ? item.body.map(function (p) { return "<p>" + escapeHtml(p) + "</p>"; }).join("")
+        : "";
+
+      return (
+        '<div class="card news-item p-3 mb-3" data-id="' + escapeHtml(item.id) + '" data-list="' + list + '">' +
+        '<div class="view-mode">' +
+        '<span class="badge bg-dark mb-2" style="width:fit-content">' + escapeHtml(item.sector) + "</span>" +
+        '<h6 class="item-title">' + escapeHtml(item.title) + "</h6>" +
+        '<p class="small text-muted mb-2 item-summary">' + escapeHtml(excerpt) + "</p>" +
+        (bodyPreview
+          ? '<details class="small mb-2"><summary class="text-primary" style="cursor:pointer;">Ver matéria completa</summary>' + bodyPreview + "</details>"
+          : "") +
+        '<a href="' + escapeHtml(item.link) + '" target="_blank" rel="noopener noreferrer" class="small d-block mb-2">Ver fonte original &rarr;</a>' +
+        '<div class="d-flex gap-2 flex-wrap">' +
+        actions +
+        '<button class="btn btn-outline-secondary btn-sm edit-btn"><i class="fa fa-pen me-1"></i>Editar</button>' +
+        "</div></div>" +
+        '<div class="edit-mode" style="display:none;">' +
+        '<div class="mb-2"><label class="form-label small mb-1">Setor</label>' +
+        '<input type="text" class="form-control form-control-sm edit-sector" value="' + escapeHtml(item.sector) + '"></div>' +
+        '<div class="mb-2"><label class="form-label small mb-1">Título</label>' +
+        '<input type="text" class="form-control form-control-sm edit-title" value="' + escapeHtml(item.title) + '"></div>' +
+        '<div class="mb-2"><label class="form-label small mb-1">Resumo (aparece no card)</label>' +
+        '<textarea class="form-control form-control-sm edit-excerpt" rows="2">' + escapeHtml(excerpt) + "</textarea></div>" +
+        '<div class="mb-2"><label class="form-label small mb-1">Matéria completa (um parágrafo por linha em branco)</label>' +
+        '<textarea class="form-control form-control-sm edit-body" rows="8">' + escapeHtml(bodyText) + "</textarea></div>" +
+        '<div class="mb-2"><label class="form-label small mb-1">Link da fonte</label>' +
+        '<input type="text" class="form-control form-control-sm edit-link" value="' + escapeHtml(item.link) + '"></div>' +
+        '<div class="d-flex gap-2">' +
+        '<button class="btn btn-primary btn-sm save-btn"><i class="fa fa-save me-1"></i>Salvar</button>' +
+        '<button class="btn btn-outline-secondary btn-sm cancel-btn">Cancelar</button>' +
+        "</div></div>" +
+        "</div>"
+      );
+    }
+
+    function renderList(container, items, list) {
+      if (!items.length) {
+        container.innerHTML = list === "pending"
+          ? '<p class="text-muted">Nenhuma notícia pendente no momento.</p>'
+          : '<p class="text-muted">Nenhuma notícia publicada ainda.</p>';
+        return;
+      }
+      container.innerHTML = items.map(function (item) { return itemCard(item, list); }).join("");
+    }
+
+    function callAction(path, body) {
+      return fetch(API_BASE + path, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+        body: JSON.stringify(body),
+      });
+    }
+
+    function reloadAll() {
+      loadPending();
+      loadPublished();
+    }
+
+    function bindListEvents(container) {
+      container.addEventListener("click", function (e) {
+        var card = e.target.closest(".news-item");
+        if (!card) return;
+        var id = card.getAttribute("data-id");
+        var list = card.getAttribute("data-list");
+
+        if (e.target.closest(".approve-btn")) {
+          callAction("/api/admin/approve", { id: id }).then(reloadAll);
+        } else if (e.target.closest(".reject-btn")) {
+          callAction("/api/admin/reject", { id: id }).then(reloadAll);
+        } else if (e.target.closest(".unpublish-btn")) {
+          callAction("/api/admin/unpublish", { id: id }).then(reloadAll);
+        } else if (e.target.closest(".edit-btn")) {
+          card.querySelector(".view-mode").style.display = "none";
+          card.querySelector(".edit-mode").style.display = "block";
+        } else if (e.target.closest(".cancel-btn")) {
+          card.querySelector(".edit-mode").style.display = "none";
+          card.querySelector(".view-mode").style.display = "block";
+        } else if (e.target.closest(".save-btn")) {
+          var body = {
+            list: list,
+            id: id,
+            sector: card.querySelector(".edit-sector").value,
+            title: card.querySelector(".edit-title").value,
+            excerpt: card.querySelector(".edit-excerpt").value,
+            body: card.querySelector(".edit-body").value.split(/\n\s*\n/).map(function (p) { return p.trim(); }).filter(Boolean),
+            link: card.querySelector(".edit-link").value,
+          };
+          callAction("/api/admin/edit", body).then(reloadAll);
+        }
+      });
+    }
+
+    bindListEvents(pendingList);
+    bindListEvents(publishedList);
+
+    document.getElementById("run-now-btn").addEventListener("click", function () {
+      var btn = this;
+      var originalText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa fa-spinner fa-spin me-1"></i>Rodando (até ~30s, não clique de novo)...';
+
+      // A rota só confirma que a curadoria começou (roda em segundo plano no
+      // worker), então esperamos um tempo fixo antes de liberar o botão de
+      // novo — clicar duas vezes rápido faz duas curadorias brigarem pela
+      // cota da IA ao mesmo tempo.
+      fetch(API_BASE + "/api/admin/run-now", {
+        method: "POST",
+        headers: { Authorization: "Bearer " + token },
+      })
+        .then(function () {
+          return new Promise(function (resolve) { setTimeout(resolve, 25000); });
+        })
+        .then(reloadAll)
+        .finally(function () {
+          btn.disabled = false;
+          btn.innerHTML = originalText;
+        });
+    });
+
+    document.getElementById("login-btn").addEventListener("click", function () {
+      var password = document.getElementById("password").value;
+      loginError.style.display = "none";
+      fetch(API_BASE + "/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: password }),
+      })
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          if (!data.token) { loginError.style.display = "block"; return; }
+          token = data.token;
+          sessionStorage.setItem("hooke_admin_token", token);
+          showPanel();
+        })
+        .catch(function () { loginError.style.display = "block"; });
+    });
+
+    function logout() {
+      sessionStorage.removeItem("hooke_admin_token");
+      token = null;
+      panel.style.display = "none";
+      loginBox.style.display = "block";
+    }
+
+    if (token) showPanel();
+  </script>
+</body>
+</html>
