@@ -1,271 +1,151 @@
-(function ($) {
-    "use strict";
+/**
+ * main.js (versão moderna) — sem jQuery/WOW/Owl. Reveal-on-scroll nativo,
+ * botão voltar ao topo, botão WhatsApp flutuante, vídeo do hero e slider
+ * de notícias em vanilla JS.
+ */
+(function () {
+  'use strict';
 
-    // Spinner
-    var spinner = function () {
-        setTimeout(function () {
-            if ($('#spinner').length > 0) {
-                $('#spinner').removeClass('show');
-            }
-        }, 1);
-    };
-    spinner();
-    
-    
-    // Initiate the wowjs
-    new WOW().init();
-
-
-    // Sticky Navbar
-    $(window).scroll(function () {
-        if ($(this).scrollTop() > 300) {
-            $('.sticky-top').addClass('shadow-sm').css('top', '0px');
-        } else {
-            $('.sticky-top').removeClass('shadow-sm').css('top', '-100px');
+  /* ---------- Reveal on scroll ---------- */
+  var revealEls = document.querySelectorAll('.m-reveal');
+  if ('IntersectionObserver' in window && revealEls.length) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          io.unobserve(entry.target);
         }
-    });
-    
-    
-    // Back to top button
-    $(window).scroll(function () {
-        if ($(this).scrollTop() > 300) {
-            $('.back-to-top').fadeIn('slow');
-        } else {
-            $('.back-to-top').fadeOut('slow');
-        }
-    });
-    $('.back-to-top').click(function () {
-        $('html, body').animate({scrollTop: 0}, 1500, 'easeInOutExpo');
-        return false;
-    });
+      });
+    }, { threshold: 0.12 });
+    revealEls.forEach(function (el) { io.observe(el); });
+  } else {
+    revealEls.forEach(function (el) { el.classList.add('is-visible'); });
+  }
 
+  /* ---------- Floating utilities: WhatsApp + back-to-top ---------- */
+  var wa = document.createElement('a');
+  wa.href = 'https://wa.me/5571999524838?text=' + encodeURIComponent('Olá! Gostaria de solicitar um orçamento com a Hooke.');
+  wa.target = '_blank';
+  wa.rel = 'noopener noreferrer';
+  wa.className = 'm-float-btn m-whatsapp';
+  wa.setAttribute('aria-label', 'Falar no WhatsApp');
+  wa.innerHTML = '<i class="fab fa-whatsapp"></i>';
+  document.body.appendChild(wa);
 
-    // Facts counter
-    $('[data-toggle="counter-up"]').counterUp({
-        delay: 10,
-        time: 2000
-    });
+  var top = document.createElement('button');
+  top.type = 'button';
+  top.className = 'm-float-btn m-back-to-top';
+  top.setAttribute('aria-label', 'Voltar ao topo');
+  top.innerHTML = '<i class="bi bi-arrow-up"></i>';
+  top.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+  document.body.appendChild(top);
 
+  window.addEventListener('scroll', function () {
+    top.classList.toggle('show', window.scrollY > 400);
+  });
 
-    // Date and time picker
-    $('.date').datetimepicker({
-        format: 'L'
-    });
-    $('.time').datetimepicker({
-        format: 'LT'
-    });
+  /* ---------- Hero video (play/pause/sound) ---------- */
+  var video = document.querySelector('.m-hero-video');
+  var playBtn = document.getElementById('mHeroPlay');
+  var soundBtn = document.getElementById('mHeroSound');
 
-
-    // Header carousel
-    $(".header-carousel").owlCarousel({
-        autoplay: true,
-        animateOut: 'fadeOutLeft',
-        items: 1,
-        dots: true,
-        loop: true,
-        nav : true,
-        navText : [
-            '<i class="bi bi-chevron-left"></i>',
-            '<i class="bi bi-chevron-right"></i>'
-        ]
-    });
-
-    // Alterar background da div externa conforme o item do carrossel ativo
-    var owl = $('.header-carousel');
-    owl.on('changed.owl.carousel', function(event) {
-        // Pega o índice do item ativo
-        var currentItemIndex = event.item.index;
-        
-        // Seleciona o item ativo e pega o valor do atributo 'data-bg'
-        var currentItem = $(event.target).find('.owl-carousel-item').eq(currentItemIndex);
-        var backgroundUrl = currentItem.data('bg');
-
-        // Troca o background da div externa
-        $('#carousel-wrapper').css('background-image', backgroundUrl);
-    });
-
-    // Dispara o evento ao carregar a página para ajustar o background inicial
-    owl.trigger('changed.owl.carousel', { item: { index: 1 } });
-
-
-    // Testimonials carousel
-    $(".testimonial-carousel").owlCarousel({
-        autoplay: true,
-        smartSpeed: 1000,
-        center: true,
-        dots: false,
-        loop: true,
-        nav : true,
-        navText : [
-            '<i class="bi bi-arrow-left"></i>',
-            '<i class="bi bi-arrow-right"></i>'
-        ],
-        responsive: {
-            0:{
-                items:1
-            },
-            768:{
-                items:2
-            }
-        }
-    });
-
-     // Show/hide date and time fields based on subject selection
-     $(document).ready(function () {
-        const assuntoSelect = $('#assunto');
-        const dateField = $('#date-field');
-        const timeField = $('#time-field');
-
-        assuntoSelect.on('change', function () {
-            if (assuntoSelect.val() === 'Agendamento') {
-                dateField.show();
-                timeField.show();
-            } else {
-                dateField.hide();
-                timeField.hide();
-            }
-        });
-    });
-
-
-
-    // Formulário de contato: site 100% estático, sem backend — o envio abre
-    // o cliente de e-mail do visitante com os dados preenchidos, endereçado
-    // a comercial@hookengenharia.com.br.
-    document.addEventListener('DOMContentLoaded', function () {
-        var contactForm = document.getElementById('contactForm');
-        if (contactForm) {
-            contactForm.addEventListener('submit', function (e) {
-                e.preventDefault();
-                var name = document.getElementById('name').value.trim();
-                var email = document.getElementById('email').value.trim();
-                var subjectField = document.getElementById('subject').value.trim();
-                var message = document.getElementById('message').value.trim();
-
-                var subject = 'Contato pelo site — ' + (subjectField || 'Hooke');
-                var body = [
-                    'Nome: ' + name,
-                    'E-mail: ' + email,
-                    'Assunto: ' + (subjectField || 'não informado'),
-                    '',
-                    'Mensagem:',
-                    message
-                ].join('\n');
-
-                window.location.href = 'mailto:comercial@hookengenharia.com.br'
-                    + '?subject=' + encodeURIComponent(subject)
-                    + '&body=' + encodeURIComponent(body);
-            });
-        }
-    });
-
-    document.addEventListener('DOMContentLoaded', function () {
-    const video = document.querySelector('.hero-video');
-    const btn = document.getElementById('hero-sound-toggle');
-    const playBtn = document.getElementById('hero-play-button');
-
-    if (!video) return;
-
-    let userRequestedPlay = false;
-
-    // Garantir que não inicia tocando (inclui retorno via BFCache / voltar do navegador)
-    const forcePaused = () => {
-        userRequestedPlay = false;
-
-        // Defesa extra caso alguma versão antiga tenha `autoplay` no HTML
-        video.autoplay = false;
-        video.removeAttribute('autoplay');
-
-        video.pause();
-        try { video.currentTime = 0; } catch (e) {}
-
-        if (playBtn) playBtn.style.display = '';
-    };
-
-    forcePaused();
-    window.addEventListener('pageshow', function (event) {
-        // Evita interromper o play no carregamento normal.
-        // Só força pausa quando a página volta do BFCache (voltar/avançar do navegador).
-        if (event && event.persisted) {
-            forcePaused();
-        }
-    });
-
-    // Não iniciar autoplay: manter mudo por padrão
+  if (video) {
     video.muted = true;
-    video.volume = 1;
+    var userPlayed = false;
 
-    // Atualiza estado do botão de som
-    if (btn) {
-        btn.classList.remove('active');
-        btn.innerHTML = '<i class="fas fa-volume-mute"></i>';
-        btn.addEventListener('click', function () {
-            if (video.muted) {
-                video.muted = false;
-                btn.classList.add('active');
-                btn.innerHTML = '<i class="fas fa-volume-up"></i>';
-            } else {
-                video.muted = true;
-                btn.classList.remove('active');
-                btn.innerHTML = '<i class="fas fa-volume-mute"></i>';
-            }
-        });
-    }
-
-    // Clique no wrapper do vídeo (exceto nos botões) → toggle play/pause
-    const videoWrapper = video.closest('.hero-video-wrapper');
-    if (videoWrapper) {
-        videoWrapper.addEventListener('click', function (e) {
-            if (e.target.closest('#hero-play-button') || e.target.closest('#hero-sound-toggle')) return;
-
-            if (video.paused) {
-                userRequestedPlay = true;
-                video.play().catch(() => { userRequestedPlay = false; });
-            } else {
-                video.pause();
-            }
-        });
-    }
-
-    // Play button overlay: inicia o vídeo quando clicado
     if (playBtn) {
-        playBtn.addEventListener('click', function () {
-            userRequestedPlay = true;
-
-            const p = video.play();
-            if (p !== undefined) {
-                p.then(() => {
-                    playBtn.style.display = 'none';
-                }).catch(() => {
-                    userRequestedPlay = false;
-                    playBtn.style.display = '';
-                });
-            } else {
-                playBtn.style.display = 'none';
-            }
-        });
-
-        // Se algo tentar dar autoplay sem clique do usuário, pausar imediatamente
-        video.addEventListener('play', function () {
-            if (!userRequestedPlay) {
-                video.pause();
-                return;
-            }
-            playBtn.style.display = 'none';
-        });
-
-        // Quando pausa/termina, mostrar botão novamente
-        video.addEventListener('pause', function () {
-            playBtn.style.display = '';
-        });
-        video.addEventListener('ended', function () {
-            userRequestedPlay = false;
-            playBtn.style.display = '';
-        });
+      playBtn.addEventListener('click', function () {
+        userPlayed = true;
+        var p = video.play();
+        if (p !== undefined) {
+          p.then(function () { playBtn.style.display = 'none'; }).catch(function () { userPlayed = false; });
+        } else {
+          playBtn.style.display = 'none';
+        }
+      });
     }
-});
 
+    var wrap = video.closest('.m-hero-video-wrap');
+    if (wrap) {
+      wrap.addEventListener('click', function (e) {
+        if (e.target.closest('#mHeroPlay') || e.target.closest('#mHeroSound')) return;
+        if (video.paused) { userPlayed = true; video.play().catch(function () { userPlayed = false; }); }
+        else { video.pause(); }
+      });
+    }
 
-    
-})(jQuery);
-  
+    video.addEventListener('pause', function () { if (playBtn) playBtn.style.display = ''; });
+    video.addEventListener('play', function () { if (playBtn) playBtn.style.display = 'none'; });
+
+    if (soundBtn) {
+      soundBtn.addEventListener('click', function () {
+        video.muted = !video.muted;
+        soundBtn.innerHTML = video.muted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
+      });
+    }
+  }
+
+  /* ---------- Mini news slider (hero panel) ---------- */
+  var slides = document.querySelectorAll('.m-news-slide');
+  var dotsWrap = document.getElementById('mNewsDots');
+  if (slides.length) {
+    var current = 0;
+    var dots = [];
+
+    if (dotsWrap) {
+      slides.forEach(function (_, i) {
+        var d = document.createElement('button');
+        d.type = 'button';
+        d.className = i === 0 ? 'active' : '';
+        d.setAttribute('aria-label', 'Notícia ' + (i + 1));
+        d.addEventListener('click', function () { show(i); restart(); });
+        dotsWrap.appendChild(d);
+        dots.push(d);
+      });
+    }
+
+    function show(i) {
+      slides[current].classList.remove('active');
+      if (dots[current]) dots[current].classList.remove('active');
+      current = i;
+      slides[current].classList.add('active');
+      if (dots[current]) dots[current].classList.add('active');
+    }
+
+    var timer;
+    function restart() {
+      clearInterval(timer);
+      timer = setInterval(function () { show((current + 1) % slides.length); }, 5500);
+    }
+    restart();
+  }
+
+  /* ---------- Footer year ---------- */
+  var yearEl = document.getElementById('mYear');
+  if (yearEl) { yearEl.textContent = new Date().getFullYear(); }
+
+  /* ---------- Formulário de contato/orçamento (envia por e-mail) ---------- */
+  // Site 100% estático, sem backend: o envio abre o cliente de e-mail do
+  // visitante com os dados preenchidos, endereçado a comercial@hookengenharia.com.br.
+  var contactForm = document.getElementById('mContactForm');
+  if (contactForm) {
+    contactForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var f = contactForm.elements;
+      var subject = 'Solicitação de orçamento — ' + (f['sector'].value || 'Site Hooke');
+      var body = [
+        'Nome: ' + f['name'].value.trim(),
+        'E-mail: ' + f['email'].value.trim(),
+        'Telefone/WhatsApp: ' + (f['phone'].value.trim() || 'não informado'),
+        'Setor de interesse: ' + f['sector'].value,
+        '',
+        'Mensagem:',
+        f['message'].value.trim(),
+      ].join('\n');
+
+      window.location.href = 'mailto:comercial@hookengenharia.com.br'
+        + '?subject=' + encodeURIComponent(subject)
+        + '&body=' + encodeURIComponent(body);
+    });
+  }
+})();

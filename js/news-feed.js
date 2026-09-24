@@ -14,12 +14,8 @@
 
   var isModerno = document.body.classList.contains("m-body");
 
-  // As páginas ficam em profundidades diferentes (raiz vs /moderno/), então a
-  // imagem é resolvida em caminho relativo à página, não absoluto (absoluto
-  // quebra ao abrir o arquivo direto, sem servidor, e na versão moderna).
   function resolveImage(path) {
-    var p = (path || DEFAULT_IMAGE).replace(/^\//, "");
-    return isModerno ? "../" + p : p;
+    return (path || DEFAULT_IMAGE).replace(/^\//, "");
   }
 
   function formatDate(iso) {

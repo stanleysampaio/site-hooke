@@ -1,560 +1,250 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
-    <title>Hooke - Soluções em Engenharia</title>
+    <title>Hooke — Soluções em Engenharia</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <meta
-      content="Soluções em engenharia, manutenção e automação industrial para mineração, cimento, petróleo e gás, fertilizantes, metalurgia, refrigeração, alimentícia e siderurgia."
-      name="description"
-    />
-    <meta
-      content="Hooke, engenharia industrial, mineração, cimento, petróleo e gás, fertilizantes, metalurgia, refrigeração, alimentícia, siderurgia, automação, manutenção"
-      name="keywords"
-    />
-
-    <!-- Favicon -->
-    <link href="img/favicon.ico" rel="icon" />
-
-    <!-- Google Web Fonts -->
+    <meta name="description" content="Soluções em engenharia, manutenção e automação industrial para mineração, cimento, petróleo e gás, fertilizantes, metalurgia, refrigeração, alimentícia e siderurgia." />
+    <meta name="keywords" content="Hooke, engenharia industrial, mineração, cimento, petróleo e gás, fertilizantes, metalurgia, refrigeração, alimentícia, siderurgia, automação, manutenção" />
+    <link href="img/favicon.png" rel="icon" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500&family=Roboto:wght@500;700;900&display=swap"
-      rel="stylesheet"
-    />
-
-    <!-- Icon Font Stylesheet -->
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
-      rel="stylesheet"
-    />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css"
-      rel="stylesheet"
-    />
-
-    <!-- Libraries Stylesheet -->
-    <link href="lib/animate/animate.min.css" rel="stylesheet" />
-    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet" />
-    <link
-      href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css"
-      rel="stylesheet"
-    />
-
-    <!-- Customized Bootstrap Stylesheet -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
     <link href="css/bootstrap.min.css" rel="stylesheet" />
-
-    <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet" />
-
-    <!-- Pequeno offset para não ficar atrás da navbar ao usar âncora -->
-    <style>
-      .service-section {
-        scroll-margin-top: 150px;
-      }
-      .page-header { padding-top: 1rem; padding-bottom: 1rem; }
-      .sector-nav { position: sticky; top: 0; z-index: 100; border-bottom: 2px solid #ffcf34; }
-      .sector-nav a:hover { background: #202425 !important; color: #ffcf34 !important; border-color: #202425 !important; }
-      #cimento, #fertilizantes, #refrigeracao, #siderurgia {
-        background: #f4f6f8;
-        border-radius: 1rem;
-        padding: 1.5rem 1rem;
-      }
-    </style>
   </head>
 
-  <body>
-    <!-- Spinner Start -->
-    <div
-      id="spinner"
-      class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center"
-    >
-      <div
-        class="spinner-grow text-primary"
-        style="width: 3rem; height: 3rem"
-        role="status"
-      >
-        <span class="visually-hidden">Loading...</span>
-      </div>
-    </div>
-    <!-- Spinner End -->
-
-    <!-- Nav Component -->
+  <body class="m-body">
     <div id="site-nav"></div>
     <script src="js/nav.js"></script>
 
-    <!-- Page Header -->
-    <div class="container-fluid page-header py-3 py-sm-5 text-center">
-      <h1 class="display-3 text-black mb-3 animated slideInDown">
-        Nossas Soluções
-      </h1>
-      <p class="text-black">
-        Engenharia, manutenção e automação industrial para impulsionar a
-        performance do seu negócio em diferentes segmentos.
-      </p>
-    </div>
-
-    <!-- Sector Quick Nav -->
-    <div class="container-fluid bg-white sector-nav py-2 shadow-sm">
+    <div class="m-page-header">
       <div class="container">
-        <div class="d-flex flex-wrap justify-content-center gap-2 py-1">
-          <a href="#mineracao" class="btn btn-sm btn-outline-primary rounded-pill px-3">Mineração</a>
-          <a href="#cimento" class="btn btn-sm btn-outline-primary rounded-pill px-3">Cimento</a>
-          <a href="#petroleo-gas" class="btn btn-sm btn-outline-primary rounded-pill px-3">Petróleo &amp; Gás</a>
-          <a href="#fertilizantes" class="btn btn-sm btn-outline-primary rounded-pill px-3">Fertilizantes</a>
-          <a href="#metalurgia" class="btn btn-sm btn-outline-primary rounded-pill px-3">Metalurgia</a>
-          <a href="#refrigeracao" class="btn btn-sm btn-outline-primary rounded-pill px-3">Refrigeração</a>
-          <a href="#alimenticia" class="btn btn-sm btn-outline-primary rounded-pill px-3">Alimentícia</a>
-          <a href="#siderurgia" class="btn btn-sm btn-outline-primary rounded-pill px-3">Siderurgia</a>
-        </div>
+        <h1>Nossas Soluções</h1>
+        <p>Engenharia, manutenção e automação industrial para impulsionar a performance do seu negócio.</p>
       </div>
     </div>
 
-    <!-- Services Detail -->
-    <div class="container-xxl py-5">
+    <nav class="m-sector-nav">
       <div class="container">
-
-        <!-- Mineração -->
-        <div
-          id="mineracao"
-          class="row align-items-center g-5 mb-5 service-section"
-        >
-          <div class="col-lg-5">
-            <img
-              src="img/services-1.png"
-              alt="Soluções em Mineração"
-              class="img-fluid rounded shadow-sm"
-            />
-          </div>
-          <div class="col-lg-7">
-            <h2 class="mb-3">Mineração</h2>
-            <p class="mb-3">
-              Engenharia e manutenção para elevar a eficiência da sua mina, com
-              segurança, confiabilidade e alta performance operacional.
-            </p>
-            <p class="mb-3">
-              Atuamos em projetos e manutenção industrial voltados ao setor de
-              mineração, com foco em disponibilidade, redução de paradas e
-              melhoria contínua dos ativos. Nossas equipes integram mecânica,
-              elétrica, automação e segurança do trabalho para entregar
-              resultados consistentes em ambientes de alta criticidade.
-            </p>
-            <p class="mb-3">
-              Utilizamos metodologias estruturadas de manutenção preditiva e
-              corretiva, sempre orientadas por indicadores de desempenho,
-              garantindo mais controle, previsibilidade e produtividade para a
-              operação.
-            </p>
-            <p class="fw-semibold mb-4">
-              Eleve a eficiência da sua mina com a Hooke. Solicite uma
-              consultoria e transforme sua operação.
-            </p>
-            <a href="contact.html" class="btn btn-primary rounded-pill px-4 py-2">
-              Falar com a Hooke
-            </a>
-          </div>
+        <div class="m-scroller">
+          <a href="#mineracao">Mineração</a>
+          <a href="#cimento">Cimento</a>
+          <a href="#petroleo-gas">Petróleo &amp; Gás</a>
+          <a href="#fertilizantes">Fertilizantes</a>
+          <a href="#metalurgia">Metalurgia</a>
+          <a href="#refrigeracao">Refrigeração</a>
+          <a href="#alimenticia">Alimentícia</a>
+          <a href="#siderurgia">Siderurgia</a>
         </div>
-
-        <!-- Cimento -->
-        <div
-          id="cimento"
-          class="row align-items-center g-5 mb-5 flex-lg-row-reverse service-section"
-        >
-          <div class="col-lg-5">
-            <img
-              src="img/services-2.png"
-              alt="Soluções para Cimento"
-              class="img-fluid rounded shadow-sm"
-            />
-          </div>
-          <div class="col-lg-7">
-            <h2 class="mb-3">Cimento</h2>
-            <p class="mb-3">
-              Operações seguras e eficientes, com suporte em mecânica, elétrica
-              e instrumentação, além da otimização de plantas e processos.
-            </p>
-            <p class="mb-3">
-              As soluções para o setor de cimento entregam operações seguras,
-              eficientes e de excelência em qualidade. A equipe técnica
-              especializada oferece suporte em mecânica, elétrica e
-              instrumentação, atuando desde a montagem e comissionamento até a
-              manutenção e melhoria contínua.
-            </p>
-            <p class="mb-3">
-              Também realizamos consultoria em otimização de plantas e segurança
-              do trabalho, garantindo desempenho, confiabilidade e conformidade
-              com normas regulatórias em todas as etapas produtivas.
-            </p>
-            <p class="fw-semibold mb-4">
-              Entre em contato e descubra como a Hooke pode impulsionar sua
-              operação no setor de cimento.
-            </p>
-            <a href="contact.html" class="btn btn-primary rounded-pill px-4 py-2">
-              Falar com a Hooke
-            </a>
-          </div>
-        </div>
-
-        <!-- Petróleo e Gás -->
-        <div
-          id="petroleo-gas"
-          class="row align-items-center g-5 mb-5 service-section"
-        >
-          <div class="col-lg-5">
-            <img
-              src="img/services-3.png"
-              alt="Soluções em Petróleo e Gás"
-              class="img-fluid rounded shadow-sm"
-            />
-          </div>
-          <div class="col-lg-7">
-            <h2 class="mb-3">Petróleo e Gás</h2>
-            <p class="mb-3">
-              Projetos e manutenção com foco em automação, eficiência
-              energética e segurança, do projeto à manutenção preditiva.
-            </p>
-            <p class="mb-3">
-              A Hooke possui foco em projetos e manutenção para indústrias de
-              petróleo e gás. Atuamos com automação industrial, montagem
-              elétrica e mecânica, engenharia de processos e soluções em
-              eficiência energética, sempre orientadas à segurança operacional e
-              continuidade das operações.
-            </p>
-            <p class="mb-3">
-              Nossos especialistas também realizam consultoria industrial,
-              licenciamento ambiental e suporte em segurança do trabalho,
-              assegurando conformidade e alto desempenho em cada etapa: da
-              concepção de projetos à manutenção preditiva.
-            </p>
-            <p class="fw-semibold mb-4">
-              Potencialize seus resultados com quem entende o mercado.
-              Solicite uma consultoria Hooke e eleve seu desempenho industrial
-              no setor de petróleo e gás.
-            </p>
-            <a href="contact.html" class="btn btn-primary rounded-pill px-4 py-2">
-              Falar com a Hooke
-            </a>
-          </div>
-        </div>
-
-        <!-- Fertilizantes -->
-        <div
-          id="fertilizantes"
-          class="row align-items-center g-5 mb-5 flex-lg-row-reverse service-section"
-        >
-          <div class="col-lg-5">
-            <img
-              src="img/services-4.png"
-              alt="Soluções para Fertilizantes"
-              class="img-fluid rounded shadow-sm"
-            />
-          </div>
-          <div class="col-lg-7">
-            <h2 class="mb-3">Fertilizantes</h2>
-            <p class="mb-3">
-              Soluções para o agronegócio, unindo automação, manutenção e
-              otimização para aumentar produtividade e reduzir custos.
-            </p>
-            <p class="mb-3">
-              No setor de fertilizantes, a Hooke apoia as indústrias em todas as
-              etapas: do projeto e montagem industrial à automação, manutenção e
-              otimização de processos. Trabalhamos para garantir plantas mais
-              eficientes, seguras e sustentáveis.
-            </p>
-            <p class="mb-3">
-              Desenvolvemos soluções sob medida que aumentam produtividade e
-              reduzem custos, com foco em eficiência energética, segurança
-              operacional e responsabilidade ambiental.
-            </p>
-            <p class="fw-semibold mb-4">
-              Fale com a Hooke e descubra como transformar sua operação com
-              engenharia e tecnologia de alto desempenho.
-            </p>
-            <a href="contact.html" class="btn btn-primary rounded-pill px-4 py-2">
-              Falar com a Hooke
-            </a>
-          </div>
-        </div>
-
-        <!-- Metalurgia -->
-        <div
-          id="metalurgia"
-          class="row align-items-center g-5 mb-5 service-section"
-        >
-          <div class="col-lg-5">
-            <img
-              src="img/services-5.png"
-              alt="Soluções para Metalurgia"
-              class="img-fluid rounded shadow-sm"
-            />
-          </div>
-          <div class="col-lg-7">
-            <h2 class="mb-3">Metalurgia</h2>
-            <p class="mb-3">
-              Engenharia mecânica, elétrica e de processos para otimizar linhas
-              metalúrgicas com segurança, confiabilidade e desempenho.
-            </p>
-            <p class="mb-3">
-              As soluções para indústrias metalúrgicas têm o propósito de
-              apoiar projetos industriais, automação, manutenção e otimização de
-              processos. Atuamos em ambientes de alta exigência, onde robustez e
-              precisão são essenciais.
-            </p>
-            <p class="mb-3">
-              Nossa equipe de especialistas em engenharia mecânica, elétrica e
-              de processos industriais garante eficiência, segurança e
-              confiabilidade em todas as etapas de produção. Realizamos
-              consultoria industrial, manutenção preditiva e suporte em
-              segurança do trabalho, assegurando operações de alto desempenho
-              sob as normas de segurança e compliance.
-            </p>
-            <p class="fw-semibold mb-4">
-              Entre em contato e descubra como a Hooke pode fortalecer a sua
-              operação metalúrgica com soluções de engenharia, tecnologia e
-              segurança.
-            </p>
-            <a href="contact.html" class="btn btn-primary rounded-pill px-4 py-2">
-              Falar com a Hooke
-            </a>
-          </div>
-        </div>
-
-        <!-- Refrigeração -->
-        <div
-          id="refrigeracao"
-          class="row align-items-center g-5 mb-5 flex-lg-row-reverse service-section"
-        >
-          <div class="col-lg-5">
-            <img
-              src="img/services-6.png"
-              alt="Soluções em Refrigeração Industrial"
-              class="img-fluid rounded shadow-sm"
-            />
-          </div>
-          <div class="col-lg-7">
-            <h2 class="mb-3">Refrigeração</h2>
-            <p class="mb-3">
-              Projetos e manutenção de sistemas frigoríficos industriais, com
-              foco em eficiência energética e controle preciso de temperatura.
-            </p>
-            <p class="mb-3">
-              A refrigeração industrial é essencial para setores que dependem de
-              controle rigoroso de temperatura em grande escala, como indústrias
-              alimentícias, farmacêuticas, de logística e outras operações
-              sensíveis.
-            </p>
-            <p class="mb-3">
-              Atendemos diversos segmentos com projetos, automação, manutenção e
-              otimização de sistemas frigoríficos. Atuamos com engenharia
-              mecânica, elétrica e de processos industriais para garantir
-              eficiência energética, segurança operacional e desempenho
-              confiável.
-            </p>
-            <p class="fw-semibold mb-4">
-              Nossa consultoria industrial e manutenção preditiva asseguram que
-              sua operação funcione com máxima produtividade. Agende uma
-              consultoria e descubra como podemos ajudar.
-            </p>
-            <a href="contact.html" class="btn btn-primary rounded-pill px-4 py-2">
-              Falar com a Hooke
-            </a>
-          </div>
-        </div>
-
-        <!-- Alimentícia -->
-        <div
-          id="alimenticia"
-          class="row align-items-center g-5 mb-5 service-section"
-        >
-          <div class="col-lg-5">
-            <img
-              src="img/services-7.png"
-              alt="Soluções para Indústria Alimentícia"
-              class="img-fluid rounded shadow-sm"
-            />
-          </div>
-          <div class="col-lg-7">
-            <h2 class="mb-3">Alimentícia</h2>
-            <p class="mb-3">
-              Engenharia e automação para a indústria de alimentos, garantindo
-              qualidade, rastreabilidade e segurança em toda a produção.
-            </p>
-            <p class="mb-3">
-              Desenvolvemos soluções que contemplam desde o layout de linhas de
-              produção até sistemas de automação, controle de processos,
-              rastreabilidade e atendimento às exigências sanitárias e
-              regulatórias.
-            </p>
-            <p class="mb-3">
-              Nossos projetos priorizam estabilidade de processo, redução de
-              perdas, melhoria de rendimento e garantia de qualidade do produto
-              final, sempre alinhados às normas de segurança de alimentos.
-            </p>
-            <p class="fw-semibold mb-4">
-              Fale com a Hooke e veja como podemos apoiar o crescimento da sua
-              indústria de alimentos com tecnologia e engenharia aplicada.
-            </p>
-            <a href="contact.html" class="btn btn-primary rounded-pill px-4 py-2">
-              Falar com a Hooke
-            </a>
-          </div>
-        </div>
-
-        <!-- Siderurgia -->
-        <div
-          id="siderurgia"
-          class="row align-items-center g-5 mb-5 flex-lg-row-reverse service-section"
-        >
-          <div class="col-lg-5">
-            <img
-              src="img/services-8.png"
-              alt="Soluções para Siderurgia"
-              class="img-fluid rounded shadow-sm"
-            />
-          </div>
-          <div class="col-lg-7">
-            <h2 class="mb-3">Siderurgia</h2>
-            <p class="mb-3">
-              Modernização, automação e otimização de processos siderúrgicos,
-              com foco em eficiência, inovação e redução de impactos.
-            </p>
-            <p class="mb-3">
-              O setor de siderurgia enfrenta desafios que exigem soluções
-              tecnológicas, inovadoras e sustentáveis. A Hooke atua com
-              expertise em engenharia industrial, oferecendo suporte em
-              modernização, automação, digitalização e otimização de processos,
-              ajudando sua indústria a aumentar eficiência e reduzir custos.
-            </p>
-            <p class="mb-3">
-              Nossas soluções incluem modernização de plantas, redução de
-              emissões e otimização do uso de recursos naturais, automação e
-              digitalização de processos, projetos de infraestrutura e expansão,
-              além de apoio à inovação e competitividade do setor.
-            </p>
-            <p class="fw-semibold mb-4">
-              Podemos transformar a sua operação siderúrgica com soluções de
-              engenharia, automação e tecnologia. Entre em contato e fale com a
-              Hooke.
-            </p>
-            <a href="contact.html" class="btn btn-primary rounded-pill px-4 py-2">
-              Falar com a Hooke
-            </a>
-          </div>
-        </div>
-
       </div>
-    </div>
+    </nav>
 
-    <!-- CTA Banner -->
-    <div class="container-fluid bg-primary py-5 wow fadeIn" data-wow-delay="0.1s">
-      <div class="container text-center">
-        <h2 class="text-white mb-3">Pronto para transformar sua operação?</h2>
-        <p class="text-white mb-4" style="max-width:600px;margin:0 auto 1.5rem">
-          Nossa equipe está pronta para analisar o seu projeto e oferecer a solução ideal. Fale com a Hooke e dê o próximo passo.
-        </p>
-        <a href="contact.html" class="btn btn-warning btn-lg rounded-pill px-5 py-3 fw-bold text-dark">
-          <i class="fa fa-comments me-2"></i>Solicitar Consultoria
-        </a>
+    <section id="mineracao" class="m-sector-block">
+      <div class="container">
+        <div class="m-sector-grid m-reveal">
+          <img src="img/services-1.png" alt="Soluções em Mineração" />
+          <div>
+            <h2>Mineração</h2>
+            <p>Engenharia e manutenção para elevar a eficiência da sua mina, com segurança, confiabilidade e alta performance operacional.</p>
+            <p>Atuamos em projetos e manutenção industrial voltados ao setor de mineração, com foco em disponibilidade, redução de paradas e melhoria contínua dos ativos. Nossas equipes integram mecânica, elétrica, automação e segurança do trabalho para entregar resultados consistentes em ambientes de alta criticidade.</p>
+            <p>Utilizamos metodologias estruturadas de manutenção preditiva e corretiva, sempre orientadas por indicadores de desempenho, garantindo mais controle, previsibilidade e produtividade para a operação.</p>
+            <p class="m-strong">Eleve a eficiência da sua mina com a Hooke. Solicite uma consultoria e transforme sua operação.</p>
+            <a href="contact.html" class="m-btn m-btn-dark">Falar com a Hooke</a>
+          </div>
+        </div>
       </div>
-    </div>
-    <!-- CTA Banner End -->
+    </section>
 
-    <!-- Footer Start -->
-    <div
-      class="container-fluid bg-yellowhooke text-dark footer overflow-hidden mt-5 pt-5 wow fadeIn px-lg-0"
-      data-wow-delay="0.1s"
-    >
-      <div class="container py-5">
+    <section id="cimento" class="m-sector-block">
+      <div class="container">
+        <div class="m-sector-grid rev m-reveal">
+          <img src="img/services-2.png" alt="Soluções para Cimento" />
+          <div>
+            <h2>Cimento</h2>
+            <p>Operações seguras e eficientes, com suporte em mecânica, elétrica e instrumentação, além da otimização de plantas e processos.</p>
+            <p>As soluções para o setor de cimento entregam operações seguras, eficientes e de excelência em qualidade. A equipe técnica especializada oferece suporte em mecânica, elétrica e instrumentação, atuando desde a montagem e comissionamento até a manutenção e melhoria contínua.</p>
+            <p>Também realizamos consultoria em otimização de plantas e segurança do trabalho, garantindo desempenho, confiabilidade e conformidade com normas regulatórias em todas as etapas produtivas.</p>
+            <p class="m-strong">Entre em contato e descubra como a Hooke pode impulsionar sua operação no setor de cimento.</p>
+            <a href="contact.html" class="m-btn m-btn-dark">Falar com a Hooke</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="petroleo-gas" class="m-sector-block">
+      <div class="container">
+        <div class="m-sector-grid m-reveal">
+          <img src="img/services-3.png" alt="Soluções em Petróleo e Gás" />
+          <div>
+            <h2>Petróleo e Gás</h2>
+            <p>Projetos e manutenção com foco em automação, eficiência energética e segurança, do projeto à manutenção preditiva.</p>
+            <p>A Hooke possui foco em projetos e manutenção para indústrias de petróleo e gás. Atuamos com automação industrial, montagem elétrica e mecânica, engenharia de processos e soluções em eficiência energética, sempre orientadas à segurança operacional e continuidade das operações.</p>
+            <p>Nossos especialistas também realizam consultoria industrial, licenciamento ambiental e suporte em segurança do trabalho, assegurando conformidade e alto desempenho em cada etapa: da concepção de projetos à manutenção preditiva.</p>
+            <p class="m-strong">Potencialize seus resultados com quem entende o mercado. Solicite uma consultoria Hooke.</p>
+            <a href="contact.html" class="m-btn m-btn-dark">Falar com a Hooke</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="fertilizantes" class="m-sector-block">
+      <div class="container">
+        <div class="m-sector-grid rev m-reveal">
+          <img src="img/services-4.png" alt="Soluções para Fertilizantes" />
+          <div>
+            <h2>Fertilizantes</h2>
+            <p>Soluções para o agronegócio, unindo automação, manutenção e otimização para aumentar produtividade e reduzir custos.</p>
+            <p>No setor de fertilizantes, a Hooke apoia as indústrias em todas as etapas: do projeto e montagem industrial à automação, manutenção e otimização de processos. Trabalhamos para garantir plantas mais eficientes, seguras e sustentáveis.</p>
+            <p>Desenvolvemos soluções sob medida que aumentam produtividade e reduzem custos, com foco em eficiência energética, segurança operacional e responsabilidade ambiental.</p>
+            <p class="m-strong">Fale com a Hooke e descubra como transformar sua operação com engenharia de alto desempenho.</p>
+            <a href="contact.html" class="m-btn m-btn-dark">Falar com a Hooke</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="metalurgia" class="m-sector-block">
+      <div class="container">
+        <div class="m-sector-grid m-reveal">
+          <img src="img/services-5.png" alt="Soluções para Metalurgia" />
+          <div>
+            <h2>Metalurgia</h2>
+            <p>Engenharia mecânica, elétrica e de processos para otimizar linhas metalúrgicas com segurança, confiabilidade e desempenho.</p>
+            <p>As soluções para indústrias metalúrgicas têm o propósito de apoiar projetos industriais, automação, manutenção e otimização de processos. Atuamos em ambientes de alta exigência, onde robustez e precisão são essenciais.</p>
+            <p>Nossa equipe garante eficiência, segurança e confiabilidade em todas as etapas de produção, com consultoria industrial, manutenção preditiva e suporte em segurança do trabalho.</p>
+            <p class="m-strong">Entre em contato e descubra como a Hooke pode fortalecer sua operação metalúrgica.</p>
+            <a href="contact.html" class="m-btn m-btn-dark">Falar com a Hooke</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="refrigeracao" class="m-sector-block">
+      <div class="container">
+        <div class="m-sector-grid rev m-reveal">
+          <img src="img/services-6.png" alt="Soluções em Refrigeração Industrial" />
+          <div>
+            <h2>Refrigeração</h2>
+            <p>Projetos e manutenção de sistemas frigoríficos industriais, com foco em eficiência energética e controle preciso de temperatura.</p>
+            <p>A refrigeração industrial é essencial para setores que dependem de controle rigoroso de temperatura em grande escala, como indústrias alimentícias, farmacêuticas, de logística e outras operações sensíveis.</p>
+            <p>Atendemos diversos segmentos com projetos, automação, manutenção e otimização de sistemas frigoríficos, garantindo eficiência energética, segurança operacional e desempenho confiável.</p>
+            <p class="m-strong">Agende uma consultoria e descubra como podemos ajudar sua operação.</p>
+            <a href="contact.html" class="m-btn m-btn-dark">Falar com a Hooke</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="alimenticia" class="m-sector-block">
+      <div class="container">
+        <div class="m-sector-grid m-reveal">
+          <img src="img/services-7.png" alt="Soluções para Indústria Alimentícia" />
+          <div>
+            <h2>Alimentícia</h2>
+            <p>Engenharia e automação para a indústria de alimentos, garantindo qualidade, rastreabilidade e segurança em toda a produção.</p>
+            <p>Desenvolvemos soluções que contemplam desde o layout de linhas de produção até sistemas de automação, controle de processos, rastreabilidade e atendimento às exigências sanitárias e regulatórias.</p>
+            <p>Nossos projetos priorizam estabilidade de processo, redução de perdas, melhoria de rendimento e garantia de qualidade do produto final.</p>
+            <p class="m-strong">Fale com a Hooke e veja como podemos apoiar o crescimento da sua indústria de alimentos.</p>
+            <a href="contact.html" class="m-btn m-btn-dark">Falar com a Hooke</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="siderurgia" class="m-sector-block">
+      <div class="container">
+        <div class="m-sector-grid rev m-reveal">
+          <img src="img/services-8.png" alt="Soluções para Siderurgia" />
+          <div>
+            <h2>Siderurgia</h2>
+            <p>Modernização, automação e otimização de processos siderúrgicos, com foco em eficiência, inovação e redução de impactos.</p>
+            <p>A Hooke atua com expertise em engenharia industrial, oferecendo suporte em modernização, automação, digitalização e otimização de processos, ajudando sua indústria a aumentar eficiência e reduzir custos.</p>
+            <p>Nossas soluções incluem modernização de plantas, redução de emissões, otimização do uso de recursos naturais e apoio à inovação e competitividade do setor.</p>
+            <p class="m-strong">Podemos transformar a sua operação siderúrgica. Entre em contato e fale com a Hooke.</p>
+            <a href="contact.html" class="m-btn m-btn-dark">Falar com a Hooke</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="m-section">
+      <div class="container">
+        <div class="m-cta-banner m-reveal">
+          <h2>Pronto para transformar sua operação?</h2>
+          <p>Nossa equipe está pronta para analisar o seu projeto e oferecer a solução ideal.</p>
+          <a href="contact.html" class="m-btn m-btn-yellow"><i class="fa fa-comments"></i> Solicitar Consultoria</a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="m-footer">
+      <div class="container">
         <div class="row g-5">
-          <div class="col-lg-3 col-md-4">
-            <h5 class="text-dark mb-4">Endereço</h5>
-            <p class="mb-2">
-              <i class="fa fa-map-marker-alt me-3"></i>R. Monte Alto, 59 - Dias
-              d'Ávila - BA, 42850-000
-            </p>
-            <p class="mb-2">
-              <i class="fa fa-phone-alt me-3"></i>71 99952-4838
-            </p>
-            <p class="mb-2">
-              <i class="fa fa-envelope me-3"></i>comercial@hookengenharia.com.br
-            </p>
-              <div class="d-flex pt-2">
-              <a class="btn btn-outline-light btn-social rounded-circle" href="" ><i class="fab fa-twitter"></i></a>
-              <a class="btn btn-outline-light btn-social rounded-circle" href="" ><i class="fab fa-facebook-f"></i></a>
-              <a class="btn btn-outline-light btn-social rounded-circle" href="" ><i class="fab fa-youtube"></i></a>
-              <a class="btn btn-outline-light btn-social rounded-circle" href="https://www.linkedin.com/company/hooke-solu%C3%A7%C3%B5es-de-engenharia/" target="_blank" rel="noopener noreferrer" ><i class="fab fa-linkedin-in"></i></a>
+          <div class="col-lg-3 col-md-6">
+            <h5>Endereço</h5>
+            <p><i class="fa fa-map-marker-alt me-2"></i>R. Monte Alto, 59 - Dias d'Ávila - BA, 42850-000</p>
+            <p><i class="fa fa-phone-alt me-2"></i>71 99952-4838</p>
+            <p><i class="fa fa-envelope me-2"></i>comercial@hookengenharia.com.br</p>
+            <div class="m-social">
+              <a href="https://www.linkedin.com/company/hooke-solu%C3%A7%C3%B5es-de-engenharia/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
             </div>
           </div>
-          <div class="col-lg-3 col-md-4">
-            <h5 class="text-dark mb-4">Serviços</h5>
-            <a class="btn btn-link" href="">Mineração</a>
-            <a class="btn btn-link" href="">Cimento</a>
-            <a class="btn btn-link" href="">Petróleo e Gás</a>
-            <a class="btn btn-link" href="">Fertilizantes</a>
-            <a class="btn btn-link" href="">Metalurgia</a>
-            <a class="btn btn-link" href="">Refrigeração</a>
-            <a class="btn btn-link" href="">Alimentícia</a>
-            <a class="btn btn-link" href="">Siderurgia</a>
+          <div class="col-lg-3 col-md-6">
+            <h5>Serviços</h5>
+            <a class="m-flink" href="#mineracao">Mineração</a>
+            <a class="m-flink" href="#cimento">Cimento</a>
+            <a class="m-flink" href="#petroleo-gas">Petróleo e Gás</a>
+            <a class="m-flink" href="#fertilizantes">Fertilizantes</a>
+            <a class="m-flink" href="#metalurgia">Metalurgia</a>
+            <a class="m-flink" href="#refrigeracao">Refrigeração</a>
+            <a class="m-flink" href="#alimenticia">Alimentícia</a>
+            <a class="m-flink" href="#siderurgia">Siderurgia</a>
           </div>
-          <div class="col-lg-3 col-md-4">
-            <h5 class="text-dark mb-4">Links Rápidos</h5>
-            <a class="btn btn-link" href="about.html">Quem somos</a>
-            <a class="btn btn-link" href="service.html">Portifólio</a>
-            <a class="btn btn-link" href="location.html">Onde estamos</a>
-            <a class="btn btn-link" href="news.html">Notícias</a>
-            <a class="btn btn-link" href="contact.html">Canais</a>
+          <div class="col-lg-3 col-md-6">
+            <h5>Links Rápidos</h5>
+            <a class="m-flink" href="about.html">Quem somos</a>
+            <a class="m-flink" href="service.html">Soluções</a>
+            <a class="m-flink" href="location.html">Onde estamos</a>
+            <span class="m-flink m-disabled-link" tabindex="0">Notícias</span>
+            <a class="m-flink" href="contact.html">Contato</a>
           </div>
-          <div class="col-lg-3 col-md-4">
-            <h5 class="text-dark mb-4">Novidades</h5>
+          <div class="col-lg-3 col-md-6">
+            <h5>Novidades</h5>
             <p>Inscreva-se para acompanhar todas as novidades.</p>
-            <div class="position-relative mx-auto" style="max-width: 400px">
-              <input
-                class="form-control border-0 w-100 py-3 ps-4 pe-5"
-                type="text"
-                placeholder="Seu e-mail"
-              />
-              <button
-                type="button"
-                class="btn btn-primary py-2 position-absolute top-0 end-0 mt-2 me-2"
-              >
-                Inscrever
-              </button>
-            </div>
+            <form class="m-newsletter" onsubmit="return false;">
+              <input type="email" placeholder="Seu e-mail" aria-label="Seu e-mail" />
+              <button type="submit" class="m-btn m-btn-yellow m-btn-sm">OK</button>
+            </form>
           </div>
         </div>
-      </div>
-      <div class="container">
-        <div class="copyright">
-          <div class="row">
-            <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-              &copy; <a class="border-bottom" href="#">Hooke</a>, All Right
-              Reserved.
-            </div>
-            <div class="col-md-6 text-center text-md-end">
-              Designed By
-              <a class="border-bottom" href="https://htmlcodex.com"
-                >Stanley Sampaio</a
-              >
-            </div>
-          </div>
+        <div class="m-footer-bottom">
+          <div>&copy; <span id="mYear"></span> Hooke. Todos os direitos reservados.</div>
+          <div>Design por <a href="https://htmlcodex.com" target="_blank" rel="noopener noreferrer">Stanley Sampaio</a></div>
         </div>
       </div>
-    </div>
-    <!-- Footer End -->
+    </footer>
 
-    <!-- JavaScript Libraries -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="lib/wow/wow.min.js"></script>
-    <script src="lib/easing/easing.min.js"></script>
-    <script src="lib/waypoints/waypoints.min.js"></script>
-    <script src="lib/counterup/counterup.min.js"></script>
-    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-    <script src="lib/tempusdominus/js/moment.min.js"></script>
-    <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
-
-    <!-- Template Javascript -->
     <script src="js/main.js"></script>
+    <script>
+      // Ativa o item da sector-nav conforme o scroll
+      (function () {
+        var links = Array.prototype.slice.call(document.querySelectorAll('.m-sector-nav a'));
+        var sections = links.map(function (l) { return document.querySelector(l.getAttribute('href')); });
+        if (!('IntersectionObserver' in window)) return;
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              var idx = sections.indexOf(entry.target);
+              links.forEach(function (l) { l.classList.remove('active'); });
+              if (links[idx]) links[idx].classList.add('active');
+            }
+          });
+        }, { rootMargin: '-40% 0px -50% 0px' });
+        sections.forEach(function (s) { if (s) io.observe(s); });
+      })();
+    </script>
   </body>
 </html>

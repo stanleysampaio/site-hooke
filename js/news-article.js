@@ -1,7 +1,6 @@
 /*
  * Renderiza a matéria completa (escrita pela Hooke com base numa fonte real)
- * na página noticia.html / moderno/noticia.html, a partir do id na query
- * string (?id=...). Funciona nas duas versões do site via classe "m-body".
+ * na página noticia.html, a partir do id na query string (?id=...).
  */
 (function () {
   var API_BASE = "https://hooke-news.yelnalts1993.workers.dev";
@@ -13,8 +12,7 @@
   var isModerno = document.body.classList.contains("m-body");
 
   function resolveImage(path) {
-    var p = (path || DEFAULT_IMAGE).replace(/^\//, "");
-    return isModerno ? "../" + p : p;
+    return (path || DEFAULT_IMAGE).replace(/^\//, "");
   }
 
   function formatDate(iso) {

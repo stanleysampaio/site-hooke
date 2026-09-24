@@ -1,901 +1,306 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
-    <title>Hooke - soluções de engenharia</title>
+    <title>Hooke — Soluções em Engenharia Industrial</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <meta content="" name="keywords" />
-    <meta content="" name="description" />
+    <meta
+      name="description"
+      content="Hooke Soluções em Engenharia: engenharia, manutenção e automação industrial para mineração, cimento, petróleo e gás, fertilizantes, metalurgia, refrigeração, alimentícia e siderurgia."
+    />
+    <meta
+      name="keywords"
+      content="Hooke, engenharia industrial, mineração, cimento, petróleo e gás, fertilizantes, metalurgia, refrigeração, alimentícia, siderurgia, automação, manutenção industrial"
+    />
+    <link href="img/favicon.png" rel="icon" />
 
-    <!-- Favicon -->
-    <link href="img/logo_amarela.png" rel="icon" />
-
-    <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500&family=Roboto:wght@500;700;900&display=swap"
-      rel="stylesheet"
-    />
-
-    <!-- Icon Font Stylesheet -->
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
-      rel="stylesheet"
-    />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css"
-      rel="stylesheet"
-    />
-
-    <!-- Libraries Stylesheet -->
-    <link href="./lib/animate/animate.min.css" rel="stylesheet" />
-    <link
-      href="./lib/owlcarousel/assets/owl.carousel.min.css"
-      rel="stylesheet"
-    />
-    <link
-      href="./lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css"
-      rel="stylesheet"
-    />
-
-    <!-- Customized Bootstrap Stylesheet -->
-    <link href="./css/bootstrap.min.css" rel="stylesheet" />
-
-    <!-- Template Stylesheet -->
-    <link href="./css/style.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/style.css" rel="stylesheet" />
   </head>
 
-  <body>
-    <!-- Spinner Start -->
-    <div
-      id="spinner"
-      class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center"
-    >
-      <div
-        class="spinner-grow text-primary"
-        style="width: 3rem; height: 3rem"
-        role="status"
-      >
-        <span class="sr-only">Loading...</span>
-      </div>
-    </div>
-    <!-- Spinner End -->
-
-    <!-- Nav Component -->
+  <body class="m-body">
     <div id="site-nav"></div>
     <script src="js/nav.js"></script>
 
-    <!-- Header Start -->
-    <div class="hero-section">
-      <div class="row g-0 hero-main-row">
-
-        <!-- Vídeo: 50% largura -->
-        <div class="col-lg-6 col-12 hero-panel-col">
-          <div class="hero-video-wrapper position-relative">
-            <video class="hero-video w-100 d-block" playsinline>
-              <source src="./video/welcome.mov" type="video/mp4" />
-              Seu navegador não suporta vídeo HTML5.
-            </video>
-            <button id="hero-play-button" type="button" class="btn btn-primary btn-hero-play" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:5;width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;opacity:0.95">
-              <i class="fa fa-play"></i>
-            </button>
-            <button type="button" class="btn btn-sm btn-hero-sound" id="hero-sound-toggle" aria-label="Ativar/desativar som" style="position:absolute;right:16px;bottom:16px;z-index:5">
-              <i class="fas fa-volume-mute"></i>
-            </button>
+    <!-- Hero -->
+    <section class="m-hero">
+      <div class="container">
+        <div class="m-hero-grid">
+          <div>
+            <p class="m-eyebrow on-dark"><i class="fa fa-industry"></i> Engenharia industrial de alta performance</p>
+            <h1>Segurança, eficiência e <span>alta performance</span> para a sua indústria.</h1>
+            <p class="lead">
+              Engenharia, manutenção e montagem industrial para mineração, cimento, petróleo e gás,
+              fertilizantes, metalurgia, refrigeração, alimentícia e siderurgia — em todo o Brasil.
+            </p>
+            <div class="m-hero-ctas">
+              <a href="contact.html" class="m-btn m-btn-yellow"><i class="fa fa-comments"></i> Solicitar Orçamento</a>
+              <a href="service.html" class="m-btn m-btn-outline on-dark">Ver Soluções</a>
+            </div>
+            <div class="m-hero-stats">
+              <div><strong>8+</strong><span>Anos de experiência</span></div>
+              <div><strong>100+</strong><span>Projetos entregues</span></div>
+              <div><strong>8</strong><span>Setores industriais</span></div>
+              <div><strong>8+</strong><span>Anos sem acidente no trabalho</span></div>
+              <div><strong>BR</strong><span>Presença nacional</span></div>
+            </div>
           </div>
-        </div>
 
-        <!-- Slider de Notícias: 50% largura -->
-        <div class="col-lg-6 col-12 hero-panel-col">
-          <div class="news-slider-wrapper">
-            <div class="news-slider-header">
-              <i class="fa fa-newspaper me-2"></i>Notícias &amp; Destaques
+          <div class="m-hero-panel">
+            <div class="m-hero-video-wrap">
+              <video class="m-hero-video" playsinline>
+                <source src="video/welcome.mov" type="video/mp4" />
+              </video>
+              <button id="mHeroPlay" class="m-hero-play" type="button" aria-label="Reproduzir vídeo"><i class="fa fa-play"></i></button>
+              <button id="mHeroSound" class="m-hero-sound" type="button" aria-label="Ativar som"><i class="fas fa-volume-mute"></i></button>
             </div>
 
-            <div id="newsCarousel" class="carousel slide news-carousel" data-bs-ride="carousel" data-bs-interval="5500">
-              <div class="carousel-indicators news-indicators">
-                <button type="button" data-bs-target="#newsCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Notícia 1"></button>
-                <button type="button" data-bs-target="#newsCarousel" data-bs-slide-to="1" aria-label="Notícia 2"></button>
-                <button type="button" data-bs-target="#newsCarousel" data-bs-slide-to="2" aria-label="Notícia 3"></button>
-                <button type="button" data-bs-target="#newsCarousel" data-bs-slide-to="3" aria-label="Notícia 4"></button>
+            <div class="m-news-mini">
+              <div class="m-news-mini-head">
+                <span><i class="fa fa-newspaper me-1"></i> Notícias &amp; Destaques</span>
               </div>
 
-              <div class="carousel-inner">
-                <div class="carousel-item active">
-                  <div class="news-slide">
-                    <span class="news-slide-tag">Mineração</span>
-                    <h3 class="news-slide-title">Hooke expande operações no setor de mineração</h3>
-                    <p class="news-slide-date"><i class="fa fa-calendar-alt me-2"></i>15 de novembro de 2024</p>
-                    <p class="news-slide-excerpt">A Hooke Engenharia amplia sua atuação no setor minerário com novas parcerias estratégicas, reforçando seu compromisso com eficiência e segurança operacional.</p>
-                    <a href="news.html" class="news-slide-btn">Leia mais <i class="fa fa-arrow-right ms-2"></i></a>
-                  </div>
-                </div>
-                <div class="carousel-item">
-                  <div class="news-slide">
-                    <span class="news-slide-tag">Petróleo &amp; Gás</span>
-                    <h3 class="news-slide-title">Projeto de automação em planta de gás concluído com êxito</h3>
-                    <p class="news-slide-date"><i class="fa fa-calendar-alt me-2"></i>28 de outubro de 2024</p>
-                    <p class="news-slide-excerpt">A equipe da Hooke entregou com sucesso um projeto de automação industrial para uma importante planta de processamento de gás natural no Nordeste.</p>
-                    <a href="news.html" class="news-slide-btn">Leia mais <i class="fa fa-arrow-right ms-2"></i></a>
-                  </div>
-                </div>
-                <div class="carousel-item">
-                  <div class="news-slide">
-                    <span class="news-slide-tag">Segurança</span>
-                    <h3 class="news-slide-title">Hooke conquista certificação de segurança NR-12</h3>
-                    <p class="news-slide-date"><i class="fa fa-calendar-alt me-2"></i>05 de setembro de 2024</p>
-                    <p class="news-slide-excerpt">Mais um marco para a Hooke: a empresa obteve certificação referente à norma NR-12, fortalecendo sua posição como referência em segurança industrial.</p>
-                    <a href="news.html" class="news-slide-btn">Leia mais <i class="fa fa-arrow-right ms-2"></i></a>
-                  </div>
-                </div>
-                <div class="carousel-item">
-                  <div class="news-slide">
-                    <span class="news-slide-tag">Inovação</span>
-                    <h3 class="news-slide-title">Soluções de manutenção preditiva em evento nacional</h3>
-                    <p class="news-slide-date"><i class="fa fa-calendar-alt me-2"></i>20 de agosto de 2024</p>
-                    <p class="news-slide-excerpt">Representantes da Hooke participaram do maior evento de engenharia industrial do país, apresentando soluções inovadoras de manutenção preditiva.</p>
-                    <a href="news.html" class="news-slide-btn">Leia mais <i class="fa fa-arrow-right ms-2"></i></a>
-                  </div>
-                </div>
+              <div class="m-news-slide active">
+                <span class="m-news-tag">Mineração</span>
+                <h3 class="m-news-title">Hooke expande operações no setor de mineração</h3>
+                <p class="m-news-date"><i class="fa fa-calendar-alt me-1"></i>15 de novembro de 2024</p>
+                <p class="m-news-excerpt">Novas parcerias estratégicas reforçam o compromisso com eficiência e segurança operacional.</p>
+                <span class="m-news-link m-disabled-link" tabindex="0">Leia mais <i class="fa fa-arrow-right"></i></span>
+              </div>
+              <div class="m-news-slide">
+                <span class="m-news-tag">Petróleo &amp; Gás</span>
+                <h3 class="m-news-title">Automação em planta de gás concluída com êxito</h3>
+                <p class="m-news-date"><i class="fa fa-calendar-alt me-1"></i>28 de outubro de 2024</p>
+                <p class="m-news-excerpt">Projeto de automação industrial entregue em importante planta de processamento no Nordeste.</p>
+                <span class="m-news-link m-disabled-link" tabindex="0">Leia mais <i class="fa fa-arrow-right"></i></span>
+              </div>
+              <div class="m-news-slide">
+                <span class="m-news-tag">Segurança</span>
+                <h3 class="m-news-title">Hooke conquista certificação de segurança NR-12</h3>
+                <p class="m-news-date"><i class="fa fa-calendar-alt me-1"></i>05 de setembro de 2024</p>
+                <p class="m-news-excerpt">Mais um marco para a Hooke, fortalecendo sua posição como referência em segurança industrial.</p>
+                <span class="m-news-link m-disabled-link" tabindex="0">Leia mais <i class="fa fa-arrow-right"></i></span>
+              </div>
+              <div class="m-news-slide">
+                <span class="m-news-tag">Inovação</span>
+                <h3 class="m-news-title">Manutenção preditiva em destaque em evento nacional</h3>
+                <p class="m-news-date"><i class="fa fa-calendar-alt me-1"></i>20 de agosto de 2024</p>
+                <p class="m-news-excerpt">A Hooke apresentou soluções inovadoras no maior evento de engenharia industrial do país.</p>
+                <span class="m-news-link m-disabled-link" tabindex="0">Leia mais <i class="fa fa-arrow-right"></i></span>
               </div>
 
-              <button class="carousel-control-prev news-control" type="button" data-bs-target="#newsCarousel" data-bs-slide="prev">
-                <i class="bi bi-chevron-left" aria-hidden="true"></i>
-                <span class="visually-hidden">Anterior</span>
-              </button>
-              <button class="carousel-control-next news-control" type="button" data-bs-target="#newsCarousel" data-bs-slide="next">
-                <i class="bi bi-chevron-right" aria-hidden="true"></i>
-                <span class="visually-hidden">Próximo</span>
-              </button>
+              <div class="m-news-dots" id="mNewsDots"></div>
             </div>
           </div>
         </div>
-
       </div>
-    </div>
-    <!-- Header End -->
+    </section>
 
-
-    <!-- Faixa Hooke (indicadores) -->
-    <div class="container-xxl py-4">
+    <!-- About teaser -->
+    <section class="m-section">
       <div class="container">
-        <img src="img/hooke-faixa-8anos.png" class="img-fluid w-100 hooke-faixa-img" alt="8 anos de história, + de 100 clientes atendidos, atuação em todo o Brasil, +8 anos sem acidente no trabalho, + 150 projetos realizados" />
-      </div>
-    </div>
-    <!-- Fim Faixa Hooke -->
-    <!-- About Start -->
-    <div class="container-xxl py-5">
-      <div class="container">
-        <div class="row g-5">
-          <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
-            <div class="about-images position-relative mx-auto">
-              <img
-                class="img-main img-fluid rounded"
-                src="img/quem_somos1.jpg"
-                alt="Equipe Hooke"
-              />
-              <img
-                class="img-secondary img-fluid rounded shadow"
-                src="img/quem_somos.jpg"
-                alt="Equipe Hooke"
-              />
+        <div class="row g-5 align-items-center">
+          <div class="col-lg-6 m-reveal">
+            <div class="m-about-media">
+              <img class="m-img-front" src="img/quem_somos1.jpg" alt="Equipe Hooke em campo" />
+              <img class="m-img-back" src="img/quem_somos.jpg" alt="Equipe Hooke em operação" />
             </div>
           </div>
-          <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
-            <p class="d-inline-block border rounded-pill py-1 px-4">
-              Quem somos
+          <div class="col-lg-6 m-reveal">
+            <p class="m-eyebrow">Quem somos</p>
+            <h2>Parceiros técnicos da sua indústria, do projeto à manutenção.</h2>
+            <p class="m-text-muted">
+              Somos a Hooke, empresa especializada em soluções de engenharia, manutenção e montagem
+              industrial. Nosso propósito é impulsionar o sucesso dos nossos clientes em todas as
+              dimensões: prazos, segurança do trabalho, qualidade, desenvolvimento das equipes e
+              valorização das pessoas.
             </p>
-            <h1 class="mb-4">Quem somos</h1>
-            <p>
-              Somos a Hooke. Empresa especializada em soluções de engenharia,
-              manutenção e montagem industrial, com foco em segurança,
-              eficiência e alta performance.
-            </p>
-            <p class="mb-4">
-              Nosso propósito é impulsionar o sucesso dos nossos clientes em
-              todas as dimensões: cumprimento de prazos, segurança do trabalho,
-              qualidade, desenvolvimento das equipes e valorização das pessoas,
-              da vida. A Hooke executa suas obras com processos e metodologias
-              otimizadas, assegurando eficiência, consistência e geração de
-              valor em cada etapa. Diante de novos desafios, atuamos com
-              inovação, comprometimento e alta performance, transformando
-              complexidade em resultados concretos.
-            </p>
-            <p>
-              <i class="far fa-check-circle text-primary me-3"></i>Alta
-              performance
-            </p>
-            <p>
-              <i class="far fa-check-circle text-primary me-3"></i>Segurança
-            </p>
-            <p>
-              <i class="far fa-check-circle text-primary me-3"></i>Eficiência
-            </p>
-            <a
-              class="btn btn-primary rounded-pill py-3 px-5 mt-3"
-              href="about.html"
-              >Saiba mais</a
-            >
+            <ul class="m-check-list">
+              <li><i class="fa fa-check"></i> Alta performance operacional</li>
+              <li><i class="fa fa-check"></i> Segurança em primeiro lugar</li>
+              <li><i class="fa fa-check"></i> Eficiência e conformidade regulatória</li>
+            </ul>
+            <a href="about.html" class="m-btn m-btn-dark">Conheça a Hooke</a>
           </div>
         </div>
       </div>
-    </div>
-    <!-- About End -->
+    </section>
 
-    <!-- Service Start -->
-    <div class="container-fluid px-lg-0">
+    <!-- Services grid -->
+    <section class="m-section m-section-alt">
       <div class="container">
-        <div
-          class="text-center mx-auto mb-5 wow fadeInUp"
-          data-wow-delay="0.1s"
-        >
-          <p class="d-inline-block border rounded-pill py-1 px-4">
-            Nossos serviços
-          </p>
-          <h1>Hooke soluções</h1>
+        <div class="m-section-head center m-reveal">
+          <p class="m-eyebrow">Nossos serviços</p>
+          <h2>Soluções de engenharia para os setores mais exigentes</h2>
         </div>
 
+        <div class="m-services-grid">
+          <article class="m-service-card m-reveal">
+            <div class="m-service-img"><img src="img/services-1.png" alt="Mineração" /></div>
+            <div class="m-service-body">
+              <h5>Mineração</h5>
+              <p>Engenharia e manutenção para elevar a eficiência da sua mina com segurança e alta performance.</p>
+              <a class="m-service-link" href="service.html#mineracao">Saiba mais <i class="fa fa-arrow-right"></i></a>
+            </div>
+          </article>
+          <article class="m-service-card m-reveal">
+            <div class="m-service-img"><img src="img/services-2.png" alt="Cimento" /></div>
+            <div class="m-service-body">
+              <h5>Cimento</h5>
+              <p>Suporte em mecânica, elétrica e instrumentação, além da otimização de plantas e processos.</p>
+              <a class="m-service-link" href="service.html#cimento">Saiba mais <i class="fa fa-arrow-right"></i></a>
+            </div>
+          </article>
+          <article class="m-service-card m-reveal">
+            <div class="m-service-img"><img src="img/services-3.png" alt="Petróleo e Gás" /></div>
+            <div class="m-service-body">
+              <h5>Petróleo e Gás</h5>
+              <p>Automação, eficiência energética e segurança, do projeto à manutenção preditiva.</p>
+              <a class="m-service-link" href="service.html#petroleo-gas">Saiba mais <i class="fa fa-arrow-right"></i></a>
+            </div>
+          </article>
+          <article class="m-service-card m-reveal">
+            <div class="m-service-img"><img src="img/services-4.png" alt="Fertilizantes" /></div>
+            <div class="m-service-body">
+              <h5>Fertilizantes</h5>
+              <p>Automação, manutenção e otimização para aumentar produtividade e reduzir custos.</p>
+              <a class="m-service-link" href="service.html#fertilizantes">Saiba mais <i class="fa fa-arrow-right"></i></a>
+            </div>
+          </article>
+          <article class="m-service-card m-reveal">
+            <div class="m-service-img"><img src="img/services-5.png" alt="Metalurgia" /></div>
+            <div class="m-service-body">
+              <h5>Metalurgia</h5>
+              <p>Engenharia mecânica, elétrica e de processos para otimizar linhas metalúrgicas.</p>
+              <a class="m-service-link" href="service.html#metalurgia">Saiba mais <i class="fa fa-arrow-right"></i></a>
+            </div>
+          </article>
+          <article class="m-service-card m-reveal">
+            <div class="m-service-img"><img src="img/services-6.png" alt="Refrigeração" /></div>
+            <div class="m-service-body">
+              <h5>Refrigeração</h5>
+              <p>Projetos e manutenção de sistemas frigoríficos com eficiência energética.</p>
+              <a class="m-service-link" href="service.html#refrigeracao">Saiba mais <i class="fa fa-arrow-right"></i></a>
+            </div>
+          </article>
+          <article class="m-service-card m-reveal">
+            <div class="m-service-img"><img src="img/services-7.png" alt="Alimentícia" /></div>
+            <div class="m-service-body">
+              <h5>Alimentícia</h5>
+              <p>Engenharia e automação garantindo qualidade, rastreabilidade e segurança.</p>
+              <a class="m-service-link" href="service.html#alimenticia">Saiba mais <i class="fa fa-arrow-right"></i></a>
+            </div>
+          </article>
+          <article class="m-service-card m-reveal">
+            <div class="m-service-img"><img src="img/services-8.png" alt="Siderurgia" /></div>
+            <div class="m-service-body">
+              <h5>Siderurgia</h5>
+              <p>Modernização, automação e otimização de processos com foco em eficiência.</p>
+              <a class="m-service-link" href="service.html#siderurgia">Saiba mais <i class="fa fa-arrow-right"></i></a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats dark -->
+    <section class="m-section-dark py-5">
+      <div class="container py-4">
+        <div class="m-stats m-reveal">
+          <div class="m-stat"><strong>8+</strong><span>Anos de experiência</span></div>
+          <div class="m-stat"><strong>100+</strong><span>Projetos entregues</span></div>
+          <div class="m-stat"><strong>8</strong><span>Setores industriais</span></div>
+          <div class="m-stat"><strong>BR</strong><span>Presença nacional</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact CTA -->
+    <section class="m-section">
+      <div class="container">
         <div class="row g-4">
-          <!-- Mineração -->
-          <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-            <div
-              class="service-item bg-yellowhooke rounded h-100 d-flex flex-column"
-            >
-              <div class="service-header text-center py-3">
-                <h5 class="mb-0">Mineração</h5>
-              </div>
-              <div class="service-image px-3">
-                <img
-                  src="./img/services-1.png"
-                  alt="Mineração"
-                  class="img-fluid rounded w-100"
-                  style="height: 160px; object-fit: cover"
-                />
-              </div>
-              <div
-                class="service-body px-3 py-3 d-flex flex-column flex-grow-1"
-              >
-                <p class="mb-3 small">
-                  Engenharia e manutenção para elevar a eficiência da sua mina,
-                  com segurança, confiabilidade e alta performance operacional.
-                </p>
-
-                <div class="service-footer mt-auto text-center">
-                  <a
-                    href="service.html#mineracao"
-                    class="service-plus-btn"
-                    aria-label="Saiba mais sobre Mineração"
-                  >
-                    <i class="fa fa-plus"></i>
-                    <span>Saiba mais</span>
-                  </a>
-                </div>
-              </div>
+          <div class="col-lg-6 m-reveal">
+            <p class="m-eyebrow">Orçamentos</p>
+            <h2 class="mb-3">Fale conosco</h2>
+            <p class="m-text-muted mb-4">
+              Preencha os campos para receber um orçamento personalizado, tirar dúvidas ou agendar
+              um encontro. Nossa equipe retorna em breve com as melhores opções para o seu projeto.
+            </p>
+            <div class="m-info-card mb-3" style="text-align:left; display:flex; align-items:center; gap:18px;">
+              <i class="fa fa-phone-alt" style="margin:0;"></i>
+              <div><p class="m-text-on-dark-muted mb-1" style="opacity:.8">Telefone / WhatsApp</p><h5 class="mb-0">71 99952-4838</h5></div>
+            </div>
+            <div class="m-info-card" style="text-align:left; display:flex; align-items:center; gap:18px;">
+              <i class="fa fa-envelope-open" style="margin:0;"></i>
+              <div><p class="mb-1" style="opacity:.8">E-mail</p><h5 class="mb-0">comercial@hookengenharia.com.br</h5></div>
             </div>
           </div>
-
-          <!-- Cimento -->
-          <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-            <div
-              class="service-item bg-yellowhooke rounded h-100 d-flex flex-column"
-            >
-              <div class="service-header text-center py-3">
-                <h5 class="mb-0">Cimento</h5>
-              </div>
-              <div class="service-image px-3">
-                <img
-                  src="./img/services-2.png"
-                  alt="Cimento"
-                  class="img-fluid rounded w-100"
-                  style="height: 160px; object-fit: cover"
-                />
-              </div>
-              <div
-                class="service-body px-3 py-3 d-flex flex-column flex-grow-1"
-              >
-                <p class="mb-3 small">
-                  Operações seguras e eficientes, com suporte em mecânica,
-                  elétrica e instrumentação, além da otimização de plantas e
-                  processos.
-                </p>
-
-                <div class="service-footer mt-auto text-center">
-                  <a
-                    href="service.html#cimento"
-                    class="service-plus-btn"
-                    aria-label="Saiba mais sobre Cimento"
-                  >
-                    <i class="fa fa-plus"></i>
-                    <span>Saiba mais</span>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Petróleo e Gás -->
-          <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-            <div
-              class="service-item bg-yellowhooke rounded h-100 d-flex flex-column"
-            >
-              <div class="service-header text-center py-3">
-                <h5 class="mb-0">Petróleo e Gás</h5>
-              </div>
-              <div class="service-image px-3">
-                <img
-                  src="./img/services-3.png"
-                  alt="Petróleo e Gás"
-                  class="img-fluid rounded w-100"
-                  style="height: 160px; object-fit: cover"
-                />
-              </div>
-              <div
-                class="service-body px-3 py-3 d-flex flex-column flex-grow-1"
-              >
-                <p class="mb-3 small">
-                  Projetos e manutenção com foco em automação, eficiência
-                  energética e segurança, do projeto à manutenção preditiva.
-                </p>
-
-                <div class="service-footer mt-auto text-center">
-                  <a
-                    href="service.html#petroleo-gas"
-                    class="service-plus-btn"
-                    aria-label="Saiba mais sobre Petróleo e Gás"
-                  >
-                    <i class="fa fa-plus"></i>
-                    <span>Saiba mais</span>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Fertilizantes -->
-          <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-            <div
-              class="service-item bg-yellowhooke rounded h-100 d-flex flex-column"
-            >
-              <div class="service-header text-center py-3">
-                <h5 class="mb-0">Fertilizantes</h5>
-              </div>
-              <div class="service-image px-3">
-                <img
-                  src="./img/services-4.png"
-                  alt="Fertilizantes"
-                  class="img-fluid rounded w-100"
-                  style="height: 160px; object-fit: cover"
-                />
-              </div>
-              <div
-                class="service-body px-3 py-3 d-flex flex-column flex-grow-1"
-              >
-                <p class="mb-3 small">
-                  Soluções para o agronegócio, unindo automação, manutenção e
-                  otimização para aumentar produtividade e reduzir custos.
-                </p>
-
-                <div class="service-footer mt-auto text-center">
-                  <a
-                    href="service.html#fertilizantes"
-                    class="service-plus-btn"
-                    aria-label="Saiba mais sobre Fertilizantes"
-                  >
-                    <i class="fa fa-plus"></i>
-                    <span>Saiba mais</span>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Metalurgia -->
-          <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-            <div
-              class="service-item bg-yellowhooke rounded h-100 d-flex flex-column"
-            >
-              <div class="service-header text-center py-3">
-                <h5 class="mb-0">Metalurgia</h5>
-              </div>
-              <div class="service-image px-3">
-                <img
-                  src="./img/services-5.png"
-                  alt="Metalurgia"
-                  class="img-fluid rounded w-100"
-                  style="height: 160px; object-fit: cover"
-                />
-              </div>
-              <div
-                class="service-body px-3 py-3 d-flex flex-column flex-grow-1"
-              >
-                <p class="mb-3 small">
-                  Engenharia mecânica, elétrica e de processos para otimizar
-                  linhas metalúrgicas com segurança, confiabilidade e
-                  desempenho.
-                </p>
-
-                <div class="service-footer mt-auto text-center">
-                  <a
-                    href="service.html#metalurgia"
-                    class="service-plus-btn"
-                    aria-label="Saiba mais sobre Metalurgia"
-                  >
-                    <i class="fa fa-plus"></i>
-                    <span>Saiba mais</span>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Refrigeração -->
-          <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-            <div
-              class="service-item bg-yellowhooke rounded h-100 d-flex flex-column"
-            >
-              <div class="service-header text-center py-3">
-                <h5 class="mb-0">Refrigeração</h5>
-              </div>
-              <div class="service-image px-3">
-                <img
-                  src="./img/services-6.png"
-                  alt="Refrigeração industrial"
-                  class="img-fluid rounded w-100"
-                  style="height: 160px; object-fit: cover"
-                />
-              </div>
-              <div
-                class="service-body px-3 py-3 d-flex flex-column flex-grow-1"
-              >
-                <p class="mb-3 small">
-                  Projetos e manutenção de sistemas frigoríficos industriais,
-                  com foco em eficiência energética e controle preciso de
-                  temperatura.
-                </p>
-
-                <div class="service-footer mt-auto text-center">
-                  <a
-                    href="service.html#refrigeracao"
-                    class="service-plus-btn"
-                    aria-label="Saiba mais sobre Refrigeração"
-                  >
-                    <i class="fa fa-plus"></i>
-                    <span>Saiba mais</span>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Alimentícia -->
-          <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-            <div
-              class="service-item bg-yellowhooke rounded h-100 d-flex flex-column"
-            >
-              <div class="service-header text-center py-3">
-                <h5 class="mb-0">Alimentícia</h5>
-              </div>
-              <div class="service-image px-3">
-                <img
-                  src="./img/services-7.png"
-                  alt="Indústria alimentícia"
-                  class="img-fluid rounded w-100"
-                  style="height: 160px; object-fit: cover"
-                />
-              </div>
-              <div
-                class="service-body px-3 py-3 d-flex flex-column flex-grow-1"
-              >
-                <p class="mb-3 small">
-                  Engenharia e automação para a indústria de alimentos,
-                  garantindo qualidade, rastreabilidade e segurança em toda a
-                  produção.
-                </p>
-
-                <div class="service-footer mt-auto text-center">
-                  <a
-                    href="service.html#alimenticia"
-                    class="service-plus-btn"
-                    aria-label="Saiba mais sobre Alimentícia"
-                  >
-                    <i class="fa fa-plus"></i>
-                    <span>Saiba mais</span>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Siderurgia -->
-          <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-            <div
-              class="service-item bg-yellowhooke rounded h-100 d-flex flex-column"
-            >
-              <div class="service-header text-center py-3">
-                <h5 class="mb-0">Siderurgia</h5>
-              </div>
-              <div class="service-image px-3">
-                <img
-                  src="./img/services-8.png"
-                  alt="Siderurgia"
-                  class="img-fluid rounded w-100"
-                  style="height: 160px; object-fit: cover"
-                />
-              </div>
-              <div
-                class="service-body px-3 py-3 d-flex flex-column flex-grow-1"
-              >
-                <p class="mb-3 small">
-                  Modernização, automação e otimização de processos
-                  siderúrgicos, com foco em eficiência, inovação e redução de
-                  impactos.
-                </p>
-
-                <div class="service-footer mt-auto text-center">
-                  <a
-                    href="service.html#siderurgia"
-                    class="service-plus-btn"
-                    aria-label="Saiba mais sobre Siderurgia"
-                  >
-                    <i class="fa fa-plus"></i>
-                    <span> Saiba mais</span>
-                  </a>
-                </div>
+          <div class="col-lg-6 m-reveal">
+            <div class="m-cta-banner h-100 d-flex flex-column justify-content-center">
+              <h2>Agende conosco uma visita técnica</h2>
+              <p>Fale com a Hooke agora e descubra a solução ideal para a sua operação.</p>
+              <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <a href="contact.html" class="m-btn m-btn-yellow"><i class="fa fa-comments"></i> Fale Conosco</a>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <!-- Service End -->
+    </section>
 
-    <!-- Feature Start -->
-    <!-- <div class="container-fluid bg-primary overflow-hidden my-5 px-lg-0">
-        <div class="container feature px-lg-0">
-            <div class="row g-0 mx-lg-0">
-                <div class="col-lg-6 feature-text py-5 wow fadeIn" data-wow-delay="0.1s">
-                    <div class="p-lg-5 ps-lg-0">
-                        <p class="d-inline-block border rounded-pill text-light py-1 px-4">Features</p>
-                        <h1 class="text-white mb-4">Why Choose Us</h1>
-                        <p class="text-white mb-4 pb-2">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo erat amet</p>
-                        <div class="row g-4">
-                            <div class="col-6">
-                                <div class="d-flex align-items-center">
-                                    <div class="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle bg-light" style="width: 55px; height: 55px;">
-                                        <i class="fa fa-user-md text-primary"></i>
-                                    </div>
-                                    <div class="ms-4">
-                                        <p class="text-white mb-2">Experience</p>
-                                        <h5 class="text-white mb-0">Doctors</h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="d-flex align-items-center">
-                                    <div class="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle bg-light" style="width: 55px; height: 55px;">
-                                        <i class="fa fa-check text-primary"></i>
-                                    </div>
-                                    <div class="ms-4">
-                                        <p class="text-white mb-2">Quality</p>
-                                        <h5 class="text-white mb-0">Services</h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="d-flex align-items-center">
-                                    <div class="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle bg-light" style="width: 55px; height: 55px;">
-                                        <i class="fa fa-comment-medical text-primary"></i>
-                                    </div>
-                                    <div class="ms-4">
-                                        <p class="text-white mb-2">Positive</p>
-                                        <h5 class="text-white mb-0">Consultation</h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="d-flex align-items-center">
-                                    <div class="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle bg-light" style="width: 55px; height: 55px;">
-                                        <i class="fa fa-headphones text-primary"></i>
-                                    </div>
-                                    <div class="ms-4">
-                                        <p class="text-white mb-2">24 Hours</p>
-                                        <h5 class="text-white mb-0">Support</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 pe-lg-0 wow fadeIn" data-wow-delay="0.5s" style="min-height: 400px;">
-                    <div class="position-relative h-100">
-                        <img class="position-absolute img-fluid w-100 h-100" src="img/feature.jpg" style="object-fit: cover;" alt="">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
-    <!-- Feature End -->
-
-    <!-- Team Start -->
-    <!-- <div class="container-xxl py-5">
-        <div class="container">
-            <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
-                <p class="d-inline-block border rounded-pill py-1 px-4">Doctors</p>
-                <h1>Our Experience Doctors</h1>
-            </div>
-            <div class="row g-4">
-                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="team-item position-relative rounded overflow-hidden">
-                        <div class="overflow-hidden">
-                            <img class="img-fluid" src="img/team-1.jpg" alt="">
-                        </div>
-                        <div class="team-text bg-light text-center p-4">
-                            <h5>Doctor Name</h5>
-                            <p class="text-primary">Department</p>
-                            <div class="team-social text-center">
-                                <a class="btn btn-square" href=""><i class="fab fa-facebook-f"></i></a>
-                                <a class="btn btn-square" href=""><i class="fab fa-twitter"></i></a>
-                                <a class="btn btn-square" href=""><i class="fab fa-instagram"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="team-item position-relative rounded overflow-hidden">
-                        <div class="overflow-hidden">
-                            <img class="img-fluid" src="img/team-2.jpg" alt="">
-                        </div>
-                        <div class="team-text bg-light text-center p-4">
-                            <h5>Doctor Name</h5>
-                            <p class="text-primary">Department</p>
-                            <div class="team-social text-center">
-                                <a class="btn btn-square" href=""><i class="fab fa-facebook-f"></i></a>
-                                <a class="btn btn-square" href=""><i class="fab fa-twitter"></i></a>
-                                <a class="btn btn-square" href=""><i class="fab fa-instagram"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="team-item position-relative rounded overflow-hidden">
-                        <div class="overflow-hidden">
-                            <img class="img-fluid" src="img/team-3.jpg" alt="">
-                        </div>
-                        <div class="team-text bg-light text-center p-4">
-                            <h5>Doctor Name</h5>
-                            <p class="text-primary">Department</p>
-                            <div class="team-social text-center">
-                                <a class="btn btn-square" href=""><i class="fab fa-facebook-f"></i></a>
-                                <a class="btn btn-square" href=""><i class="fab fa-twitter"></i></a>
-                                <a class="btn btn-square" href=""><i class="fab fa-instagram"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
-                    <div class="team-item position-relative rounded overflow-hidden">
-                        <div class="overflow-hidden">
-                            <img class="img-fluid" src="img/team-4.jpg" alt="">
-                        </div>
-                        <div class="team-text bg-light text-center p-4">
-                            <h5>Doctor Name</h5>
-                            <p class="text-primary">Department</p>
-                            <div class="team-social text-center">
-                                <a class="btn btn-square" href=""><i class="fab fa-facebook-f"></i></a>
-                                <a class="btn btn-square" href=""><i class="fab fa-twitter"></i></a>
-                                <a class="btn btn-square" href=""><i class="fab fa-instagram"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
-    <!-- Team End -->
-
-    <!-- Appointment Start -->
-    <div class="container-xxl py-5">
+    <!-- Footer -->
+    <footer class="m-footer">
       <div class="container">
         <div class="row g-5">
-          <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
-            <p class="d-inline-block border rounded-pill py-1 px-4">
-              Orçamentos
-            </p>
-            <h1 class="mb-4">Fale conosco</h1>
-            <p class="mb-4">
-              Por favor, preencha os campos abaixo para receber um orçamento
-              personalizado, tirar dúvidas ou agendar um encontro . Nossa equipe
-              entrará em contato em breve com as melhores opções para atender às
-              suas necessidades
-            </p>
-            <div class="bg-light rounded d-flex align-items-center p-5 mb-4">
-              <div
-                class="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle bg-white"
-                style="width: 55px; height: 55px"
-              >
-                <i class="fa fa-phone-alt text-primary"></i>
-              </div>
-              <div class="ms-4">
-                <p class="mb-2">Telefone para contato</p>
-                <h5 class="mb-0">71 99952-4838</h5>
-              </div>
-            </div>
-            <div class="bg-light rounded d-flex align-items-center p-5">
-              <div
-                class="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle bg-white"
-                style="width: 55px; height: 55px"
-              >
-                <i class="fa fa-envelope-open text-primary"></i>
-              </div>
-              <div class="ms-4">
-                <p class="mb-2">E-mail para contato</p>
-                <h5 class="mb-0">comercial@hookengenharia.com.br</h5>
-              </div>
+          <div class="col-lg-3 col-md-6">
+            <h5>Endereço</h5>
+            <p><i class="fa fa-map-marker-alt me-2"></i>R. Monte Alto, 59 - Dias d'Ávila - BA, 42850-000</p>
+            <p><i class="fa fa-phone-alt me-2"></i>71 99952-4838</p>
+            <p><i class="fa fa-envelope me-2"></i>comercial@hookengenharia.com.br</p>
+            <div class="m-social">
+              <a href="https://www.linkedin.com/company/hooke-solu%C3%A7%C3%B5es-de-engenharia/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
             </div>
           </div>
-          <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.5s">
-            <div class="bg-light rounded h-100 d-flex align-items-center p-5">
-              <div class="w-100 text-center">
-                <a href="contact.html" class="btn btn-primary btn-lg py-3 px-5">Fale conosco</a>
-                <p class="mt-3 mb-0">Ou envie um e-mail para comercial@hookengenharia.com.br</p>
-              </div>
-            </div>
+          <div class="col-lg-3 col-md-6">
+            <h5>Serviços</h5>
+            <a class="m-flink" href="service.html#mineracao">Mineração</a>
+            <a class="m-flink" href="service.html#cimento">Cimento</a>
+            <a class="m-flink" href="service.html#petroleo-gas">Petróleo e Gás</a>
+            <a class="m-flink" href="service.html#fertilizantes">Fertilizantes</a>
+            <a class="m-flink" href="service.html#metalurgia">Metalurgia</a>
+            <a class="m-flink" href="service.html#refrigeracao">Refrigeração</a>
+            <a class="m-flink" href="service.html#alimenticia">Alimentícia</a>
+            <a class="m-flink" href="service.html#siderurgia">Siderurgia</a>
           </div>
-        </div>
-      </div>
-    </div>
-    <!-- Appointment End -->
-
-    <!-- Testimonial Start -->
-    <!-- <div class="container-xxl py-5">
-        <div class="container">
-            <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
-                <p class="d-inline-block border rounded-pill py-1 px-4">Testimonial</p>
-                <h1>What Say Our Patients!</h1>
-            </div>
-            <div class="owl-carousel testimonial-carousel wow fadeInUp" data-wow-delay="0.1s">
-                <div class="testimonial-item text-center">
-                    <img class="img-fluid bg-light rounded-circle p-2 mx-auto mb-4" src="img/testimonial-1.jpg" style="width: 100px; height: 100px;">
-                    <div class="testimonial-text rounded text-center p-4">
-                        <p>Clita clita tempor justo dolor ipsum amet kasd amet duo justo duo duo labore sed sed. Magna ut diam sit et amet stet eos sed clita erat magna elitr erat sit sit erat at rebum justo sea clita.</p>
-                        <h5 class="mb-1">Patient Name</h5>
-                        <span class="fst-italic">Profession</span>
-                    </div>
-                </div>
-                <div class="testimonial-item text-center">
-                    <img class="img-fluid bg-light rounded-circle p-2 mx-auto mb-4" src="img/testimonial-2.jpg" style="width: 100px; height: 100px;">
-                    <div class="testimonial-text rounded text-center p-4">
-                        <p>Clita clita tempor justo dolor ipsum amet kasd amet duo justo duo duo labore sed sed. Magna ut diam sit et amet stet eos sed clita erat magna elitr erat sit sit erat at rebum justo sea clita.</p>
-                        <h5 class="mb-1">Patient Name</h5>
-                        <span class="fst-italic">Profession</span>
-                    </div>
-                </div>
-                <div class="testimonial-item text-center">
-                    <img class="img-fluid bg-light rounded-circle p-2 mx-auto mb-4" src="img/testimonial-3.jpg" style="width: 100px; height: 100px;">
-                    <div class="testimonial-text rounded text-center p-4">
-                        <p>Clita clita tempor justo dolor ipsum amet kasd amet duo justo duo duo labore sed sed. Magna ut diam sit et amet stet eos sed clita erat magna elitr erat sit sit erat at rebum justo sea clita.</p>
-                        <h5 class="mb-1">Patient Name</h5>
-                        <span class="fst-italic">Profession</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
-    <!-- Testimonial End -->
-
-    <!-- Footer Start -->
-    <div
-      class="container-fluid bg-yellowhooke text-dark footer overflow-hidden mt-5 pt-5 wow fadeIn px-lg-0"
-      data-wow-delay="0.1s"
-    >
-      <div class="container py-5">
-        <div class="row g-5">
-          <div class="col-lg-3 col-md-4">
-            <h5 class="text-dark mb-4">Endereço</h5>
-            <p class="mb-2">
-              <i class="fa fa-map-marker-alt me-3"></i>R. Monte Alto, 59 - Dias
-              d'Ávila - BA, 42850-000
-            </p>
-            <p class="mb-2">
-              <i class="fa fa-phone-alt me-3"></i>71 99952-4838
-            </p>
-            <p class="mb-2">
-              <i class="fa fa-envelope me-3"></i>comercial@hookengenharia.com.br
-            </p>
-            <div class="d-flex pt-2">
-              <a class="btn btn-outline-light btn-social rounded-circle" href=""
-                ><i class="fab fa-twitter"></i
-              ></a>
-              <a class="btn btn-outline-light btn-social rounded-circle" href=""
-                ><i class="fab fa-facebook-f"></i
-              ></a>
-              <a class="btn btn-outline-light btn-social rounded-circle" href=""
-                ><i class="fab fa-youtube"></i
-              ></a>
-              <a class="btn btn-outline-light btn-social rounded-circle" href="https://www.linkedin.com/company/hooke-solu%C3%A7%C3%B5es-de-engenharia/" target="_blank" rel="noopener noreferrer"
-                ><i class="fab fa-linkedin-in"></i
-              ></a>
-            </div>
+          <div class="col-lg-3 col-md-6">
+            <h5>Links Rápidos</h5>
+            <a class="m-flink" href="about.html">Quem somos</a>
+            <a class="m-flink" href="service.html">Soluções</a>
+            <a class="m-flink" href="location.html">Onde estamos</a>
+            <span class="m-flink m-disabled-link" tabindex="0">Notícias</span>
+            <a class="m-flink" href="contact.html">Contato</a>
           </div>
-          <div class="col-lg-3 col-md-4">
-            <h5 class="text-dark mb-4">Serviços</h5>
-            <a class="btn btn-link" href="">Mineração</a>
-            <a class="btn btn-link" href="">Cimento</a>
-            <a class="btn btn-link" href="">Petróleo e Gás</a>
-            <a class="btn btn-link" href="">Fertilizantes</a>
-            <a class="btn btn-link" href="">Metalurgia</a>
-            <a class="btn btn-link" href="">Refrigeração</a>
-            <a class="btn btn-link" href="">Alimentícia</a>
-            <a class="btn btn-link" href="">Siderurgia</a>
-          </div>
-          <div class="col-lg-3 col-md-4">
-            <h5 class="text-dark mb-4">Links Rápidos</h5>
-            <a class="btn btn-link" href="about.html">Quem somos</a>
-            <a class="btn btn-link" href="service.html">Portifólio</a>
-            <a class="btn btn-link" href="location.html">Onde estamos</a>
-            <a class="btn btn-link" href="news.html">Notícias</a>
-            <a class="btn btn-link" href="contact.html">Canais</a>
-          </div>
-          <div class="col-lg-3 col-md-4">
-            <h5 class="text-dark mb-4">Novidades</h5>
+          <div class="col-lg-3 col-md-6">
+            <h5>Novidades</h5>
             <p>Inscreva-se para acompanhar todas as novidades.</p>
-            <div class="position-relative mx-auto" style="max-width: 400px">
-              <input
-                class="form-control border-0 w-100 py-3 ps-4 pe-5"
-                type="text"
-                placeholder="Seu e-mail"
-              />
-              <button
-                type="button"
-                class="btn btn-primary py-2 position-absolute top-0 end-0 mt-2 me-2"
-              >
-                Inscrever
-              </button>
-            </div>
+            <form class="m-newsletter" onsubmit="return false;">
+              <input type="email" placeholder="Seu e-mail" aria-label="Seu e-mail" />
+              <button type="submit" class="m-btn m-btn-yellow m-btn-sm">OK</button>
+            </form>
           </div>
         </div>
-      </div>
-      <div class="container">
-        <div class="copyright">
-          <div class="row">
-            <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-              &copy; <a class="border-bottom" href="#">Hooke</a>, All Right
-              Reserved.
-            </div>
-            <div class="col-md-6 text-center text-md-end">
-              <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
-              Designed By
-              <a class="border-bottom" href="https://htmlcodex.com"
-                >Stanley Sampaio</a
-              >
-            </div>
-          </div>
+        <div class="m-footer-bottom">
+          <div>&copy; <span id="mYear"></span> Hooke. Todos os direitos reservados.</div>
+          <div>Design por <a href="https://htmlcodex.com" target="_blank" rel="noopener noreferrer">Stanley Sampaio</a></div>
         </div>
       </div>
-    </div>
-    <!-- Footer End -->
+    </footer>
 
-    <!-- Back to Top -->
-    <a
-      href="#"
-      class="btn btn-lg btn-primary btn-lg-square rounded-circle back-to-top"
-      ><i class="bi bi-arrow-up"></i
-    ></a>
-
-    <!-- JavaScript Libraries -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="lib/wow/wow.min.js"></script>
-    <script src="lib/easing/easing.min.js"></script>
-    <script src="lib/waypoints/waypoints.min.js"></script>
-    <script src="lib/counterup/counterup.min.js"></script>
-    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-    <script src="lib/tempusdominus/js/moment.min.js"></script>
-    <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
-    <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
-
-    <!-- Template Javascript -->
     <script src="js/main.js"></script>
   </body>
 </html>
