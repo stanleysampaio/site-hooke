@@ -1,0 +1,10 @@
+# Todo dia às 09:00 UTC (06:00 em Brasília).
+[Unit]
+Description=Hooke - gerador de noticias diario
+
+[Timer]
+OnCalendar=*-*-* 09:00:00 UTC
+Persistent=true
+
+[Install]
+WantedBy=timers.target

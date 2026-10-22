@@ -1,0 +1,11 @@
+# Execução diária do gerador de notícias (disparada por hooke-news.timer).
+[Unit]
+Description=Hooke - gerador de noticias (execucao diaria)
+After=docker.service network-online.target
+Requires=docker.service
+
+[Service]
+Type=oneshot
+User=ec2-user
+ExecStart=/home/ec2-user/hooke-news-pipeline/deploy/run.sh
+TimeoutStartSec=45min

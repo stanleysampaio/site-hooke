@@ -13,16 +13,20 @@
     { href: 'about.html', label: 'A Hooke' },
     { href: 'service.html', label: 'Soluções' },
     { href: 'location.html', label: 'Onde Atuamos' },
+    { href: 'news.html', label: 'Notícias' },
     { href: 'contact.html', label: 'Contato' },
   ];
 
   function navLink(l) {
-    var cls = page === l.href ? ' class="active"' : '';
+    var current = page === 'noticia.html' ? 'news.html' : page;
+    var cls = current === l.href ? ' class="active"' : '';
     return '<a href="' + l.href + '"' + cls + '>' + l.label + '</a>';
   }
 
   var desktopLinks = links.map(navLink).join('');
   var mobileLinks = links.map(navLink).join('');
+  // Seletor de idioma (js/i18n.js, carregado no <head>).
+  var langSwitcher = window.HookeI18n ? window.HookeI18n.switcherHtml() : '';
 
   var html = [
     '<div class="m-topstrip">',
@@ -42,6 +46,7 @@
     '    </a>',
     '    <nav class="m-nav-links">' + desktopLinks + '</nav>',
     '    <div class="m-nav-actions">',
+    '      ' + langSwitcher,
     '      <a class="m-nav-phone" href="tel:+5571999524838"><i class="fa fa-phone-alt"></i><span>71 99952-4838</span></a>',
     '      <a class="m-btn m-btn-yellow m-btn-sm d-none d-lg-inline-flex" href="contact.html">Orçamento</a>',
     '      <button class="m-nav-toggle" type="button" id="mNavToggle" aria-label="Abrir menu"><i class="fa fa-bars"></i></button>',

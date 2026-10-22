@@ -1,478 +1,277 @@
-import { SOURCES } from "./sources.js";
+// API do feed de notícias da Hooke: guarda as matérias no D1 (SQL da
+// Cloudflare), serve as publicadas para o site e o painel /admin/news.html
+// (rotas em admin.js). Quem gera as matérias (pesquisa + IA + imagem +
+// tradução) é o news-pipeline, que roda na EC2 e conversa pelas rotas
+// /api/ingest/* (token próprio). O KV ficou só para o pedido "gerar agora" e o
+// resumo da última execução (uma chave cada, sem disputa).
+import {
+  SITE_URL, CORS_HEADERS, json, now, today, listItems, getItem, insertItem, patchItem, viewsMap, getSetting,
+} from "./db.js";
+import { handleAdmin } from "./admin.js";
 
-const CORS_HEADERS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
-};
+// Token fixo do pipeline (secret INGEST_TOKEN). Comparação em tempo constante.
+function requireIngest(request, env) {
+  const given = new TextEncoder().encode((request.headers.get("Authorization") || "").replace(/^Bearer\s+/i, ""));
+  const expected = new TextEncoder().encode(env.INGEST_TOKEN || "");
+  if (!expected.length || given.length !== expected.length) return false;
+  let diff = 0;
+  for (let i = 0; i < given.length; i++) diff |= given[i] ^ expected[i];
+  return diff === 0;
+}
 
-function json(data, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: { "Content-Type": "application/json", ...CORS_HEADERS },
+// ---------- Ingest (news-pipeline na EC2) ----------
+
+const ITEM_FIELDS = [
+  "id", "sector", "themeId", "title", "summary", "excerpt", "body", "link", "sourceName", "sources",
+  "sourceDate", "verification", "image", "imageAlt", "imageGenerated", "imagePrompt", "imagePromptAlt", "createdAt",
+];
+
+function sanitizeItem(raw) {
+  const item = {};
+  for (const f of ITEM_FIELDS) if (raw[f] !== undefined) item[f] = raw[f];
+  if (!item.id) item.id = crypto.randomUUID();
+  if (!item.createdAt) item.createdAt = now();
+  if (!Array.isArray(item.body)) item.body = item.body ? [String(item.body)] : [];
+  return item;
+}
+
+const DAY = 24 * 3600 * 1000;
+const retry = (failedAt) => !failedAt || Date.now() - Date.parse(failedAt) > DAY;
+
+async function handleIngest(request, env, url) {
+  if (!requireIngest(request, env)) return json({ error: "Não autorizado" }, 401);
+
+  if (url.pathname === "/api/ingest/known" && request.method === "GET") {
+    const { results } = await env.DB.prepare("SELECT link FROM items WHERE link IS NOT NULL").all();
+    return json({ links: results.map((r) => r.link) });
+  }
+
+  if (url.pathname === "/api/ingest/items" && request.method === "POST") {
+    const { items } = await request.json().catch(() => ({}));
+    if (!Array.isArray(items)) return json({ error: "items precisa ser uma lista" }, 400);
+    const { results } = await env.DB.prepare("SELECT link FROM items WHERE link IS NOT NULL").all();
+    const known = new Set(results.map((r) => r.link));
+    const fresh = items.filter((it) => it && it.title && it.link && !known.has(it.link)).map(sanitizeItem);
+    if (fresh.length) await env.DB.batch(fresh.map((it) => insertItem(env, "pending", it)));
+    return json({ ok: true, added: fresh.length });
+  }
+
+  // Regras editoriais editadas no painel (o pipeline usa o arquivo local se vier vazio).
+  if (url.pathname === "/api/ingest/rules" && request.method === "GET") {
+    const s = await getSetting(env, "rules");
+    return json({ text: s ? s.value : "", updatedAt: s ? s.updated_at : null });
+  }
+
+  // Editorias e temas de pauta (tela "Temas e fontes" do painel).
+  if (url.pathname === "/api/ingest/themes" && request.method === "GET") {
+    const [eds, ths] = await Promise.all([
+      env.DB.prepare("SELECT name, max_per_run, active FROM editorias ORDER BY sort, name").all(),
+      env.DB.prepare("SELECT id, editoria, kind, value, priority, active FROM themes").all(),
+    ]);
+    return json({
+      editorias: eds.results.map((e) => ({ name: e.name, maxPerRun: e.max_per_run, active: !!e.active })),
+      themes: ths.results.map((t) => ({ id: t.id, editoria: t.editoria, kind: t.kind, value: t.value, priority: !!t.priority, active: !!t.active })),
+    });
+  }
+
+  // Consome o pedido feito pelo botão do painel (devolve e apaga).
+  if (url.pathname === "/api/ingest/run-request" && request.method === "POST") {
+    const requestedAt = await env.NEWS_KV.get("run-request");
+    if (requestedAt) await env.NEWS_KV.delete("run-request");
+    return json({ requested: Boolean(requestedAt), requestedAt });
+  }
+
+  // Pedidos de imagem e de tradução. Além dos pedidos marcados, toda notícia
+  // PUBLICADA sem tradução (ou sem imagem própria) entra na fila: um pedido
+  // perdido se corrige sozinho na rodada seguinte. Falhas voltam após 24 h.
+  if (url.pathname === "/api/ingest/queue" && request.method === "GET") {
+    const pending = await listItems(env, "pending");
+    const published = await listItems(env, "published");
+    const brief = (it) => ({
+      id: it.id, sector: it.sector, title: it.title, excerpt: it.excerpt || it.summary,
+      body: it.body, imageAlt: it.imageAlt, imagePrompt: it.imagePrompt, imagePromptAlt: it.imagePromptAlt,
+    });
+    const needsImage = (it) => it.imageStatus === "requested" ||
+      (!it.imageGenerated && (it.imageStatus !== "failed" || retry(it.imageFailedAt)));
+    const needsTranslation = (it) => it.translationStatus === "requested" ||
+      (!it.translations && (it.translationStatus !== "failed" || retry(it.translationFailedAt)));
+    return json({
+      images: [...pending.filter((it) => it.imageStatus === "requested"), ...published.filter(needsImage)].map(brief),
+      translations: published.filter(needsTranslation).map(brief),
+    });
+  }
+
+  if (url.pathname === "/api/ingest/image" && request.method === "POST") {
+    const { id, image, imageAlt, failed, error } = await request.json().catch(() => ({}));
+    if (!(await getItem(env, id))) return json({ error: "Item não encontrado" }, 404);
+    if (failed) {
+      await patchItem(env, id, { imageStatus: "failed", imageError: error || "", imageFailedAt: now() }).run();
+    } else {
+      await patchItem(env, id,
+        { image, imageAlt: imageAlt || undefined, imageGenerated: true, watermarked: true, imageStatus: "done" },
+        ["imageError", "imageFailedAt"]).run();
+    }
+    return json({ ok: true });
+  }
+
+  if (url.pathname === "/api/ingest/translation" && request.method === "POST") {
+    const { id, translations, failed, error } = await request.json().catch(() => ({}));
+    if (!(await getItem(env, id))) return json({ error: "Item não encontrado" }, 404);
+    if (failed) {
+      await patchItem(env, id, { translationStatus: "failed", translationError: error || "", translationFailedAt: now() }).run();
+    } else {
+      await patchItem(env, id, { translations, translationStatus: "done" }, ["translationError", "translationFailedAt"]).run();
+    }
+    return json({ ok: true });
+  }
+
+  // Fontes com título/portal/autor (news-pipeline --enrich-sources).
+  if (url.pathname === "/api/ingest/sources" && request.method === "POST") {
+    const { id, sources } = await request.json().catch(() => ({}));
+    if (!Array.isArray(sources) || !(await getItem(env, id))) return json({ error: "Item não encontrado" }, 404);
+    await patchItem(env, id, { sources }).run();
+    return json({ ok: true });
+  }
+
+  // Todas as notícias (para manutenções do pipeline, ex.: --enrich-sources).
+  if (url.pathname === "/api/ingest/all" && request.method === "GET") {
+    return json({ pending: await listItems(env, "pending"), published: await listItems(env, "published") });
+  }
+
+  // Imagens por IA geradas antes da marca d'água (news-pipeline --watermark-existing).
+  if (url.pathname === "/api/ingest/unwatermarked" && request.method === "GET") {
+    const all = [...(await listItems(env, "pending")), ...(await listItems(env, "published"))];
+    return json({
+      items: all
+        .filter((it) => it.imageGenerated && !it.watermarked && /^\/img\/noticias\//.test(it.image || ""))
+        .map((it) => ({ id: it.id, title: it.title, image: it.image })),
+    });
+  }
+
+  if (url.pathname === "/api/ingest/report" && request.method === "POST") {
+    const report = await request.json().catch(() => null);
+    if (!report) return json({ error: "JSON inválido" }, 400);
+    await env.NEWS_KV.put("last-run", JSON.stringify(report));
+    return json({ ok: true });
+  }
+
+  return json({ error: "Not found" }, 404);
+}
+
+// ---------- Página de compartilhamento ----------
+// noticia.html é estática e monta a matéria via JS, então WhatsApp/LinkedIn/
+// Facebook não veem título nem imagem. O botão de compartilhar usa este link:
+// ele devolve as tags de prévia (Open Graph) e redireciona para o site.
+
+function escapeAttr(s) {
+  return String(s || "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+async function handleShare(env, id) {
+  const found = await getItem(env, id);
+  const item = found && found.status === "published" ? found.item : null;
+  const target = item ? `${SITE_URL}/noticia.html?id=${encodeURIComponent(id)}` : `${SITE_URL}/news.html`;
+  if (!item) return Response.redirect(target, 302);
+
+  const image = /^https?:\/\//.test(item.image || "") ? item.image : SITE_URL + (item.image || "/img/atuacao.jpg");
+  const description = String(item.excerpt || item.summary || "").replace(/\*\*/g, "");
+  const html = `<!DOCTYPE html>
+<html lang="pt-BR"><head>
+<meta charset="utf-8">
+<title>${escapeAttr(item.title)} — Hooke Notícias</title>
+<meta name="description" content="${escapeAttr(description)}">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Hooke Soluções em Engenharia">
+<meta property="og:title" content="${escapeAttr(item.title)}">
+<meta property="og:description" content="${escapeAttr(description)}">
+<meta property="og:image" content="${escapeAttr(image)}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="675">
+<meta property="og:url" content="${escapeAttr(target)}">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="${escapeAttr(target)}">
+<meta http-equiv="refresh" content="0; url=${escapeAttr(target)}">
+</head><body>
+<script>location.replace(${JSON.stringify(target)});</script>
+<p><a href="${escapeAttr(target)}">${escapeAttr(item.title)}</a></p>
+</body></html>`;
+  return new Response(html, {
+    headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=300" },
   });
-}
-
-// ---------- KV helpers ----------
-
-async function getList(env, key) {
-  const raw = await env.NEWS_KV.get(key);
-  return raw ? JSON.parse(raw) : [];
-}
-
-async function putList(env, key, list) {
-  await env.NEWS_KV.put(key, JSON.stringify(list));
-}
-
-// ---------- Auth (HMAC token, no session store) ----------
-
-async function sign(env, payload) {
-  const key = await crypto.subtle.importKey(
-    "raw",
-    new TextEncoder().encode(env.ADMIN_PASSWORD),
-    { name: "HMAC", hash: "SHA-256" },
-    false,
-    ["sign"]
-  );
-  const sig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(payload));
-  return btoa(String.fromCharCode(...new Uint8Array(sig)));
-}
-
-async function makeToken(env) {
-  const exp = Date.now() + 1000 * 60 * 60 * 8; // 8h
-  const payload = String(exp);
-  const sig = await sign(env, payload);
-  return `${payload}.${sig}`;
-}
-
-async function verifyToken(env, token) {
-  if (!token) return false;
-  const [payload, sig] = token.split(".");
-  if (!payload || !sig) return false;
-  if (Number(payload) < Date.now()) return false;
-  const expected = await sign(env, payload);
-  return expected === sig;
-}
-
-async function requireAuth(request, env) {
-  const auth = request.headers.get("Authorization") || "";
-  const token = auth.replace(/^Bearer\s+/i, "");
-  return verifyToken(env, token);
-}
-
-// ---------- RSS parsing (regex-based, no DOM parser in Workers runtime) ----------
-
-function extractTag(block, tag) {
-  const m = block.match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)</${tag}>`, "i"));
-  if (!m) return "";
-  return m[1]
-    .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/, "$1")
-    .replace(/<[^>]+>/g, "")
-    .trim();
-}
-
-function parseFeed(xml) {
-  const items = [];
-  const itemBlocks = xml.match(/<item[\s\S]*?<\/item>/gi) || xml.match(/<entry[\s\S]*?<\/entry>/gi) || [];
-  for (const block of itemBlocks) {
-    const title = extractTag(block, "title");
-    let link = extractTag(block, "link");
-    if (!link) {
-      const hrefMatch = block.match(/<link[^>]*href="([^"]+)"/i);
-      if (hrefMatch) link = hrefMatch[1];
-    }
-    const pubDate = extractTag(block, "pubDate") || extractTag(block, "published") || extractTag(block, "updated");
-    const description = extractTag(block, "description") || extractTag(block, "summary");
-    if (title && link) {
-      items.push({ title, link, pubDate, description: description.slice(0, 500) });
-    }
-  }
-  return items;
-}
-
-// Imagem por setor: as mesmas fotos já usadas na página de Serviços (uma por
-// setor, próprias da Hooke — sem custo, sem depender de direitos de terceiros).
-const DEFAULT_IMAGE = "/img/atuacao.jpg";
-const SECTOR_IMAGES = {
-  "Mineração": "/img/services-1.png",
-  "Cimento": "/img/services-2.png",
-  "Petróleo e Gás": "/img/services-3.png",
-  "Fertilizantes": "/img/services-4.png",
-  "Metalurgia": "/img/services-5.png",
-  "Refrigeração": "/img/services-6.png",
-  "Alimentícia": "/img/services-7.png",
-  "Siderurgia": "/img/services-8.png",
-};
-function imageForSector(sector) {
-  return SECTOR_IMAGES[sector] || DEFAULT_IMAGE;
-}
-
-// ---------- Extração do texto completo do artigo original ----------
-// Sem parser de DOM disponível no runtime do Worker: removemos script/style e
-// tags, e ficamos só com o texto visível. É heurístico (funciona bem o
-// suficiente pra alimentar a reescrita da IA, não precisa ser perfeito).
-function extractArticleText(html) {
-  const noScripts = html
-    .replace(/<script[\s\S]*?<\/script>/gi, " ")
-    .replace(/<style[\s\S]*?<\/style>/gi, " ")
-    .replace(/<!--[\s\S]*?-->/g, " ");
-  const paragraphs = noScripts.match(/<p[^>]*>[\s\S]*?<\/p>/gi) || [];
-  const text = paragraphs
-    .map((p) => p.replace(/<[^>]+>/g, " ").replace(/&nbsp;/g, " ").trim())
-    .filter((p) => p.length > 40)
-    .join("\n\n");
-  return text.slice(0, 6000);
-}
-
-async function fetchArticleText(link) {
-  try {
-    const res = await fetch(link, {
-      headers: { "User-Agent": "HookeNewsBot/1.0" },
-      signal: AbortSignal.timeout(8000),
-    });
-    if (!res.ok) return "";
-    const html = await res.text();
-    return extractArticleText(html);
-  } catch (err) {
-    console.log(`Falha ao buscar artigo ${link}: ${err.message}`);
-    return "";
-  }
-}
-
-// ---------- Redação da matéria completa (nossa própria, baseada na fonte) ----------
-// Uma chamada só à Gemini pro lote inteiro de itens escolhidos, pelo mesmo
-// motivo da curadoria: a cota free é de poucas requisições por dia.
-async function writeFullArticles(env, items) {
-  if (items.length === 0) return items;
-
-  const sourceTexts = await Promise.all(
-    items.map((it) => fetchArticleText(it.link))
-  );
-
-  const payload = items.map((it, i) => ({
-    id: it.id,
-    sector: it.sector,
-    title: it.title,
-    summary: it.summary,
-    sourceText: sourceTexts[i] || "(não foi possível extrair o texto da fonte; baseie-se só no título e resumo)",
-  }));
-
-  const prompt = `Você é um redator da Hooke Engenharia escrevendo matérias originais para o blog
-de notícias do setor industrial. Para cada item abaixo (título, setor, resumo e o texto extraído
-da matéria original), escreva uma matéria própria em português, com 3 a 5 parágrafos, baseada
-EXCLUSIVAMENTE nas informações fornecidas em "sourceText" (não invente fatos, números ou citações
-que não estejam lá). Se "sourceText" estiver vazio ou insuficiente, escreva um texto mais curto
-(1-2 parágrafos) baseado só no título e resumo, sem inventar detalhes. Escreva num tom
-informativo e profissional, parafraseando (não copie frases inteiras da fonte).
-
-Responda APENAS com um JSON array, sem texto adicional, no formato:
-[{"id": "<id>", "excerpt": "<1-2 frases de chamada para o card>", "body": ["<parágrafo 1>", "<parágrafo 2>", "..."]}]
-
-Itens:
-${JSON.stringify(payload)}`;
-
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${env.GEMINI_API_KEY}`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.4 },
-      }),
-      signal: AbortSignal.timeout(25000),
-    }
-  );
-
-  if (!res.ok) {
-    console.log(`Gemini falhou ao escrever matérias: ${res.status} ${await res.text()}`);
-    return items.map((it) => ({ ...it, excerpt: it.summary, body: [it.summary], image: imageForSector(it.sector) }));
-  }
-
-  const data = await res.json();
-  const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "[]";
-  const cleaned = text.replace(/```json|```/g, "").trim();
-
-  let written;
-  try {
-    written = JSON.parse(cleaned);
-  } catch {
-    console.log(`Resposta da Gemini (matérias) não é JSON válido: ${cleaned.slice(0, 300)}`);
-    written = [];
-  }
-
-  const writtenById = Object.fromEntries(written.map((w) => [w.id, w]));
-
-  return items.map((it) => {
-    const w = writtenById[it.id];
-    return {
-      ...it,
-      excerpt: w?.excerpt || it.summary,
-      body: Array.isArray(w?.body) && w.body.length ? w.body : [it.summary],
-      image: imageForSector(it.sector),
-    };
-  });
-}
-
-// Vários setores compartilham o feed genérico da Agência Brasil. Buscamos
-// cada URL de feed uma única vez (mesmo que apareça em vários setores) pra
-// não desperdiçar sub-requisições, que no plano free da Cloudflare são
-// limitadas a 50 por execução do Worker.
-async function fetchFeed(feedUrl) {
-  try {
-    const res = await fetch(feedUrl, {
-      headers: { "User-Agent": "HookeNewsBot/1.0" },
-      signal: AbortSignal.timeout(8000),
-    });
-    if (!res.ok) return [];
-    const xml = await res.text();
-    return parseFeed(xml);
-  } catch (err) {
-    console.log(`Falha ao buscar feed ${feedUrl}: ${err.message}`);
-    return [];
-  }
-}
-
-async function fetchAllSectorItems() {
-  const uniqueFeeds = [...new Set(Object.values(SOURCES).flat())];
-  const entries = await Promise.all(uniqueFeeds.map(async (url) => [url, await fetchFeed(url)]));
-  const itemsByFeed = Object.fromEntries(entries);
-
-  const itemsBySector = {};
-  for (const [sector, feeds] of Object.entries(SOURCES)) {
-    itemsBySector[sector] = feeds.flatMap((url) => itemsByFeed[url] || []);
-  }
-  return itemsBySector;
-}
-
-// ---------- Gemini curation ----------
-
-// O plano free da Gemini API limita a 5 requisições/minuto por modelo. Com 8
-// setores, chamar a IA uma vez por setor estoura essa cota (a maioria volta
-// 429 RESOURCE_EXHAUSTED). Por isso agrupamos todos os setores num único
-// prompt e fazemos UMA chamada só por execução da curadoria.
-async function curateAllSectors(env, itemsBySector) {
-  const bySector = {};
-  let candidateId = 0;
-  const candidateIndex = {};
-
-  for (const [sector, rawItems] of Object.entries(itemsBySector)) {
-    if (rawItems.length === 0) continue;
-    bySector[sector] = rawItems.slice(0, 20).map((it) => {
-      const id = candidateId++;
-      candidateIndex[id] = { sector, ...it };
-      return {
-        id,
-        title: it.title,
-        description: it.description,
-        link: it.link,
-        pubDate: it.pubDate,
-      };
-    });
-  }
-
-  if (Object.keys(bySector).length === 0) return [];
-
-  const prompt = `Você é um curador de notícias para setores industriais no Brasil.
-Abaixo está um objeto JSON com candidatos a notícia agrupados por setor. Para CADA setor,
-escolha até 2 notícias que sejam realmente relevantes, recentes e específicas daquele setor
-(descarte itens genéricos, duplicados ou fora do tema). Para cada uma escolhida, escreva um
-título curto e um resumo de 1-2 frases em português, SEM copiar frases inteiras da fonte
-(parafraseie).
-
-Responda APENAS com um JSON array, sem texto adicional, no formato:
-[{"sector": "<nome exato do setor>", "id": <id do candidato original>, "title": "...", "summary": "..."}]
-
-Candidatos por setor:
-${JSON.stringify(bySector)}`;
-
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${env.GEMINI_API_KEY}`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.3 },
-      }),
-      signal: AbortSignal.timeout(25000),
-    }
-  );
-
-  if (!res.ok) {
-    console.log(`Gemini falhou na curadoria: ${res.status} ${await res.text()}`);
-    return [];
-  }
-
-  const data = await res.json();
-  const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "[]";
-  const cleaned = text.replace(/```json|```/g, "").trim();
-
-  let picked;
-  try {
-    picked = JSON.parse(cleaned);
-  } catch {
-    console.log(`Resposta da Gemini não é JSON válido: ${cleaned.slice(0, 300)}`);
-    return [];
-  }
-
-  const bySectorCount = {};
-  return picked
-    .filter((p) => candidateIndex[p.id])
-    .filter((p) => {
-      const count = bySectorCount[p.sector] || 0;
-      if (count >= 2) return false;
-      bySectorCount[p.sector] = count + 1;
-      return true;
-    })
-    .map((p) => {
-      const source = candidateIndex[p.id];
-      return {
-        id: crypto.randomUUID(),
-        sector: source.sector,
-        title: p.title || source.title,
-        summary: p.summary || source.description,
-        link: source.link,
-        sourceDate: source.pubDate || null,
-        createdAt: new Date().toISOString(),
-      };
-    });
-}
-
-async function runDailyCuration(env) {
-  const itemsBySector = await fetchAllSectorItems();
-
-  const picked = await curateAllSectors(env, itemsBySector);
-  if (picked.length === 0) return;
-
-  // Se a redação da matéria completa falhar (ex: estourou o limite de
-  // sub-requisições do plano free), ainda assim salva os itens escolhidos
-  // com um resumo básico, em vez de perder a curadoria inteira.
-  let withFullArticles;
-  try {
-    withFullArticles = await writeFullArticles(env, picked);
-  } catch (err) {
-    console.log(`writeFullArticles falhou, salvando com resumo básico: ${err.message}`);
-    withFullArticles = picked.map((it) => ({
-      ...it,
-      excerpt: it.summary,
-      body: [it.summary],
-      image: imageForSector(it.sector),
-    }));
-  }
-
-  const pending = await getList(env, "pending");
-  await putList(env, "pending", [...pending, ...withFullArticles]);
 }
 
 // ---------- HTTP routes ----------
 
-async function handleRequest(request, env, ctx) {
+async function handleRequest(request, env) {
   const url = new URL(request.url);
 
   if (request.method === "OPTIONS") {
     return new Response(null, { headers: CORS_HEADERS });
   }
 
+  if (url.pathname.startsWith("/api/ingest/")) return handleIngest(request, env, url);
+  if (url.pathname.startsWith("/api/admin/")) return handleAdmin(request, env, url);
+
+  if (url.pathname.startsWith("/share/") && request.method === "GET") {
+    return handleShare(env, decodeURIComponent(url.pathname.slice("/share/".length)));
+  }
+
+  // Newsletter quinzenal. Guarda e-mail, idioma, data e o registro do
+  // consentimento (LGPD); o link de cancelamento usa um token por inscrito.
+  if (url.pathname === "/api/newsletter/subscribe" && request.method === "POST") {
+    const { email, consent, lang } = await request.json().catch(() => ({}));
+    const clean = String(email || "").trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(clean) || clean.length > 150) return json({ error: "E-mail inválido" }, 400);
+    if (consent !== true) return json({ error: "Consentimento obrigatório" }, 400);
+    await env.DB
+      .prepare("INSERT OR IGNORE INTO subscribers (email, token, lang, consent, created_at) VALUES (?, ?, ?, ?, ?)")
+      .bind(clean, crypto.randomUUID(), String(lang || "pt-BR").slice(0, 10),
+        "Aceito receber a newsletter da Hooke por e-mail. Posso cancelar a qualquer momento pelo link no próprio e-mail.", now())
+      .run();
+    return json({ ok: true });
+  }
+
+  if (url.pathname === "/api/newsletter/unsubscribe" && request.method === "GET") {
+    const token = url.searchParams.get("t") || "";
+    const { meta } = await env.DB.prepare("DELETE FROM subscribers WHERE token = ?").bind(token).run();
+    const removed = meta && meta.changes > 0;
+    const html = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Newsletter Hooke</title><style>body{font-family:system-ui,sans-serif;background:#f4f6f8;color:#1b2025;display:grid;place-items:center;min-height:100vh;margin:0}
+.box{background:#fff;padding:40px;border-radius:18px;max-width:440px;text-align:center;box-shadow:0 10px 40px rgba(20,23,26,.1)}a{color:#14171a}</style></head>
+<body><div class="box"><h1>Inscrição cancelada</h1><p>${removed ? "Você não vai mais receber a newsletter da Hooke." : "Este link já foi usado ou não é válido."}</p>
+<p><a href="${SITE_URL}/news.html">Voltar para as notícias</a></p></div></body></html>`;
+    return new Response(html, { headers: { "Content-Type": "text/html; charset=utf-8" } });
+  }
+
+  // Contador de leituras (bloco "Mais lidas", gráficos do painel e newsletter).
+  if (url.pathname === "/api/views" && request.method === "GET") {
+    return json(await viewsMap(env));
+  }
+
+  if (url.pathname.startsWith("/api/views/") && request.method === "POST") {
+    const id = decodeURIComponent(url.pathname.slice("/api/views/".length));
+    const found = await getItem(env, id);
+    if (!found || found.status !== "published") return json({ error: "Notícia não encontrada" }, 404);
+    await env.DB.batch([
+      env.DB.prepare("INSERT INTO views (id, count) VALUES (?, 1) ON CONFLICT(id) DO UPDATE SET count = count + 1").bind(id),
+      env.DB.prepare("INSERT INTO views_daily (day, id, count) VALUES (?, ?, 1) ON CONFLICT(day, id) DO UPDATE SET count = count + 1").bind(today(), id),
+    ]);
+    return json({ ok: true });
+  }
+
   if (url.pathname === "/api/news" && request.method === "GET") {
-    const published = await getList(env, "published");
-    return json(published);
+    return json(await listItems(env, "published"));
   }
 
   if (url.pathname.startsWith("/api/news/") && request.method === "GET") {
-    const id = url.pathname.slice("/api/news/".length);
-    const published = await getList(env, "published");
-    const item = published.find((it) => it.id === id);
-    if (!item) return json({ error: "Notícia não encontrada" }, 404);
-    return json(item);
-  }
-
-  if (url.pathname === "/api/admin/login" && request.method === "POST") {
-    const { password } = await request.json().catch(() => ({}));
-    if (password !== env.ADMIN_PASSWORD) {
-      return json({ error: "Senha inválida" }, 401);
-    }
-    const token = await makeToken(env);
-    return json({ token });
-  }
-
-  if (url.pathname === "/api/admin/pending" && request.method === "GET") {
-    if (!(await requireAuth(request, env))) return json({ error: "Não autorizado" }, 401);
-    const pending = await getList(env, "pending");
-    return json(pending);
-  }
-
-  if (url.pathname === "/api/admin/approve" && request.method === "POST") {
-    if (!(await requireAuth(request, env))) return json({ error: "Não autorizado" }, 401);
-    const { id } = await request.json().catch(() => ({}));
-    const pending = await getList(env, "pending");
-    const item = pending.find((it) => it.id === id);
-    if (!item) return json({ error: "Item não encontrado" }, 404);
-
-    const published = await getList(env, "published");
-    published.unshift({ ...item, publishedAt: new Date().toISOString() });
-    await putList(env, "published", published);
-    await putList(env, "pending", pending.filter((it) => it.id !== id));
-    return json({ ok: true });
-  }
-
-  if (url.pathname === "/api/admin/reject" && request.method === "POST") {
-    if (!(await requireAuth(request, env))) return json({ error: "Não autorizado" }, 401);
-    const { id } = await request.json().catch(() => ({}));
-    const pending = await getList(env, "pending");
-    await putList(env, "pending", pending.filter((it) => it.id !== id));
-    return json({ ok: true });
-  }
-
-  if (url.pathname === "/api/admin/published" && request.method === "GET") {
-    if (!(await requireAuth(request, env))) return json({ error: "Não autorizado" }, 401);
-    const published = await getList(env, "published");
-    return json(published);
-  }
-
-  if (url.pathname === "/api/admin/unpublish" && request.method === "POST") {
-    if (!(await requireAuth(request, env))) return json({ error: "Não autorizado" }, 401);
-    const { id } = await request.json().catch(() => ({}));
-    const published = await getList(env, "published");
-    await putList(env, "published", published.filter((it) => it.id !== id));
-    return json({ ok: true });
-  }
-
-  if (url.pathname === "/api/admin/edit" && request.method === "POST") {
-    if (!(await requireAuth(request, env))) return json({ error: "Não autorizado" }, 401);
-    const { list, id, title, summary, excerpt, body, sector, link, image } = await request.json().catch(() => ({}));
-    if (list !== "pending" && list !== "published") {
-      return json({ error: "list precisa ser 'pending' ou 'published'" }, 400);
-    }
-    const items = await getList(env, list);
-    const item = items.find((it) => it.id === id);
-    if (!item) return json({ error: "Item não encontrado" }, 404);
-
-    if (title !== undefined) item.title = title;
-    if (summary !== undefined) item.summary = summary;
-    if (excerpt !== undefined) item.excerpt = excerpt;
-    if (body !== undefined) item.body = Array.isArray(body) ? body : String(body).split("\n\n").filter(Boolean);
-    if (sector !== undefined) item.sector = sector;
-    if (link !== undefined) item.link = link;
-    if (image !== undefined) item.image = image;
-
-    await putList(env, list, items);
-    return json({ ok: true, item });
-  }
-
-  // Rota manual pra disparar a curadoria fora do horário do cron (testes)
-  if (url.pathname === "/api/admin/run-now" && request.method === "POST") {
-    if (!(await requireAuth(request, env))) return json({ error: "Não autorizado" }, 401);
-    ctx.waitUntil(runDailyCuration(env));
-    return json({ ok: true, started: true });
+    const found = await getItem(env, url.pathname.slice("/api/news/".length));
+    if (!found || found.status !== "published") return json({ error: "Notícia não encontrada" }, 404);
+    return json(found.item);
   }
 
   return json({ error: "Not found" }, 404);
 }
 
 export default {
-  fetch: (request, env, ctx) => handleRequest(request, env, ctx),
-  scheduled: async (event, env, ctx) => {
-    ctx.waitUntil(runDailyCuration(env));
-  },
+  fetch: (request, env) => handleRequest(request, env),
 };

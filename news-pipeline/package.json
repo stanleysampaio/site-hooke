@@ -1,0 +1,23 @@
+{
+  "name": "hooke-news-pipeline",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Gera as matérias do feed de notícias da Hooke (scraping + Gemini + imagem) e envia para o worker como pendentes.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "run": "node src/run.js",
+    "dry-run": "node src/run.js --dry-run",
+    "check-sources": "node src/run.js --check-sources"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1154.0",
+    "@mozilla/readability": "^0.6.0",
+    "dotenv": "^18.0.8",
+    "fast-xml-parser": "^5.11.2",
+    "jsdom": "^28.1.0",
+    "sharp": "^0.35.5"
+  }
+}

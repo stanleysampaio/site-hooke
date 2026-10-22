@@ -28,6 +28,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
     <link href="css/bootstrap.min.css" rel="stylesheet" />
     <link href="css/style.css" rel="stylesheet" />
+    <script src="js/i18n-dict.js"></script>
+    <script src="js/i18n.js"></script>
   </head>
 
   <body class="m-body">
@@ -44,7 +46,7 @@
         <div class="m-hero-grid">
           <div>
             <p class="m-eyebrow on-dark"><i class="fa fa-industry"></i> Engenharia industrial de alta performance</p>
-            <h1>Segurança, eficiência e <span>alta performance</span> para a sua indústria.</h1>
+            <h1 data-i18n="home.hero-title">Segurança, eficiência e <span>alta performance</span> para a sua indústria.</h1>
             <p class="lead">
               Engenharia, manutenção e montagem industrial para mineração, cimento, petróleo e gás,
               fertilizantes, metalurgia, refrigeração, alimentícia e siderurgia — em todo o Brasil.
@@ -81,28 +83,28 @@
                 <h3 class="m-news-title">Hooke expande operações no setor de mineração</h3>
                 <p class="m-news-date"><i class="fa fa-calendar-alt me-1"></i>15 de novembro de 2024</p>
                 <p class="m-news-excerpt">Novas parcerias estratégicas reforçam o compromisso com eficiência e segurança operacional.</p>
-                <span class="m-news-link m-disabled-link" tabindex="0">Leia mais <i class="fa fa-arrow-right"></i></span>
+                <a href="news.html" class="m-news-link">Leia mais <i class="fa fa-arrow-right"></i></a>
               </div>
               <div class="m-news-slide">
                 <span class="m-news-tag">Petróleo &amp; Gás</span>
                 <h3 class="m-news-title">Automação em planta de gás concluída com êxito</h3>
                 <p class="m-news-date"><i class="fa fa-calendar-alt me-1"></i>28 de outubro de 2024</p>
                 <p class="m-news-excerpt">Projeto de automação industrial entregue em importante planta de processamento no Nordeste.</p>
-                <span class="m-news-link m-disabled-link" tabindex="0">Leia mais <i class="fa fa-arrow-right"></i></span>
+                <a href="news.html" class="m-news-link">Leia mais <i class="fa fa-arrow-right"></i></a>
               </div>
               <div class="m-news-slide">
                 <span class="m-news-tag">Segurança</span>
                 <h3 class="m-news-title">Hooke conquista certificação de segurança NR-12</h3>
                 <p class="m-news-date"><i class="fa fa-calendar-alt me-1"></i>05 de setembro de 2024</p>
                 <p class="m-news-excerpt">Mais um marco para a Hooke, fortalecendo sua posição como referência em segurança industrial.</p>
-                <span class="m-news-link m-disabled-link" tabindex="0">Leia mais <i class="fa fa-arrow-right"></i></span>
+                <a href="news.html" class="m-news-link">Leia mais <i class="fa fa-arrow-right"></i></a>
               </div>
               <div class="m-news-slide">
                 <span class="m-news-tag">Inovação</span>
                 <h3 class="m-news-title">Manutenção preditiva em destaque em evento nacional</h3>
                 <p class="m-news-date"><i class="fa fa-calendar-alt me-1"></i>20 de agosto de 2024</p>
                 <p class="m-news-excerpt">A Hooke apresentou soluções inovadoras no maior evento de engenharia industrial do país.</p>
-                <span class="m-news-link m-disabled-link" tabindex="0">Leia mais <i class="fa fa-arrow-right"></i></span>
+                <a href="news.html" class="m-news-link">Leia mais <i class="fa fa-arrow-right"></i></a>
               </div>
 
               <div class="m-news-dots" id="mNewsDots"></div>
@@ -294,8 +296,9 @@
             <a class="m-flink" href="about.html">Quem somos</a>
             <a class="m-flink" href="service.html">Soluções</a>
             <a class="m-flink" href="location.html">Onde estamos</a>
-            <span class="m-flink m-disabled-link" tabindex="0">Notícias</span>
+            <a class="m-flink" href="news.html">Notícias</a>
             <a class="m-flink" href="contact.html">Contato</a>
+            <a class="m-flink" href="trabalhe-conosco.html">Trabalhe Conosco</a>
           </div>
           <div class="col-lg-3 col-md-6">
             <h5>Novidades</h5>
@@ -314,5 +317,7 @@
     </footer>
 
     <script src="js/main.js"></script>
+    <script src="js/news-common.js"></script>
+    <script src="js/news-mini.js"></script>
   </body>
 </html>

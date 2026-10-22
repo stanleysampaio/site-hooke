@@ -12,10 +12,6 @@
     <title>Hooke — Notícias</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <meta name="description" content="Acompanhe as novidades, projetos e conquistas da Hooke Engenharia." />
-    <!-- Página de notícias temporariamente desativada (em construção) -->
-    <meta name="robots" content="noindex, nofollow" />
-    <meta http-equiv="refresh" content="0; url=index.html" />
-    <script>window.location.replace('index.html');</script>
     <link href="img/favicon.png" rel="icon" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -24,6 +20,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
     <link href="css/bootstrap.min.css" rel="stylesheet" />
     <link href="css/style.css" rel="stylesheet" />
+    <script src="js/i18n-dict.js"></script>
+    <script src="js/i18n.js"></script>
   </head>
 
   <body class="m-body">
@@ -34,21 +32,76 @@
     <div id="site-nav"></div>
     <script src="js/nav.js"></script>
 
-    <div class="m-page-header">
+    <!-- Cabeçalho da editoria + menu de editorias (montado por js/news-feed.js) -->
+    <section class="m-portal-top">
       <div class="container">
-        <h1>Notícias</h1>
-        <p>Acompanhe as novidades, projetos e conquistas da Hooke Engenharia.</p>
+        <div class="m-portal-strip">
+          <span class="m-portal-date" id="newsToday" data-i18n-skip></span>
+          <span class="m-portal-brand">Hooke Soluções em Engenharia</span>
+          <span class="m-portal-clock"><i class="fa fa-clock"></i><time id="newsClock" data-i18n-skip></time><small>Horário de Brasília</small></span>
+        </div>
+        <div class="m-portal-masthead">
+          <h1>Notícias</h1>
+          <p>Indústria, engenharia e infraestrutura na Bahia, em Minas Gerais e no Brasil.</p>
+        </div>
+        <nav class="m-portal-tabs" id="newsFilters" aria-label="Editorias"></nav>
       </div>
-    </div>
+    </section>
 
-    <section class="m-section">
+    <section class="m-news-page">
       <div class="container">
-        <!-- Notícias por setor (curadas por IA a partir de fontes reais, aprovadas por um admin) -->
-        <div class="row g-4" id="news-feed">
-          <div class="col-12 text-center m-text-muted">Carregando notícias...</div>
+        <!-- Manchete (troca entre as 3 principais) + 2 submanchetes -->
+        <div class="m-lead" id="newsLead" hidden>
+          <div class="m-lead-main" id="newsHero" aria-label="Destaques">
+            <div class="m-lead-track" id="newsHeroTrack"></div>
+            <div class="m-lead-dots" id="newsHeroDots"></div>
+          </div>
+          <div class="m-lead-side" id="newsLeadSide"></div>
+        </div>
+
+        <div class="m-news-layout">
+          <div>
+            <h2 class="m-block-title" id="newsFeedTitle">Últimas notícias</h2>
+            <div class="m-feed" id="news-feed">
+              <p class="m-text-muted">Carregando notícias...</p>
+            </div>
+            <div class="m-feed-more">
+              <button class="m-btn m-btn-outline" type="button" id="newsMore" hidden>Carregar mais</button>
+            </div>
+            <div id="newsSections"></div>
+          </div>
+
+          <aside class="m-news-aside">
+            <div class="m-aside-box">
+              <h2 class="m-block-title">Mais lidas</h2>
+              <ol class="m-popular" id="newsPopular"></ol>
+            </div>
+
+            <div class="m-aside-box m-newsletter-box" id="newsletter">
+              <h5><i class="fa fa-envelope-open-text me-2"></i>Newsletter Hooke</h5>
+              <p>As 3 notícias mais lidas da quinzena, direto no seu e-mail. Grátis.</p>
+              <form id="newsletterForm" novalidate>
+                <input class="m-form-control" type="email" name="email" placeholder="Seu e-mail" aria-label="Seu e-mail" autocomplete="email" maxlength="150" required />
+                <div class="m-hp" aria-hidden="true"><input type="text" name="site" tabindex="-1" autocomplete="off" /></div>
+                <label class="m-check m-consent">
+                  <input type="checkbox" name="consent" required />
+                  <span>Aceito receber a newsletter da Hooke por e-mail. Posso cancelar a qualquer momento pelo link no próprio e-mail.</span>
+                </label>
+                <button class="m-btn m-btn-yellow m-btn-block" type="submit"><i class="fa fa-paper-plane"></i> Assinar</button>
+                <p class="m-newsletter-status" role="status" aria-live="polite"></p>
+              </form>
+            </div>
+
+            <a class="m-aside-box m-aside-cta" href="contact.html">
+              <span class="m-aside-cta-kicker">Hooke Soluções em Engenharia</span>
+              <strong>Precisa de engenharia, manutenção ou automação para a sua planta?</strong>
+              <span class="m-aside-cta-link">Fale com a Hooke <i class="fa fa-arrow-right"></i></span>
+            </a>
+          </aside>
         </div>
       </div>
     </section>
+    <script src="js/news-common.js"></script>
     <script src="js/news-feed.js"></script>
 
     <footer class="m-footer">
@@ -79,8 +132,9 @@
             <a class="m-flink" href="about.html">Quem somos</a>
             <a class="m-flink" href="service.html">Soluções</a>
             <a class="m-flink" href="location.html">Onde estamos</a>
-            <span class="m-flink m-disabled-link" tabindex="0">Notícias</span>
+            <a class="m-flink" href="news.html">Notícias</a>
             <a class="m-flink" href="contact.html">Contato</a>
+            <a class="m-flink" href="trabalhe-conosco.html">Trabalhe Conosco</a>
           </div>
           <div class="col-lg-3 col-md-6">
             <h5>Novidades</h5>

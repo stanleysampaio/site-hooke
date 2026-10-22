@@ -2,11 +2,16 @@ name = "hooke-news"
 main = "src/index.js"
 compatibility_date = "2024-11-01"
 
-# Roda todo dia às 09:00 UTC (06:00 horário de Brasília)
-[triggers]
-crons = ["0 9 * * *"]
+# Sem cron: a geração das matérias roda na EC2 (../news-pipeline).
+# Secrets: ADMIN_PASSWORD (painel) e INGEST_TOKEN (pipeline) — `wrangler secret put <NOME>`.
 
-# Depois de rodar `wrangler kv namespace create NEWS_KV`, cole o "id" gerado aqui.
+# Notícias, leituras e inscritos da newsletter (schema em schema.sql).
+[[d1_databases]]
+binding = "DB"
+database_name = "hooke-news"
+database_id = "281acc54-e237-4731-b8df-cef50484cab2"
+
+# Só o pedido "gerar agora" e o resumo da última execução (e os dados antigos, antes da migração).
 [[kv_namespaces]]
 binding = "NEWS_KV"
 id = "644af31eb80a4920bb1da76762032474"

@@ -2,255 +2,1063 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
-  <title>Hooke - Admin de Notícias</title>
+  <title>Painel de Notícias — Hooke</title>
   <meta name="robots" content="noindex, nofollow" />
-  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-  <link href="../css/bootstrap.min.css" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="../img/favicon.png" rel="icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet" />
   <style>
-    body { background: #f4f4f4; }
-    .news-item { border-left: 4px solid #ffc107; }
+    :root {
+      --ink: #14171a; --ink-2: #1b2025; --ink-3: #2a3138;
+      --yellow: #ffcf34; --yellow-strong: #f5b800;
+      --bg: #f3f5f7; --surface: #ffffff; --border: #e3e6ea;
+      --text: #1b2025; --muted: #5b6470; --faint: #8a929c;
+      --ok: #15803d; --ok-bg: #e8f5ec; --warn: #a16207; --warn-bg: #fdf4dc;
+      --danger: #b42318; --danger-bg: #fdecea; --info: #0369a1; --info-bg: #e5f2fa;
+      --radius: 12px; --shadow: 0 1px 2px rgba(20,23,26,.06), 0 4px 16px rgba(20,23,26,.05);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; }
+    body { font-family: "Inter", system-ui, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; -webkit-font-smoothing: antialiased; }
+    h1, h2, h3, h4 { font-family: "Manrope", sans-serif; font-weight: 800; letter-spacing: -0.01em; margin: 0; }
+    a { color: var(--ink); }
+    button, input, select, textarea { font: inherit; color: inherit; }
+    [hidden] { display: none !important; }
+    .muted { color: var(--muted); }
+    .small { font-size: 12.5px; }
+
+    /* ===== Botões e campos ===== */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 9px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); font-weight: 600; cursor: pointer; text-decoration: none; transition: background .15s, border-color .15s, color .15s; white-space: nowrap; }
+    .btn:hover { border-color: var(--ink); }
+    .btn:focus-visible, .field:focus-visible, .nav a:focus-visible { outline: 2px solid var(--yellow-strong); outline-offset: 2px; }
+    .btn:disabled { opacity: .55; cursor: not-allowed; }
+    .btn-primary { background: var(--ink); border-color: var(--ink); color: #fff; }
+    .btn-primary:hover { background: #000; }
+    .btn-yellow { background: var(--yellow); border-color: var(--yellow); color: var(--ink); }
+    .btn-yellow:hover { background: var(--yellow-strong); border-color: var(--yellow-strong); }
+    .btn-success { background: var(--ok); border-color: var(--ok); color: #fff; }
+    .btn-danger-ghost { color: var(--danger); }
+    .btn-danger-ghost:hover { border-color: var(--danger); background: var(--danger-bg); }
+    .btn-sm { padding: 6px 10px; font-size: 12.5px; border-radius: 7px; }
+    .field { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: #fff; }
+    .field:focus { border-color: var(--ink); outline: none; }
+    textarea.field { resize: vertical; min-height: 90px; line-height: 1.5; }
+    .label { display: block; font-weight: 600; font-size: 12.5px; margin: 0 0 6px; }
+    .form-row { margin-bottom: 14px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    /* ===== Selos ===== */
+    .badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 600; padding: 3px 8px; border-radius: 999px; background: var(--bg); color: var(--muted); white-space: nowrap; }
+    .badge.ok { background: var(--ok-bg); color: var(--ok); }
+    .badge.warn { background: var(--warn-bg); color: var(--warn); }
+    .badge.danger { background: var(--danger-bg); color: var(--danger); }
+    .badge.info { background: var(--info-bg); color: var(--info); }
+    .badge.dark { background: var(--ink); color: var(--yellow); }
+
+    /* ===== Login / troca de senha ===== */
+    .auth { min-height: 100%; display: grid; place-items: center; padding: 24px; background: radial-gradient(900px 500px at 80% -10%, rgba(255,207,52,.18), transparent 60%), var(--ink); }
+    .auth-card { width: 100%; max-width: 400px; background: var(--surface); border-radius: 16px; padding: 32px; box-shadow: 0 20px 60px rgba(0,0,0,.35); }
+    .auth-card img { height: 38px; display: block; margin-bottom: 18px; background: var(--ink); padding: 8px 12px; border-radius: 8px; }
+    .auth-card h1 { font-size: 22px; margin-bottom: 6px; }
+    .auth-card p { margin: 0 0 20px; }
+    .alert { padding: 10px 12px; border-radius: 8px; font-size: 13px; margin-bottom: 14px; }
+    .alert.error { background: var(--danger-bg); color: var(--danger); }
+    .alert.success { background: var(--ok-bg); color: var(--ok); }
+    .alert.info { background: var(--info-bg); color: var(--info); }
+
+    /* ===== Layout ===== */
+    .app { display: grid; grid-template-columns: 248px minmax(0, 1fr); min-height: 100%; }
+    .sidebar { background: var(--ink); color: #fff; padding: 20px 14px; display: flex; flex-direction: column; gap: 4px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .brand { display: flex; align-items: center; gap: 10px; padding: 4px 10px 20px; }
+    .brand img { height: 30px; }
+    .brand span { font-family: "Manrope", sans-serif; font-weight: 800; font-size: 13px; color: rgba(255,255,255,.7); line-height: 1.2; }
+    .nav { display: flex; flex-direction: column; gap: 2px; }
+    .nav-title { font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.4); padding: 14px 12px 6px; }
+    .nav a { display: flex; align-items: center; gap: 11px; padding: 10px 12px; border-radius: 8px; color: rgba(255,255,255,.75); text-decoration: none; font-weight: 600; }
+    .nav a i { width: 16px; text-align: center; color: rgba(255,255,255,.45); }
+    .nav a:hover { background: rgba(255,255,255,.06); color: #fff; }
+    .nav a.active { background: var(--yellow); color: var(--ink); }
+    .nav a.active i { color: var(--ink); }
+    .nav .count { margin-left: auto; background: rgba(255,255,255,.12); color: #fff; font-size: 11px; padding: 1px 8px; border-radius: 999px; }
+    .nav a.active .count { background: var(--ink); color: var(--yellow); }
+    .sidebar-foot { margin-top: auto; padding: 14px 10px 0; border-top: 1px solid rgba(255,255,255,.08); font-size: 12px; color: rgba(255,255,255,.5); }
+    .sidebar-foot a { color: rgba(255,255,255,.7); }
+    .main { min-width: 0; }
+    .topbar { display: flex; align-items: center; gap: 12px; padding: 14px 28px; background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 5; }
+    .topbar h2 { font-size: 18px; margin-right: auto; }
+    .menu-btn { display: none; }
+    .user-chip { display: flex; align-items: center; gap: 10px; padding-left: 12px; border-left: 1px solid var(--border); }
+    .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--ink); color: var(--yellow); display: grid; place-items: center; font-weight: 800; font-family: "Manrope", sans-serif; }
+    .user-chip strong { display: block; font-size: 13px; line-height: 1.2; }
+    .user-chip span { font-size: 11.5px; color: var(--muted); }
+    .content { padding: 24px 28px 60px; max-width: 1320px; }
+    @media (max-width: 960px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar { position: fixed; inset: 0 auto 0 0; width: 260px; z-index: 20; transform: translateX(-100%); transition: transform .25s; }
+      .sidebar.open { transform: none; box-shadow: 0 0 0 100vmax rgba(0,0,0,.45); }
+      .menu-btn { display: inline-flex; }
+      .topbar { padding: 12px 16px; }
+      .content { padding: 18px 16px 50px; }
+      .user-chip div { display: none; }
+    }
+
+    /* ===== Cartões ===== */
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); }
+    .card-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 16px 18px 0; }
+    .card-head h3 { font-size: 15px; }
+    .card-body { padding: 16px 18px 18px; }
+    .toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
+    .toolbar .spacer { flex: 1; }
+    .seg { display: inline-flex; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 3px; }
+    .seg button { border: 0; background: none; padding: 6px 12px; border-radius: 6px; font-weight: 600; color: var(--muted); cursor: pointer; }
+    .seg button.active { background: var(--ink); color: #fff; }
+
+    /* ===== Indicadores ===== */
+    .kpis { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; margin-bottom: 18px; }
+    @media (max-width: 1200px) { .kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    @media (max-width: 640px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .kpi { padding: 16px 18px; }
+    .kpi-label { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12.5px; font-weight: 600; }
+    .kpi-label i { width: 26px; height: 26px; border-radius: 7px; display: grid; place-items: center; background: var(--bg); color: var(--ink); font-size: 12px; }
+    .kpi-value { font-family: "Manrope", sans-serif; font-weight: 800; font-size: 28px; margin: 10px 0 2px; font-variant-numeric: tabular-nums; }
+    .kpi-sub { font-size: 12px; color: var(--muted); }
+    .dash-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 14px; margin-bottom: 14px; }
+    .dash-grid-even { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+    @media (max-width: 1100px) { .dash-grid, .dash-grid-even { grid-template-columns: 1fr; } }
+
+    /* ===== Gráficos (SVG próprio, série única) ===== */
+    .chart { position: relative; }
+    .chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+    .chart .grid line { stroke: var(--border); stroke-width: 1; }
+    .chart .axis text, .chart text.axis { fill: var(--faint); font-size: 10.5px; font-family: "Inter", sans-serif; }
+    .chart .bar { fill: var(--ink-3); transition: fill .12s; }
+    .chart .bar.hover { fill: var(--yellow-strong); }
+    .chart .hit { fill: transparent; }
+    .tooltip { position: absolute; pointer-events: none; background: var(--ink); color: #fff; padding: 7px 10px; border-radius: 7px; font-size: 12px; white-space: nowrap; transform: translate(-50%, calc(-100% - 10px)); box-shadow: var(--shadow); z-index: 3; }
+    .tooltip strong { color: var(--yellow); font-variant-numeric: tabular-nums; }
+    .chart-empty { padding: 30px 0; text-align: center; color: var(--muted); }
+    details.table-view { margin-top: 10px; }
+    details.table-view summary { cursor: pointer; color: var(--muted); font-size: 12px; }
+    .hbar { display: grid; grid-template-columns: 150px 1fr 70px; align-items: center; gap: 10px; padding: 6px 0; }
+    .hbar-label { font-weight: 600; font-size: 12.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .hbar-track { height: 10px; background: var(--bg); border-radius: 0 4px 4px 0; }
+    .hbar-fill { height: 100%; background: var(--ink-3); border-radius: 0 4px 4px 0; min-width: 2px; }
+    .hbar-value { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+    .hbar-sub { color: var(--faint); font-weight: 400; font-size: 11px; }
+    tr.muted td { color: var(--faint); }
+    @media (max-width: 760px) { .theme-add { grid-template-columns: 1fr !important; } }
+
+    /* ===== Tabelas ===== */
+    table.data { width: 100%; border-collapse: collapse; }
+    table.data th { text-align: left; font-size: 11.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); font-weight: 700; padding: 10px 12px; border-bottom: 1px solid var(--border); background: #fafbfc; }
+    table.data td { padding: 11px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    table.data tr:last-child td { border-bottom: 0; }
+    table.data td.num, table.data th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .table-wrap { overflow-x: auto; }
+    .rank { width: 26px; height: 26px; border-radius: 7px; background: var(--bg); display: inline-grid; place-items: center; font-weight: 800; font-family: "Manrope", sans-serif; }
+
+    /* ===== Notícias ===== */
+    .news { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 18px; padding: 16px; margin-bottom: 14px; }
+    @media (max-width: 760px) { .news { grid-template-columns: 1fr; } }
+    .news-thumb { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 8px; background: #dfe3e8; }
+    .news h4 { font-size: 16px; line-height: 1.35; margin: 8px 0 6px; }
+    .news-meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+    .news-excerpt { color: var(--muted); margin: 0 0 10px; line-height: 1.5; }
+    .news-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .news details { margin-top: 6px; }
+    .news details summary { cursor: pointer; font-weight: 600; font-size: 12.5px; color: var(--info); }
+    .news .body-preview { margin-top: 10px; line-height: 1.6; max-width: 760px; }
+    .news .body-preview h5 { font-family: "Manrope", sans-serif; font-size: 14px; margin: 14px 0 4px; }
+    .news .body-preview p { margin: 0 0 10px; }
+    .news .sources { margin: 8px 0 0; padding-left: 18px; color: var(--muted); }
+    .news-edit { grid-column: 1 / -1; border-top: 1px solid var(--border); padding-top: 14px; }
+    .empty { text-align: center; padding: 50px 20px; color: var(--muted); }
+    .empty i { font-size: 28px; color: var(--faint); display: block; margin-bottom: 10px; }
+
+    .rules-editor { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-size: 13px; min-height: 60vh; line-height: 1.55; }
+    .toast { position: fixed; right: 20px; bottom: 20px; background: var(--ink); color: #fff; padding: 12px 16px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,.25); z-index: 50; max-width: 380px; }
+    .toast.error { background: var(--danger); }
+    .modal-bg { position: fixed; inset: 0; background: rgba(20,23,26,.5); display: grid; place-items: center; z-index: 40; padding: 20px; }
+    .modal { background: var(--surface); border-radius: 14px; width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; padding: 22px; box-shadow: 0 20px 60px rgba(0,0,0,.3); }
+    .modal h3 { font-size: 17px; margin-bottom: 14px; }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
   </style>
 </head>
 <body>
-  <div class="container py-5" style="max-width: 900px;">
-    <h2 class="mb-4"><i class="fa fa-newspaper me-2"></i>Admin de Notícias — Hooke</h2>
-
-    <!-- Login -->
-    <div id="login-box" class="card p-4 mb-4">
-      <label class="form-label" for="password">Senha de admin</label>
-      <div class="input-group">
-        <input type="password" id="password" class="form-control" placeholder="Senha">
-        <button class="btn btn-primary" id="login-btn">Entrar</button>
+  <!-- ===== Login ===== -->
+  <section class="auth" id="loginView" hidden>
+    <form class="auth-card" id="loginForm" novalidate>
+      <img src="../img/logo_amarela.png" alt="Hooke" />
+      <h1>Painel de Notícias</h1>
+      <p class="muted">Entre com o seu usuário para gerenciar as notícias do site.</p>
+      <div class="alert error" id="loginError" hidden></div>
+      <div class="form-row">
+        <label class="label" for="loginUser">Usuário</label>
+        <input class="field" id="loginUser" autocomplete="username" autocapitalize="none" spellcheck="false" required />
       </div>
-      <p id="login-error" class="text-danger small mt-2 mb-0" style="display:none;">Senha inválida.</p>
-    </div>
-
-    <!-- Painel (só aparece depois do login) -->
-    <div id="panel" style="display:none;">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="mb-0">Notícias pendentes de aprovação</h5>
-        <button class="btn btn-outline-secondary btn-sm" id="run-now-btn">
-          <i class="fa fa-sync me-1"></i>Rodar curadoria agora
-        </button>
+      <div class="form-row">
+        <label class="label" for="loginPass">Senha</label>
+        <input class="field" id="loginPass" type="password" autocomplete="current-password" required />
       </div>
-      <p class="small text-muted">Depois de aprovar, a notícia pode levar até ~1 minuto para aparecer no site (o banco de dados do worker leva um tempo pra propagar).</p>
-      <div id="pending-list"></div>
+      <button class="btn btn-primary" style="width:100%" type="submit" id="loginBtn"><i class="fa fa-sign-in-alt"></i> Entrar</button>
+      <p class="muted small" style="margin:16px 0 0">Após 5 tentativas erradas, o usuário fica bloqueado por 15 minutos.</p>
+    </form>
+  </section>
 
-      <h5 class="mt-5 mb-3">Notícias publicadas</h5>
-      <div id="published-list"></div>
+  <!-- ===== Troca obrigatória de senha ===== -->
+  <section class="auth" id="changeView" hidden>
+    <form class="auth-card" id="changeForm" novalidate>
+      <img src="../img/logo_amarela.png" alt="Hooke" />
+      <h1>Defina a sua senha</h1>
+      <p class="muted">Você entrou com uma senha provisória. Crie a sua senha para continuar.</p>
+      <div class="alert error" id="changeError" hidden></div>
+      <div class="form-row"><label class="label" for="chCurrent">Senha provisória</label><input class="field" id="chCurrent" type="password" autocomplete="current-password" /></div>
+      <div class="form-row"><label class="label" for="chNext">Nova senha</label><input class="field" id="chNext" type="password" autocomplete="new-password" /></div>
+      <div class="form-row"><label class="label" for="chConfirm">Repita a nova senha</label><input class="field" id="chConfirm" type="password" autocomplete="new-password" /></div>
+      <p class="muted small">Mínimo de 10 caracteres, com letras e números, sem conter o nome de usuário.</p>
+      <button class="btn btn-primary" style="width:100%" type="submit"><i class="fa fa-key"></i> Salvar e continuar</button>
+    </form>
+  </section>
+
+  <!-- ===== Painel ===== -->
+  <div class="app" id="appView" hidden>
+    <aside class="sidebar" id="sidebar">
+      <div class="brand"><img src="../img/logo_amarela.png" alt="Hooke" /><span>Painel de<br>Notícias</span></div>
+      <nav class="nav" id="nav">
+        <a href="#overview" data-view="overview"><i class="fa fa-chart-line"></i> Visão geral</a>
+        <div class="nav-title">Conteúdo</div>
+        <a href="#pending" data-view="pending"><i class="fa fa-inbox"></i> Pendentes <span class="count" id="countPending">0</span></a>
+        <a href="#published" data-view="published"><i class="fa fa-newspaper"></i> Publicadas <span class="count" id="countPublished">0</span></a>
+        <a href="#rules" data-view="rules"><i class="fa fa-book"></i> Regras editoriais</a>
+        <a href="#themes" data-view="themes"><i class="fa fa-tags"></i> Temas e fontes</a>
+        <div class="nav-title" data-admin>Administração</div>
+        <a href="#newsletter" data-view="newsletter" data-admin><i class="fa fa-envelope-open-text"></i> Newsletter</a>
+        <a href="#users" data-view="users" data-admin><i class="fa fa-users"></i> Usuários</a>
+        <a href="#audit" data-view="audit" data-admin><i class="fa fa-history"></i> Histórico</a>
+        <div class="nav-title">Conta</div>
+        <a href="#account" data-view="account"><i class="fa fa-user-cog"></i> Minha conta</a>
+      </nav>
+      <div class="sidebar-foot">
+        <a href="../news.html" target="_blank" rel="noopener"><i class="fa fa-external-link-alt"></i> Ver página de notícias</a>
+      </div>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <button class="btn btn-sm menu-btn" id="menuBtn" type="button" aria-label="Abrir menu"><i class="fa fa-bars"></i></button>
+        <h2 id="viewTitle">Visão geral</h2>
+        <button class="btn btn-yellow btn-sm" id="runNowBtn" type="button"><i class="fa fa-sync"></i> Gerar notícias agora</button>
+        <div class="user-chip">
+          <span class="avatar" id="userAvatar">H</span>
+          <div><strong id="userName"></strong><span id="userRole"></span></div>
+          <button class="btn btn-sm" id="logoutBtn" type="button" title="Sair" aria-label="Sair"><i class="fa fa-sign-out-alt"></i></button>
+        </div>
+      </header>
+      <main class="content" id="content"></main>
     </div>
   </div>
 
   <script>
-    // Troque pela URL real do worker depois do deploy (mesma usada em js/news-feed.js)
-    var API_BASE = "https://hooke-news.yelnalts1993.workers.dev";
-    var token = sessionStorage.getItem("hooke_admin_token");
+  (function () {
+    "use strict";
+    var API = "https://hooke-news.yelnalts1993.workers.dev/api/admin";
+    var SITE = "https://www.hookengenharia.com.br";
+    var token = null;
+    try { token = sessionStorage.getItem("hooke_admin_token"); } catch (e) { /* sem storage */ }
+    var me = null;
 
-    var loginBox = document.getElementById("login-box");
-    var panel = document.getElementById("panel");
-    var pendingList = document.getElementById("pending-list");
-    var publishedList = document.getElementById("published-list");
-    var loginError = document.getElementById("login-error");
-
-    function escapeHtml(str) {
-      return String(str || "").replace(/[&<>"']/g, function (c) {
+    var $ = function (id) { return document.getElementById(id); };
+    function esc(s) {
+      return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
         return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
       });
     }
-
-    function showPanel() {
-      loginBox.style.display = "none";
-      panel.style.display = "block";
-      loadPending();
-      loadPublished();
+    function fmtDate(iso, time) {
+      if (!iso) return "—";
+      var o = { day: "2-digit", month: "2-digit", year: "numeric" };
+      if (time) { o.hour = "2-digit"; o.minute = "2-digit"; }
+      return new Date(iso).toLocaleString("pt-BR", o);
+    }
+    function fmtNum(n) { return Number(n || 0).toLocaleString("pt-BR"); }
+    function imageSrc(p) {
+      if (!p) return "../img/atuacao.jpg";
+      if (/^https?:\/\//.test(p)) return p;
+      if (/^\/?img\/noticias\//.test(p)) return SITE + "/" + p.replace(/^\//, "");
+      return "../" + p.replace(/^\//, "");
+    }
+    // Prévia do texto com a formatação da matéria: "## " intertítulo, **negrito**, [[link|id]].
+    function paragraph(p) {
+      p = String(p);
+      if (p.indexOf("## ") === 0) return "<h5>" + esc(p.slice(3)) + "</h5>";
+      return "<p>" + esc(p).replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+        .replace(/\[\[([^|\]]+)\|([^\]]*)\]\]/g, '<a href="../noticia.html?id=$2" target="_blank">$1</a>') + "</p>";
     }
 
-    function loadPending() {
-      pendingList.innerHTML = '<p class="text-muted">Carregando...</p>';
-      fetch(API_BASE + "/api/admin/pending", {
-        headers: { Authorization: "Bearer " + token },
-      })
-        .then(function (res) {
-          if (res.status === 401) { logout(); throw new Error("sessão expirada"); }
-          return res.json();
-        })
-        .then(function (items) { renderList(pendingList, items, "pending"); })
-        .catch(function () {
-          pendingList.innerHTML = '<p class="text-danger">Não foi possível carregar os pendentes.</p>';
+    function toast(msg, isError) {
+      var t = document.createElement("div");
+      t.className = "toast" + (isError ? " error" : "");
+      t.setAttribute("role", "status");
+      t.textContent = msg;
+      document.body.appendChild(t);
+      setTimeout(function () { t.remove(); }, 3800);
+    }
+
+    function api(path, body) {
+      return fetch(API + path, {
+        method: body ? "POST" : "GET",
+        headers: Object.assign({ "Content-Type": "application/json" }, token ? { Authorization: "Bearer " + token } : {}),
+        body: body ? JSON.stringify(body) : undefined,
+      }).then(function (res) {
+        return res.json().catch(function () { return {}; }).then(function (data) {
+          if (res.status === 401 && path !== "/login" && path !== "/password") { logout(true); throw new Error(data.error || "Sessão expirada."); }
+          if (res.status === 403 && data.error && /provisória/.test(data.error)) { showChange(); throw new Error(data.error); }
+          if (!res.ok) throw new Error(data.error || "Erro " + res.status);
+          return data;
         });
+      });
     }
 
-    function loadPublished() {
-      publishedList.innerHTML = '<p class="text-muted">Carregando...</p>';
-      fetch(API_BASE + "/api/admin/published", {
-        headers: { Authorization: "Bearer " + token },
-      })
-        .then(function (res) {
-          if (res.status === 401) { logout(); throw new Error("sessão expirada"); }
-          return res.json();
+    function setToken(t) {
+      token = t;
+      try { if (t) sessionStorage.setItem("hooke_admin_token", t); else sessionStorage.removeItem("hooke_admin_token"); } catch (e) { /* sem storage */ }
+    }
+
+    // ===================== Autenticação =====================
+    function showOnly(id) {
+      ["loginView", "changeView", "appView"].forEach(function (v) { $(v).hidden = v !== id; });
+    }
+
+    function showLogin(message) {
+      showOnly("loginView");
+      $("loginError").hidden = !message;
+      $("loginError").textContent = message || "";
+      setTimeout(function () { $("loginUser").focus(); }, 50);
+    }
+
+    function showChange() {
+      showOnly("changeView");
+      $("changeError").hidden = true;
+      setTimeout(function () { $("chCurrent").focus(); }, 50);
+    }
+
+    function logout(expired) {
+      setToken(null);
+      me = null;
+      showLogin(expired ? "Sua sessão expirou. Entre de novo." : "");
+    }
+
+    $("loginForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var btn = $("loginBtn");
+      btn.disabled = true;
+      $("loginError").hidden = true;
+      api("/login", { username: $("loginUser").value.trim(), password: $("loginPass").value })
+        .then(function (data) {
+          setToken(data.token);
+          me = data.user;
+          $("loginPass").value = "";
+          if (me.mustChange) showChange(); else startApp();
         })
-        .then(function (items) { renderList(publishedList, items, "published"); })
-        .catch(function () {
-          publishedList.innerHTML = '<p class="text-danger">Não foi possível carregar as publicadas.</p>';
-        });
+        .catch(function (err) { $("loginError").textContent = err.message; $("loginError").hidden = false; })
+        .then(function () { btn.disabled = false; });
+    });
+
+    $("changeForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var err = $("changeError");
+      err.hidden = true;
+      if ($("chNext").value !== $("chConfirm").value) { err.textContent = "As senhas novas não conferem."; err.hidden = false; return; }
+      api("/password", { current: $("chCurrent").value, next: $("chNext").value })
+        .then(function (data) {
+          setToken(data.token);
+          me = data.user;
+          ["chCurrent", "chNext", "chConfirm"].forEach(function (id) { $(id).value = ""; });
+          toast("Senha definida. Bem-vindo(a)!");
+          startApp();
+        })
+        .catch(function (e2) { err.textContent = e2.message; err.hidden = false; });
+    });
+
+    $("logoutBtn").addEventListener("click", function () { logout(false); });
+
+    // ===================== App =====================
+    var TITLES = {
+      overview: "Visão geral", pending: "Pendentes de aprovação", published: "Notícias publicadas",
+      rules: "Regras editoriais", themes: "Temas e fontes", newsletter: "Newsletter", users: "Usuários", audit: "Histórico de ações", account: "Minha conta",
+    };
+    var VIEWS = {};
+    var isAdminView = function (v) { return v === "users" || v === "audit" || v === "newsletter"; };
+
+    function startApp() {
+      showOnly("appView");
+      $("userName").textContent = me.name;
+      $("userRole").textContent = me.role === "admin" ? "Administrador" : "Editor";
+      $("userAvatar").textContent = (me.name || "H").trim().charAt(0).toUpperCase();
+      document.querySelectorAll("[data-admin]").forEach(function (el) { el.hidden = me.role !== "admin"; });
+      var hash = location.hash.replace("#", "");
+      go(VIEWS[hash] && (me.role === "admin" || !isAdminView(hash)) ? hash : "overview");
+      refreshCounts();
     }
 
-    function itemCard(item, list) {
+    function go(view) {
+      document.querySelectorAll("#nav a").forEach(function (a) { a.classList.toggle("active", a.getAttribute("data-view") === view); });
+      $("viewTitle").textContent = TITLES[view];
+      $("sidebar").classList.remove("open");
+      // Troca o container para não acumular listeners entre telas.
+      var fresh = $("content").cloneNode(false);
+      $("content").replaceWith(fresh);
+      fresh.innerHTML = '<div class="empty"><i class="fa fa-spinner fa-spin"></i>Carregando...</div>';
+      if (location.hash !== "#" + view) history.replaceState(null, "", "#" + view);
+      VIEWS[view]();
+    }
+
+    $("nav").addEventListener("click", function (e) {
+      var a = e.target.closest("a[data-view]");
+      if (!a) return;
+      e.preventDefault();
+      go(a.getAttribute("data-view"));
+    });
+    $("menuBtn").addEventListener("click", function () { $("sidebar").classList.toggle("open"); });
+
+    function refreshCounts() {
+      api("/metrics?days=7").then(function (m) {
+        $("countPending").textContent = m.totals.pending;
+        $("countPublished").textContent = m.totals.published;
+      }).catch(function () {});
+    }
+
+    $("runNowBtn").addEventListener("click", function () {
+      var btn = this;
+      btn.disabled = true;
+      api("/run-now", {}).then(function () {
+        toast("Pedido enviado. O gerador começa em até 5 minutos e leva ~2 min por matéria.");
+      }).catch(function (e) { toast(e.message, true); }).then(function () { btn.disabled = false; });
+    });
+
+    function showError(e) { $("content").innerHTML = '<div class="alert error">' + esc(e.message) + "</div>"; }
+
+    // ===================== Gráfico de barras (série única) =====================
+    function barChart(el, data, opts) {
+      opts = opts || {};
+      var W = 720, H = opts.height || 220, padL = 34, padB = 24, padT = 10, padR = 6;
+      var max = Math.max.apply(null, data.map(function (d) { return d.value; }).concat([0]));
+      if (!max) { el.innerHTML = '<div class="chart-empty">' + esc(opts.empty || "Sem dados no período.") + "</div>"; return; }
+      var mag = Math.pow(10, Math.floor(Math.log10(max)));
+      var niceMax = Math.max(4, Math.ceil(max / mag) * mag);
+      var innerW = W - padL - padR, innerH = H - padT - padB;
+      var slot = innerW / data.length;
+      var barW = Math.max(2, Math.min(28, slot * 0.62));
+      var y = function (v) { return padT + innerH - (v / niceMax) * innerH; };
+      var ticks = [0, niceMax / 2, niceMax];
+      var labelEvery = Math.ceil(data.length / 8);
+      var svg = '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="' + esc(opts.title || "") + '">';
+      svg += '<g class="grid">' + ticks.map(function (t) { return '<line x1="' + padL + '" x2="' + (W - padR) + '" y1="' + y(t) + '" y2="' + y(t) + '"/>'; }).join("") + "</g>";
+      svg += '<g class="axis">' + ticks.map(function (t) {
+        return '<text x="' + (padL - 6) + '" y="' + (y(t) + 3.5) + '" text-anchor="end">' + fmtNum(Math.round(t)) + "</text>";
+      }).join("") + "</g><g>";
+      data.forEach(function (d, i) {
+        var x = padL + i * slot + (slot - barW) / 2;
+        var h = d.value ? Math.max(2, (d.value / niceMax) * innerH) : 0;
+        var r = Math.min(4, barW / 2, h);
+        // Barra com os cantos de cima arredondados (4 px), ancorada na base.
+        if (h > 0) {
+          var top = padT + innerH - h, bottom = padT + innerH;
+          svg += '<path class="bar" data-i="' + i + '" d="M' + x + "," + bottom + " L" + x + "," + (top + r) + " Q" + x + "," + top + " " + (x + r) + "," + top +
+            " L" + (x + barW - r) + "," + top + " Q" + (x + barW) + "," + top + " " + (x + barW) + "," + (top + r) + " L" + (x + barW) + "," + bottom + ' Z"/>';
+        }
+        svg += '<rect class="hit" data-i="' + i + '" x="' + (padL + i * slot) + '" y="' + padT + '" width="' + slot + '" height="' + innerH + '"/>';
+        if (i % labelEvery === 0) svg += '<text class="axis" x="' + (padL + i * slot + slot / 2) + '" y="' + (H - 6) + '" text-anchor="middle">' + esc(d.short) + "</text>";
+      });
+      svg += "</g></svg>";
+      el.innerHTML = '<div class="chart">' + svg + '<div class="tooltip" hidden></div></div>' +
+        '<details class="table-view"><summary>Ver como tabela</summary><div class="table-wrap"><table class="data"><thead><tr><th>Dia</th><th class="num">' + esc(opts.unit || "Valor") + "</th></tr></thead><tbody>" +
+        data.slice().reverse().map(function (d) { return "<tr><td>" + esc(d.label) + '</td><td class="num">' + fmtNum(d.value) + "</td></tr>"; }).join("") + "</tbody></table></div></details>";
+      var chart = el.querySelector(".chart");
+      var tip = chart.querySelector(".tooltip");
+      var clear = function () { chart.querySelectorAll(".bar.hover").forEach(function (b) { b.classList.remove("hover"); }); };
+      chart.addEventListener("mousemove", function (e) {
+        var hit = e.target.closest("[data-i]");
+        clear();
+        if (!hit) { tip.hidden = true; return; }
+        var i = Number(hit.getAttribute("data-i"));
+        var bar = chart.querySelector('.bar[data-i="' + i + '"]');
+        if (bar) bar.classList.add("hover");
+        var scale = chart.getBoundingClientRect().width / W;
+        tip.innerHTML = esc(data[i].label) + ": <strong>" + fmtNum(data[i].value) + "</strong> " + esc(opts.unit || "");
+        tip.style.left = (padL + i * slot + slot / 2) * scale + "px";
+        tip.style.top = y(data[i].value) * scale + "px";
+        tip.hidden = false;
+      });
+      chart.addEventListener("mouseleave", function () { tip.hidden = true; clear(); });
+    }
+
+    function daySeries(rows) {
+      return rows.map(function (r) {
+        var d = new Date(r.day + "T12:00:00");
+        return {
+          value: r.count,
+          short: d.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" }),
+          label: d.toLocaleDateString("pt-BR", { weekday: "short", day: "2-digit", month: "2-digit" }),
+        };
+      });
+    }
+    function sum(rows) { return rows.reduce(function (a, r) { return a + r.count; }, 0); }
+
+    // ===================== Visão geral =====================
+    var overviewDays = 30;
+    VIEWS.overview = function () {
+      api("/metrics?days=" + overviewDays).then(function (m) {
+        var t = m.totals;
+        $("content").innerHTML =
+          '<div class="toolbar"><div class="seg" id="periodSeg">' +
+          [7, 30, 90].map(function (d) { return '<button type="button" data-days="' + d + '"' + (d === overviewDays ? ' class="active"' : "") + ">" + d + " dias</button>"; }).join("") +
+          '</div><span class="spacer"></span><span class="muted small">Leituras por dia contadas a partir de 22/10/2026.</span></div>' +
+          '<div class="kpis">' +
+          kpi("fa-newspaper", "Publicadas", fmtNum(t.published), sum(m.approvedByDay) + " aprovadas no período") +
+          kpi("fa-inbox", "Pendentes", fmtNum(t.pending), "aguardando aprovação") +
+          kpi("fa-eye", "Leituras no período", fmtNum(sum(m.viewsByDay)), fmtNum(t.views) + " no total") +
+          kpi("fa-envelope", "Inscritos", fmtNum(t.subscribers), sum(m.subscribersByDay) + " novos no período") +
+          kpi("fa-dollar-sign", "Custo de IA (mês)", "US$ " + m.month.estimatedCostUsd.toFixed(2).replace(".", ","), m.month.generated + " geradas · " + m.month.approved + " aprovadas") +
+          "</div>" +
+          '<div class="dash-grid">' + card("Leituras por dia", '<div id="chViews"></div>') + card("Status do gerador", generatorStatus(m.lastRun, m.runRequestedAt)) + "</div>" +
+          '<div class="dash-grid-even">' + card("Notícias geradas por dia", '<div id="chGenerated"></div>') + card("Notícias aprovadas por dia", '<div id="chApproved"></div>') + "</div>" +
+          '<div class="dash-grid-even">' + card("Mais lidas — últimos 7 dias", topTable(m.topWeek)) + card("Mais lidas — últimos 30 dias", topTable(m.topMonth)) + "</div>" +
+          card("Leituras por editoria", sectorBars(m.bySector));
+        barChart($("chViews"), daySeries(m.viewsByDay), { unit: "leituras", title: "Leituras por dia", empty: "Ainda sem leituras registradas no período." });
+        barChart($("chGenerated"), daySeries(m.generatedByDay), { unit: "geradas", height: 170, title: "Notícias geradas por dia" });
+        barChart($("chApproved"), daySeries(m.approvedByDay), { unit: "aprovadas", height: 170, title: "Notícias aprovadas por dia" });
+        $("periodSeg").addEventListener("click", function (e) {
+          var b = e.target.closest("[data-days]");
+          if (!b) return;
+          overviewDays = Number(b.getAttribute("data-days"));
+          VIEWS.overview();
+        });
+        $("countPending").textContent = t.pending;
+        $("countPublished").textContent = t.published;
+      }).catch(showError);
+    };
+
+    function kpi(icon, label, value, sub) {
+      return '<div class="card kpi"><div class="kpi-label"><i class="fa ' + icon + '"></i>' + esc(label) + '</div><div class="kpi-value">' + value + '</div><div class="kpi-sub">' + esc(sub) + "</div></div>";
+    }
+    function card(title, body) {
+      return '<div class="card"><div class="card-head"><h3>' + esc(title) + '</h3></div><div class="card-body">' + body + "</div></div>";
+    }
+    function topTable(rows) {
+      if (!rows || !rows.length) return '<div class="chart-empty">Ainda sem leituras no período.</div>';
+      return '<div class="table-wrap"><table class="data"><tbody>' + rows.map(function (r, i) {
+        return '<tr><td style="width:36px"><span class="rank">' + (i + 1) + '</span></td><td><a href="../noticia.html?id=' + encodeURIComponent(r.id) + '" target="_blank">' + esc(r.title) + '</a><div class="muted small">' + esc(r.sector) + '</div></td><td class="num"><strong>' + fmtNum(r.c) + "</strong></td></tr>";
+      }).join("") + "</tbody></table></div>";
+    }
+    function sectorBars(rows) {
+      if (!rows || !rows.length) return '<div class="chart-empty">Nenhuma notícia publicada.</div>';
+      var max = Math.max.apply(null, rows.map(function (r) { return r.views; }).concat([1]));
+      return rows.map(function (r) {
+        return '<div class="hbar"><span class="hbar-label" title="' + esc(r.sector) + '">' + esc(r.sector || "—") + '</span><div class="hbar-track"><div class="hbar-fill" style="width:' + (r.views / max * 100) + '%"></div></div>' +
+          '<span class="hbar-value">' + fmtNum(r.views) + ' <span class="hbar-sub">· ' + r.items + "</span></span></div>";
+      }).join("") + '<p class="muted small" style="margin:8px 0 0">Leituras totais · número de notícias publicadas na editoria.</p>';
+    }
+    function generatorStatus(lr, requestedAt) {
+      var html = "";
+      if (lr) {
+        html += '<p style="margin:0 0 8px"><strong>Última execução:</strong><br>' + fmtDate(lr.finishedAt, true) + '</p><p style="margin:0 0 8px">' + lr.generated + " matéria(s) nova(s)</p>";
+        html += lr.errors && lr.errors.length
+          ? '<details><summary class="badge danger" style="cursor:pointer">' + lr.errors.length + ' erro(s)</summary><ul class="small muted">' + lr.errors.map(function (e) { return "<li>" + esc(e) + "</li>"; }).join("") + "</ul></details>"
+          : '<span class="badge ok"><i class="fa fa-check"></i> sem erros</span>';
+      } else html += '<p class="muted">O gerador ainda não registrou execuções.</p>';
+      html += '<p class="muted small" style="margin:14px 0 0">Gera automaticamente todo dia às 06:00. Imagem e tradução são feitas depois da aprovação.</p>';
+      if (requestedAt) html += '<div class="alert info" style="margin-top:12px"><i class="fa fa-clock"></i> Geração pedida em ' + fmtDate(requestedAt, true) + ".</div>";
+      return html;
+    }
+
+    // ===================== Notícias =====================
+    function newsCard(item, list) {
+      var badges = '<span class="badge dark">' + esc(item.sector) + "</span>";
+      if (item.verification) badges += ' <span class="badge ok"><i class="fa fa-check-double"></i> fatos checados' + (item.verification.initialIssues ? " (corrigida)" : "") + "</span>";
+      if (item.imageStatus === "requested") badges += ' <span class="badge info"><i class="fa fa-clock"></i> imagem na fila</span>';
+      else if (item.imageStatus === "failed") badges += ' <span class="badge danger" title="' + esc(item.imageError) + '">falha na imagem</span>';
+      else if (!item.imageGenerated) badges += ' <span class="badge">foto padrão do setor</span>';
+      if (list === "published") {
+        if (item.translations) badges += ' <span class="badge ok"><i class="fa fa-language"></i> traduzida</span>';
+        else if (item.translationStatus === "failed") badges += ' <span class="badge danger">falha na tradução</span>';
+        else badges += ' <span class="badge info">tradução na fila</span>';
+        badges += ' <span class="badge"><i class="fa fa-eye"></i> ' + fmtNum(item.views) + "</span>";
+      }
+      var sources = Array.isArray(item.sources) && item.sources.length ? item.sources : item.link ? [{ url: item.link, site: item.sourceName }] : [];
       var actions = list === "pending"
-        ? '<button class="btn btn-success btn-sm approve-btn"><i class="fa fa-check me-1"></i>Aprovar</button>' +
-          '<button class="btn btn-outline-danger btn-sm reject-btn"><i class="fa fa-times me-1"></i>Rejeitar</button>'
-        : '<button class="btn btn-outline-danger btn-sm unpublish-btn"><i class="fa fa-eye-slash me-1"></i>Despublicar</button>';
-
-      var excerpt = item.excerpt || item.summary || "";
-      var bodyText = Array.isArray(item.body) ? item.body.join("\n\n") : (item.body || "");
-      var bodyPreview = Array.isArray(item.body)
-        ? item.body.map(function (p) { return "<p>" + escapeHtml(p) + "</p>"; }).join("")
-        : "";
-
+        ? '<button class="btn btn-success btn-sm" data-act="approve"><i class="fa fa-check"></i> Aprovar e publicar</button>' +
+          '<button class="btn btn-sm btn-danger-ghost" data-act="reject"><i class="fa fa-trash"></i> Excluir</button>'
+        : '<a class="btn btn-sm" href="../noticia.html?id=' + encodeURIComponent(item.id) + '" target="_blank"><i class="fa fa-external-link-alt"></i> Ver no site</a>' +
+          '<button class="btn btn-sm btn-danger-ghost" data-act="unpublish"><i class="fa fa-eye-slash"></i> Despublicar</button>';
+      if (!item.imageGenerated && item.imageStatus !== "requested") actions += '<button class="btn btn-sm" data-act="image"><i class="fa fa-magic"></i> Gerar imagem por IA</button>';
+      actions += '<button class="btn btn-sm" data-act="edit"><i class="fa fa-pen"></i> Editar</button>';
       return (
-        '<div class="card news-item p-3 mb-3" data-id="' + escapeHtml(item.id) + '" data-list="' + list + '">' +
-        '<div class="view-mode">' +
-        '<span class="badge bg-dark mb-2" style="width:fit-content">' + escapeHtml(item.sector) + "</span>" +
-        '<h6 class="item-title">' + escapeHtml(item.title) + "</h6>" +
-        '<p class="small text-muted mb-2 item-summary">' + escapeHtml(excerpt) + "</p>" +
-        (bodyPreview
-          ? '<details class="small mb-2"><summary class="text-primary" style="cursor:pointer;">Ver matéria completa</summary>' + bodyPreview + "</details>"
-          : "") +
-        '<a href="' + escapeHtml(item.link) + '" target="_blank" rel="noopener noreferrer" class="small d-block mb-2">Ver fonte original &rarr;</a>' +
-        '<div class="d-flex gap-2 flex-wrap">' +
-        actions +
-        '<button class="btn btn-outline-secondary btn-sm edit-btn"><i class="fa fa-pen me-1"></i>Editar</button>' +
-        "</div></div>" +
-        '<div class="edit-mode" style="display:none;">' +
-        '<div class="mb-2"><label class="form-label small mb-1">Setor</label>' +
-        '<input type="text" class="form-control form-control-sm edit-sector" value="' + escapeHtml(item.sector) + '"></div>' +
-        '<div class="mb-2"><label class="form-label small mb-1">Título</label>' +
-        '<input type="text" class="form-control form-control-sm edit-title" value="' + escapeHtml(item.title) + '"></div>' +
-        '<div class="mb-2"><label class="form-label small mb-1">Resumo (aparece no card)</label>' +
-        '<textarea class="form-control form-control-sm edit-excerpt" rows="2">' + escapeHtml(excerpt) + "</textarea></div>" +
-        '<div class="mb-2"><label class="form-label small mb-1">Matéria completa (um parágrafo por linha em branco)</label>' +
-        '<textarea class="form-control form-control-sm edit-body" rows="8">' + escapeHtml(bodyText) + "</textarea></div>" +
-        '<div class="mb-2"><label class="form-label small mb-1">Link da fonte</label>' +
-        '<input type="text" class="form-control form-control-sm edit-link" value="' + escapeHtml(item.link) + '"></div>' +
-        '<div class="d-flex gap-2">' +
-        '<button class="btn btn-primary btn-sm save-btn"><i class="fa fa-save me-1"></i>Salvar</button>' +
-        '<button class="btn btn-outline-secondary btn-sm cancel-btn">Cancelar</button>' +
-        "</div></div>" +
-        "</div>"
+        '<article class="card news" data-id="' + esc(item.id) + '">' +
+        '<img class="news-thumb" src="' + esc(imageSrc(item.image)) + '" alt="' + esc(item.imageAlt) + '" loading="lazy" />' +
+        "<div>" +
+        '<div class="news-meta">' + badges + "</div>" +
+        "<h4>" + esc(item.title) + "</h4>" +
+        '<p class="news-excerpt">' + esc(String(item.excerpt || item.summary || "").replace(/\*\*/g, "")) + "</p>" +
+        '<div class="muted small">' + (list === "published" ? "Publicada em " + fmtDate(item.publishedAt, true) : "Gerada em " + fmtDate(item.createdAt, true)) +
+        (item.reviewedBy ? " · Edição: " + esc(item.reviewedBy) : "") + (item.approvedBy ? " · Aprovada por " + esc(item.approvedBy) : "") + "</div>" +
+        "<details><summary>Ler a matéria completa e as fontes</summary>" +
+        '<div class="body-preview">' + (Array.isArray(item.body) ? item.body.map(paragraph).join("") : "") + "</div>" +
+        '<strong class="small">Fontes</strong><ol class="sources small">' + sources.map(function (s, i) {
+          return '<li><a href="' + esc(s.url) + '" target="_blank" rel="noopener noreferrer">' + esc(s.title || s.site || s.url) + "</a>" +
+            (s.site ? " — " + esc(s.site) : "") + (s.author ? ", por " + esc(s.author) : "") + (i === 0 ? ' <span class="badge">principal</span>' : "") + "</li>";
+        }).join("") + "</ol></details>" +
+        '<div class="news-actions">' + actions + "</div>" +
+        "</div>" +
+        '<div class="news-edit" hidden></div>' +
+        "</article>"
       );
     }
 
-    function renderList(container, items, list) {
-      if (!items.length) {
-        container.innerHTML = list === "pending"
-          ? '<p class="text-muted">Nenhuma notícia pendente no momento.</p>'
-          : '<p class="text-muted">Nenhuma notícia publicada ainda.</p>';
-        return;
-      }
-      container.innerHTML = items.map(function (item) { return itemCard(item, list); }).join("");
+    function editForm(item) {
+      var f = function (label, cls, value, type) {
+        return '<div class="form-row"><label class="label">' + label + "</label>" +
+          (type === "area"
+            ? '<textarea class="field ' + cls + '" rows="' + (cls === "e-body" ? 12 : 2) + '">' + esc(value) + "</textarea>"
+            : '<input class="field ' + cls + '" value="' + esc(value) + '" />') + "</div>";
+      };
+      return (
+        '<div class="grid-2">' + f("Editoria", "e-sector", item.sector) + f("Assinatura (Edição)", "e-reviewer", item.reviewedBy || "") + "</div>" +
+        f("Título", "e-title", item.title) +
+        f("Chamada (resumo do card)", "e-excerpt", item.excerpt || item.summary || "", "area") +
+        f('Matéria (parágrafos separados por linha em branco; **texto** = negrito; "## " no início = intertítulo)', "e-body", (item.body || []).join("\n\n"), "area") +
+        '<div class="grid-2">' + f("Imagem (caminho /img/... ou URL)", "e-image", item.image || "") + f("Descrição da imagem (acessibilidade)", "e-image-alt", item.imageAlt || "") + "</div>" +
+        f("Como deve ser a imagem por IA (vale para a próxima geração)", "e-image-prompt", item.imagePrompt || "", "area") +
+        '<div class="news-actions"><button class="btn btn-primary btn-sm" data-act="save"><i class="fa fa-save"></i> Salvar alterações</button><button class="btn btn-sm" data-act="cancel">Cancelar</button></div>'
+      );
     }
 
-    function callAction(path, body) {
-      return fetch(API_BASE + path, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
-        body: JSON.stringify(body),
-      });
+    function newsList(list) {
+      return function () {
+        var signature = "";
+        try { signature = localStorage.getItem("hooke_admin_reviewer") || ""; } catch (e) { /* sem storage */ }
+        api("/" + list).then(function (items) {
+          var head =
+            '<div class="toolbar"><input class="field" id="newsSearch" placeholder="Buscar por título ou editoria..." style="max-width:340px" />' +
+            '<span class="spacer"></span>' +
+            (list === "pending"
+              ? '<label class="small muted" for="reviewer" style="font-weight:600">Assinatura ao aprovar:</label><input class="field" id="reviewer" style="max-width:300px" placeholder="Ex.: Maria Silva — Jornalista (MTb 0000/BA)" value="' + esc(signature) + '" />'
+              : "") +
+            "</div>";
+          var body = items.length
+            ? items.map(function (it) { return newsCard(it, list); }).join("")
+            : '<div class="card empty"><i class="fa fa-' + (list === "pending" ? "check-circle" : "newspaper") + '"></i>' +
+              (list === "pending" ? "Nenhuma notícia pendente. O gerador roda todo dia às 06:00." : "Nenhuma notícia publicada ainda.") + "</div>";
+          $("content").innerHTML = head + '<div id="newsItems">' + body + "</div>";
+          var byId = {};
+          items.forEach(function (it) { byId[it.id] = it; });
+
+          $("newsSearch").addEventListener("input", function () {
+            var q = this.value.toLowerCase();
+            document.querySelectorAll("#newsItems .news").forEach(function (el) {
+              var it = byId[el.getAttribute("data-id")];
+              el.hidden = !!q && (it.title + " " + it.sector).toLowerCase().indexOf(q) === -1;
+            });
+          });
+          if ($("reviewer")) $("reviewer").addEventListener("change", function () {
+            try { localStorage.setItem("hooke_admin_reviewer", this.value.trim()); } catch (e) { /* sem storage */ }
+          });
+
+          $("newsItems").addEventListener("click", function (e) {
+            var btn = e.target.closest("[data-act]");
+            if (!btn) return;
+            var cardEl = btn.closest(".news");
+            var id = cardEl.getAttribute("data-id");
+            var item = byId[id];
+            var act = btn.getAttribute("data-act");
+            var done = function (msg) { toast(msg); refreshCounts(); go(list); };
+            var oops = function (err) { toast(err.message, true); btn.disabled = false; };
+            if (act === "approve") {
+              var rev = $("reviewer") ? $("reviewer").value.trim() : "";
+              if (!rev && !confirm("Aprovar sem assinatura (Edição)? Você pode preencher no topo da lista.")) return;
+              btn.disabled = true;
+              api("/approve", { id: id, reviewedBy: rev }).then(function () { done("Publicada. Imagem e tradução ficam prontas em até 5 minutos."); }, oops);
+            } else if (act === "reject") {
+              if (!confirm("Excluir esta notícia? Ela não será gerada de novo.")) return;
+              api("/reject", { id: id }).then(function () { done("Notícia excluída."); }, oops);
+            } else if (act === "unpublish") {
+              if (!confirm("Tirar esta notícia do site?")) return;
+              api("/unpublish", { id: id }).then(function () { done("Notícia retirada do site."); }, oops);
+            } else if (act === "image") {
+              api("/request-image", { id: id }).then(function () { done("Imagem pedida. Fica pronta em até 5 minutos."); }, oops);
+            } else if (act === "edit") {
+              var box = cardEl.querySelector(".news-edit");
+              box.innerHTML = editForm(item);
+              box.hidden = false;
+              box.querySelector(".e-title").focus();
+            } else if (act === "cancel") {
+              cardEl.querySelector(".news-edit").hidden = true;
+            } else if (act === "save") {
+              var q = function (c) { return cardEl.querySelector("." + c).value; };
+              btn.disabled = true;
+              api("/edit", {
+                id: id, sector: q("e-sector").trim(), reviewedBy: q("e-reviewer").trim(), title: q("e-title").trim(),
+                excerpt: q("e-excerpt").trim(),
+                body: q("e-body").split(/\n\s*\n/).map(function (p) { return p.trim(); }).filter(Boolean),
+                image: q("e-image").trim(), imageAlt: q("e-image-alt").trim(), imagePrompt: q("e-image-prompt").trim(),
+              }).then(function () { done(list === "published" ? "Salvo. A tradução é refeita se o texto mudou." : "Alterações salvas."); }, oops);
+            }
+          });
+        }).catch(showError);
+      };
     }
+    VIEWS.pending = newsList("pending");
+    VIEWS.published = newsList("published");
 
-    function reloadAll() {
-      loadPending();
-      loadPublished();
-    }
-
-    function bindListEvents(container) {
-      container.addEventListener("click", function (e) {
-        var card = e.target.closest(".news-item");
-        if (!card) return;
-        var id = card.getAttribute("data-id");
-        var list = card.getAttribute("data-list");
-
-        if (e.target.closest(".approve-btn")) {
-          callAction("/api/admin/approve", { id: id }).then(reloadAll);
-        } else if (e.target.closest(".reject-btn")) {
-          callAction("/api/admin/reject", { id: id }).then(reloadAll);
-        } else if (e.target.closest(".unpublish-btn")) {
-          callAction("/api/admin/unpublish", { id: id }).then(reloadAll);
-        } else if (e.target.closest(".edit-btn")) {
-          card.querySelector(".view-mode").style.display = "none";
-          card.querySelector(".edit-mode").style.display = "block";
-        } else if (e.target.closest(".cancel-btn")) {
-          card.querySelector(".edit-mode").style.display = "none";
-          card.querySelector(".view-mode").style.display = "block";
-        } else if (e.target.closest(".save-btn")) {
-          var body = {
-            list: list,
-            id: id,
-            sector: card.querySelector(".edit-sector").value,
-            title: card.querySelector(".edit-title").value,
-            excerpt: card.querySelector(".edit-excerpt").value,
-            body: card.querySelector(".edit-body").value.split(/\n\s*\n/).map(function (p) { return p.trim(); }).filter(Boolean),
-            link: card.querySelector(".edit-link").value,
-          };
-          callAction("/api/admin/edit", body).then(reloadAll);
-        }
-      });
-    }
-
-    bindListEvents(pendingList);
-    bindListEvents(publishedList);
-
-    document.getElementById("run-now-btn").addEventListener("click", function () {
-      var btn = this;
-      var originalText = btn.innerHTML;
-      btn.disabled = true;
-      btn.innerHTML = '<i class="fa fa-spinner fa-spin me-1"></i>Rodando (até ~30s, não clique de novo)...';
-
-      // A rota só confirma que a curadoria começou (roda em segundo plano no
-      // worker), então esperamos um tempo fixo antes de liberar o botão de
-      // novo — clicar duas vezes rápido faz duas curadorias brigarem pela
-      // cota da IA ao mesmo tempo.
-      fetch(API_BASE + "/api/admin/run-now", {
-        method: "POST",
-        headers: { Authorization: "Bearer " + token },
-      })
-        .then(function () {
-          return new Promise(function (resolve) { setTimeout(resolve, 25000); });
-        })
-        .then(reloadAll)
-        .finally(function () {
-          btn.disabled = false;
-          btn.innerHTML = originalText;
+    // ===================== Regras editoriais =====================
+    VIEWS.rules = function () {
+      Promise.all([api("/rules"), api("/rules/history")]).then(function (r) {
+        var rules = r[0], history = r[1];
+        var canEdit = me.role === "admin";
+        $("content").innerHTML =
+          '<div class="dash-grid">' +
+          card("Regras que a IA segue ao escolher, escrever, checar, ilustrar e traduzir",
+            '<p class="muted" style="margin-top:0">O texto de cada seção vai, palavra por palavra, para a IA na próxima geração. Mantenha os títulos das seções (linhas com "## "): ' +
+            rules.sections.map(function (s) { return "<code>## " + esc(s) + "</code>"; }).join(", ") + ".</p>" +
+            '<textarea class="field rules-editor" id="rulesText"' + (canEdit ? "" : " readonly") + ">" + esc(rules.text) + "</textarea>" +
+            '<div class="news-actions">' + (canEdit ? '<button class="btn btn-primary" id="rulesSave"><i class="fa fa-save"></i> Salvar regras</button>' : '<span class="muted small">Somente administradores podem alterar as regras.</span>') +
+            '<span class="muted small" style="align-self:center">Última alteração: ' + fmtDate(rules.updatedAt, true) + (rules.updatedBy ? " por " + esc(rules.updatedBy) : "") + "</span></div>") +
+          card("Versões anteriores", history.length
+            ? '<table class="data"><tbody>' + history.map(function (h) {
+              return "<tr><td>" + fmtDate(h.at, true) + '<div class="muted small">' + esc(h.username || "—") + '</div></td><td class="num"><button class="btn btn-sm" data-version="' + h.id + '">Ver</button></td></tr>';
+            }).join("") + "</tbody></table>"
+            : '<p class="muted">Nenhuma versão salva ainda.</p>') +
+          "</div>";
+        if (canEdit) $("rulesSave").addEventListener("click", function () {
+          var btn = this;
+          btn.disabled = true;
+          api("/rules", { text: $("rulesText").value }).then(function () {
+            toast("Regras salvas. Valem a partir da próxima geração.");
+            go("rules");
+          }, function (e) { toast(e.message, true); btn.disabled = false; });
         });
-    });
+        $("content").addEventListener("click", function (e) {
+          var b = e.target.closest("[data-version]");
+          if (!b) return;
+          api("/rules/version?id=" + b.getAttribute("data-version")).then(function (v) {
+            modal("Versão de " + fmtDate(v.at, true) + (v.username ? " — " + v.username : ""),
+              '<textarea class="field rules-editor" readonly style="min-height:50vh">' + esc(v.value) + "</textarea>",
+              canEdit ? [{ label: "Carregar no editor", primary: true, run: function (close) { $("rulesText").value = v.value; close(); toast("Versão carregada no editor. Clique em Salvar regras para aplicar."); } }] : []);
+          });
+        });
+      }).catch(showError);
+    };
 
-    document.getElementById("login-btn").addEventListener("click", function () {
-      var password = document.getElementById("password").value;
-      loginError.style.display = "none";
-      fetch(API_BASE + "/api/admin/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password: password }),
-      })
-        .then(function (res) { return res.json(); })
-        .then(function (data) {
-          if (!data.token) { loginError.style.display = "block"; return; }
-          token = data.token;
-          sessionStorage.setItem("hooke_admin_token", token);
-          showPanel();
-        })
-        .catch(function () { loginError.style.display = "block"; });
-    });
+    // ===================== Temas e fontes =====================
+    // Editoria = seção do site (aba da página de Notícias). Tema = o que o
+    // gerador procura todo dia dentro dela (busca de notícias ou RSS de portal).
+    VIEWS.themes = function () {
+      api("/themes").then(function (data) {
+        var canEdit = me.role === "admin";
+        var byEd = {};
+        data.themes.forEach(function (t) { (byEd[t.editoria] = byEd[t.editoria] || []).push(t); });
+        var maxOptions = function (v) {
+          return [0, 1, 2, 3, 4, 5].map(function (n) { return '<option value="' + n + '"' + (n === v ? " selected" : "") + ">" + (n === 0 ? "nenhuma" : n + " por dia") + "</option>"; }).join("");
+        };
+        var html =
+          '<div class="toolbar"><p class="muted" style="margin:0;max-width:820px">Cada <strong>editoria</strong> é uma seção do site (uma aba da página de Notícias). Dentro dela, cada <strong>tema</strong> é um assunto que o gerador procura todo dia. ' +
+          "Temas prioritários são escolhidos primeiro. As mudanças valem a partir da próxima geração.</p><span class=\"spacer\"></span>" +
+          (canEdit ? '<button class="btn btn-primary" id="newEditoria"><i class="fa fa-plus"></i> Nova editoria</button>' : "") + "</div>";
+        html += data.editorias.map(function (e) {
+          var themes = byEd[e.name] || [];
+          var rows = themes.length
+            ? themes.map(function (t) {
+              return '<tr class="' + (t.active ? "" : "muted") + '">' +
+                "<td>" + (t.kind === "rss" ? '<span class="badge info"><i class="fa fa-rss"></i> Portal (RSS)</span>' : '<span class="badge"><i class="fa fa-search"></i> Busca</span>') + "</td>" +
+                '<td style="word-break:break-word"><strong>' + esc(t.value) + "</strong>" + (t.createdBy ? '<div class="muted small">por ' + esc(t.createdBy) + " em " + fmtDate(t.createdAt) + "</div>" : "") + "</td>" +
+                "<td>" + (t.priority ? '<span class="badge warn"><i class="fa fa-star"></i> prioritário</span>' : '<span class="muted small">normal</span>') + "</td>" +
+                "<td>" + (t.active ? '<span class="badge ok">ativo</span>' : '<span class="badge">pausado</span>') + "</td>" +
+                '<td class="num" title="Notícias geradas · aprovadas nos últimos 30 dias">' + t.generated30 + ' <span class="muted small">· ' + t.approved30 + "</span></td>" +
+                '<td class="num" style="white-space:nowrap">' + (canEdit
+                  ? '<button class="btn btn-sm" data-t-prio="' + t.id + '" data-v="' + (t.priority ? 0 : 1) + '" title="' + (t.priority ? "Tirar a prioridade" : "Marcar como prioritário") + '"><i class="' + (t.priority ? "fas" : "far") + ' fa-star"></i></button> ' +
+                    '<button class="btn btn-sm" data-t-active="' + t.id + '" data-v="' + (t.active ? 0 : 1) + '">' + (t.active ? "Pausar" : "Ativar") + "</button> " +
+                    '<button class="btn btn-sm btn-danger-ghost" data-t-del="' + t.id + '" data-label="' + esc(t.value) + '" title="Excluir"><i class="fa fa-trash"></i></button>'
+                  : "") + "</td></tr>";
+            }).join("")
+            : '<tr><td colspan="6" class="muted">Nenhum tema nesta editoria. Sem temas, ela não recebe notícias novas.</td></tr>';
+          var head =
+            '<div class="card-head" style="flex-wrap:wrap"><h3>' + esc(e.name) + " " + (e.active ? "" : '<span class="badge">pausada</span>') + "</h3>" +
+            '<span class="muted small" style="margin-right:auto;margin-left:10px">' + themes.filter(function (t) { return t.active; }).length + " tema(s) ativo(s) · " + e.generated30 + " geradas · " + e.approved30 + " aprovadas em 30 dias</span>" +
+            (canEdit
+              ? '<label class="small muted" style="font-weight:600">Notícias:</label><select class="field" style="width:auto;padding:6px 8px" data-ed-max="' + esc(e.name) + '">' + maxOptions(e.maxPerRun) + "</select>" +
+                '<button class="btn btn-sm" data-ed-active="' + esc(e.name) + '" data-v="' + (e.active ? 0 : 1) + '" data-max="' + e.maxPerRun + '">' + (e.active ? "Pausar editoria" : "Reativar editoria") + "</button>"
+              : '<span class="badge">' + (e.maxPerRun || "nenhuma") + (e.maxPerRun ? " por dia" : "") + "</span>") +
+            "</div>";
+          var addForm = canEdit
+            ? '<div class="theme-add" data-ed="' + esc(e.name) + '" style="display:grid;grid-template-columns:170px minmax(0,1fr) auto auto auto;gap:8px;align-items:center;margin-top:14px">' +
+              '<select class="field t-kind"><option value="busca">Busca de notícias</option><option value="rss">Portal (RSS)</option></select>' +
+              '<input class="field t-value" placeholder="Ex.: Polo Industrial de Camaçari" maxlength="300" />' +
+              '<label class="small" style="white-space:nowrap"><input type="checkbox" class="t-prio" /> prioritário</label>' +
+              '<button class="btn btn-sm" data-t-test><i class="fa fa-vial"></i> Testar</button>' +
+              '<button class="btn btn-sm btn-primary" data-t-add><i class="fa fa-plus"></i> Adicionar tema</button>' +
+              '<div class="t-result small" style="grid-column:1/-1"></div></div>'
+            : "";
+          return '<div class="card" style="margin-bottom:14px">' + head + '<div class="card-body"><div class="table-wrap"><table class="data"><thead><tr><th>Tipo</th><th>Tema</th><th>Prioridade</th><th>Situação</th><th class="num">30 dias</th><th></th></tr></thead><tbody>' +
+            rows + "</tbody></table></div>" + addForm + "</div></div>";
+        }).join("");
+        $("content").innerHTML = html;
 
-    function logout() {
-      sessionStorage.removeItem("hooke_admin_token");
-      token = null;
-      panel.style.display = "none";
-      loginBox.style.display = "block";
+        var reload = function (msg) { if (msg) toast(msg); go("themes"); };
+        var oops = function (e) { toast(e.message, true); };
+        var c = $("content");
+        if (canEdit) {
+          $("newEditoria").addEventListener("click", function () {
+            modal("Nova editoria",
+              '<p class="muted small" style="margin-top:0">A editoria vira uma aba nova na página de Notícias, com cor própria, e o nome é traduzido automaticamente junto com as notícias.</p>' +
+              '<div class="form-row"><label class="label" for="neName">Nome (curto, como uma seção de portal)</label><input class="field" id="neName" maxlength="40" placeholder="Ex.: Energia Solar" /></div>' +
+              '<div class="form-row"><label class="label" for="neMax">Notícias por dia</label><select class="field" id="neMax">' + maxOptions(1) + "</select></div>" +
+              '<p class="muted small">Depois de criar, adicione os temas que o gerador deve procurar nela.</p>',
+              [{ label: "Criar editoria", primary: true, run: function (close) {
+                api("/editorias/save", { name: $("neName").value, maxPerRun: Number($("neMax").value), create: true }).then(function () { close(); reload("Editoria criada. Agora adicione os temas."); }, oops);
+              } }]);
+          });
+          c.addEventListener("change", function (e) {
+            var sel = e.target.closest("[data-ed-max]");
+            if (!sel) return;
+            api("/editorias/save", { name: sel.getAttribute("data-ed-max"), maxPerRun: Number(sel.value) }).then(function () { reload("Limite diário atualizado."); }, oops);
+          });
+        }
+        c.addEventListener("click", function (e) {
+          var b = e.target.closest("button");
+          if (!b) return;
+          if (b.hasAttribute("data-ed-active")) {
+            var name = b.getAttribute("data-ed-active");
+            var on = b.getAttribute("data-v") === "1";
+            if (!on && !confirm("Pausar a editoria " + name + "? O gerador para de trazer notícias dela (as já publicadas continuam no site).")) return;
+            api("/editorias/save", { name: name, maxPerRun: Number(b.getAttribute("data-max")), active: on }).then(function () { reload(on ? "Editoria reativada." : "Editoria pausada."); }, oops);
+          } else if (b.hasAttribute("data-t-prio")) {
+            api("/themes/update", { id: b.getAttribute("data-t-prio"), priority: b.getAttribute("data-v") === "1" }).then(function () { reload(); }, oops);
+          } else if (b.hasAttribute("data-t-active")) {
+            api("/themes/update", { id: b.getAttribute("data-t-active"), active: b.getAttribute("data-v") === "1" }).then(function () { reload(); }, oops);
+          } else if (b.hasAttribute("data-t-del")) {
+            if (!confirm('Excluir o tema "' + b.getAttribute("data-label") + '"? As notícias já publicadas continuam no site.')) return;
+            api("/themes/delete", { id: b.getAttribute("data-t-del") }).then(function () { reload("Tema excluído."); }, oops);
+          } else if (b.hasAttribute("data-t-test") || b.hasAttribute("data-t-add")) {
+            var form = b.closest(".theme-add");
+            var kind = form.querySelector(".t-kind").value;
+            var value = form.querySelector(".t-value").value.trim();
+            var out = form.querySelector(".t-result");
+            if (b.hasAttribute("data-t-test")) {
+              out.innerHTML = '<span class="muted"><i class="fa fa-spinner fa-spin"></i> Testando...</span>';
+              api("/themes/test", { kind: kind, value: value }).then(function (r) {
+                out.innerHTML = r.ok
+                  ? '<span class="badge ok"><i class="fa fa-check"></i> ' + r.count + " notícia(s) encontrada(s) hoje</span> " +
+                    '<span class="muted">Exemplos: ' + r.titles.map(esc).join(" · ") + "</span>"
+                  : '<span class="badge danger"><i class="fa fa-exclamation-triangle"></i> ' + esc(r.message) + "</span>";
+              }, function (er) { out.innerHTML = '<span class="badge danger">' + esc(er.message) + "</span>"; });
+            } else {
+              b.disabled = true;
+              api("/themes/add", { editoria: form.getAttribute("data-ed"), kind: kind, value: value, priority: form.querySelector(".t-prio").checked })
+                .then(function () { reload("Tema adicionado. Vale a partir da próxima geração."); }, function (er) { b.disabled = false; oops(er); });
+            }
+          }
+        });
+      }).catch(showError);
+    };
+
+    // ===================== Newsletter =====================
+    VIEWS.newsletter = function () {
+      api("/subscribers").then(function (subs) {
+        $("content").innerHTML =
+          '<div class="toolbar"><input class="field" id="subSearch" placeholder="Buscar e-mail..." style="max-width:320px" /><span class="spacer"></span>' +
+          '<span class="muted">' + fmtNum(subs.length) + ' inscrito(s)</span><button class="btn btn-sm" id="subExport"' + (subs.length ? "" : " disabled") + '><i class="fa fa-file-csv"></i> Exportar planilha (CSV)</button></div>' +
+          card("Inscritos na newsletter",
+            '<p class="muted small" style="margin-top:0">Dados pessoais protegidos pela LGPD: use só para o envio da newsletter. O inscrito pode se descadastrar pelo link do e-mail.</p>' +
+            (subs.length
+              ? '<div class="table-wrap"><table class="data" id="subTable"><thead><tr><th>E-mail</th><th>Idioma</th><th>Inscrito em</th><th></th></tr></thead><tbody>' +
+                subs.map(function (s) {
+                  return '<tr data-email="' + esc(s.email) + '"><td>' + esc(s.email) + "</td><td>" + esc(s.lang || "pt-BR") + "</td><td>" + fmtDate(s.created_at, true) +
+                    '</td><td class="num"><button class="btn btn-sm btn-danger-ghost" data-remove="' + esc(s.email) + '"><i class="fa fa-user-minus"></i> Remover</button></td></tr>';
+                }).join("") + "</tbody></table></div>"
+              : '<div class="empty"><i class="fa fa-envelope"></i>Ninguém se inscreveu ainda.</div>'));
+        $("subSearch").addEventListener("input", function () {
+          var q = this.value.toLowerCase();
+          document.querySelectorAll("#subTable tbody tr").forEach(function (tr) { tr.hidden = !!q && tr.getAttribute("data-email").indexOf(q) === -1; });
+        });
+        $("subExport").addEventListener("click", function () {
+          var csv = "email;idioma;inscrito_em\n" + subs.map(function (s) { return [s.email, s.lang || "pt-BR", s.created_at].join(";"); }).join("\n");
+          var a = document.createElement("a");
+          a.href = URL.createObjectURL(new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8" }));
+          a.download = "inscritos-newsletter-hooke.csv";
+          a.click();
+        });
+        $("content").addEventListener("click", function (e) {
+          var b = e.target.closest("[data-remove]");
+          if (!b || !confirm("Remover " + b.getAttribute("data-remove") + " da newsletter?")) return;
+          api("/subscribers/remove", { email: b.getAttribute("data-remove") }).then(function () { toast("Inscrito removido."); go("newsletter"); }, function (er) { toast(er.message, true); });
+        });
+      }).catch(showError);
+    };
+
+    // ===================== Usuários =====================
+    // Senha provisória aleatória: 12 letras + 2 números (cumpre as regras de senha).
+    function tempPassword() {
+      var chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz";
+      var rnd = crypto.getRandomValues(new Uint32Array(14));
+      var out = "";
+      for (var i = 0; i < 12; i++) out += chars[rnd[i] % chars.length];
+      return out + (rnd[12] % 10) + (rnd[13] % 10);
     }
 
-    if (token) showPanel();
+    VIEWS.users = function () {
+      api("/users").then(function (users) {
+        $("content").innerHTML =
+          '<div class="toolbar"><span class="muted">' + users.length + ' usuário(s)</span><span class="spacer"></span><button class="btn btn-primary" id="newUser"><i class="fa fa-user-plus"></i> Novo usuário</button></div>' +
+          card("Quem tem acesso ao painel",
+            '<div class="table-wrap"><table class="data"><thead><tr><th>Nome</th><th>Usuário</th><th>Perfil</th><th>Situação</th><th>Último acesso</th><th></th></tr></thead><tbody>' +
+            users.map(function (u) {
+              var status = !u.active ? '<span class="badge danger">desativado</span>' : u.locked ? '<span class="badge warn">bloqueado</span>' : u.mustChange ? '<span class="badge info">senha provisória</span>' : '<span class="badge ok">ativo</span>';
+              return "<tr><td><strong>" + esc(u.name) + '</strong><div class="muted small">' + esc(u.email || "") + "</div></td><td>" + esc(u.username) + "</td>" +
+                "<td>" + (u.role === "admin" ? '<span class="badge dark">Administrador</span>' : '<span class="badge">Editor</span>') + "</td><td>" + status + "</td><td>" + fmtDate(u.lastLoginAt, true) + "</td>" +
+                '<td class="num"><button class="btn btn-sm" data-user="' + esc(u.id) + '"><i class="fa fa-ellipsis-h"></i> Gerenciar</button></td></tr>';
+            }).join("") + "</tbody></table></div>" +
+            '<p class="muted small" style="margin:12px 0 0"><strong>Administrador:</strong> tudo, inclusive usuários, regras, newsletter e histórico. <strong>Editor:</strong> aprovar, editar e excluir notícias.</p>');
+        var byId = {};
+        users.forEach(function (u) { byId[u.id] = u; });
+
+        $("newUser").addEventListener("click", function () {
+          modal("Novo usuário",
+            '<div class="form-row"><label class="label" for="nuName">Nome completo</label><input class="field" id="nuName" /></div>' +
+            '<div class="grid-2"><div class="form-row"><label class="label" for="nuUser">Usuário (login)</label><input class="field" id="nuUser" autocapitalize="none" placeholder="ex.: maria.silva" /></div>' +
+            '<div class="form-row"><label class="label" for="nuRole">Perfil</label><select class="field" id="nuRole"><option value="editor">Editor</option><option value="admin">Administrador</option></select></div></div>' +
+            '<div class="form-row"><label class="label" for="nuEmail">E-mail (opcional)</label><input class="field" id="nuEmail" type="email" /></div>' +
+            '<div class="form-row"><label class="label" for="nuPass">Senha provisória</label><input class="field" id="nuPass" value="' + tempPassword() + '" /></div>' +
+            '<p class="muted small">Passe o usuário e a senha provisória para a pessoa. No primeiro acesso ela é obrigada a criar a própria senha.</p>',
+            [{ label: "Cadastrar", primary: true, run: function (close) {
+              api("/users", { name: $("nuName").value, username: $("nuUser").value, role: $("nuRole").value, email: $("nuEmail").value, password: $("nuPass").value })
+                .then(function () { close(); toast("Usuário cadastrado."); go("users"); }, function (e) { toast(e.message, true); });
+            } }]);
+        });
+
+        $("content").addEventListener("click", function (e) {
+          var b = e.target.closest("[data-user]");
+          if (!b) return;
+          var u = byId[b.getAttribute("data-user")];
+          var self = u.id === me.id;
+          var upd = function (body, msg, close, after) {
+            api("/users/update", Object.assign({ id: u.id }, body)).then(function () { if (close) close(); toast(msg); go("users"); if (after) after(); }, function (er) { toast(er.message, true); });
+          };
+          var actions = [];
+          if (!self) actions.push({ label: u.role === "admin" ? "Tornar editor" : "Tornar administrador", run: function (close) { upd({ role: u.role === "admin" ? "editor" : "admin" }, "Perfil alterado.", close); } });
+          if (u.locked) actions.push({ label: "Desbloquear", run: function (close) { upd({ unlock: true }, "Usuário desbloqueado.", close); } });
+          actions.push({ label: "Redefinir senha", run: function (close) {
+            if (!confirm("Gerar uma nova senha provisória para " + u.name + "?")) return;
+            var p = tempPassword();
+            upd({ password: p }, "Senha redefinida.", close, function () {
+              modal("Nova senha provisória", "<p>Passe para <strong>" + esc(u.name) + '</strong>:</p><p><code style="font-size:16px">' + esc(p) + '</code></p><p class="muted small">No próximo acesso a pessoa será obrigada a criar a própria senha.</p>', []);
+            });
+          } });
+          if (!self) actions.push({ label: u.active ? "Desativar acesso" : "Reativar acesso", danger: u.active, run: function (close) {
+            if (u.active && !confirm("Desativar o acesso de " + u.name + "? A sessão é encerrada na hora.")) return;
+            upd({ active: !u.active }, u.active ? "Acesso desativado." : "Acesso reativado.", close);
+          } });
+          modal(u.name + " (" + u.username + ")",
+            '<div class="form-row"><label class="label" for="euName">Nome</label><input class="field" id="euName" value="' + esc(u.name) + '" /></div>' +
+            '<div class="form-row"><label class="label" for="euEmail">E-mail</label><input class="field" id="euEmail" value="' + esc(u.email || "") + '" /></div>' +
+            '<button class="btn btn-sm btn-primary" id="euSave">Salvar nome e e-mail</button>',
+            actions, function (close) {
+              $("euSave").addEventListener("click", function () { upd({ name: $("euName").value, email: $("euEmail").value }, "Dados atualizados.", close); });
+            });
+        });
+      }).catch(showError);
+    };
+
+    // ===================== Histórico =====================
+    var ACTIONS = {
+      login: "Entrou no painel", login_falhou: "Senha errada", login_bloqueado: "Usuário bloqueado (tentativas)", login_negado: "Acesso negado (desativado)",
+      senha_alterada: "Alterou a própria senha", sessoes_encerradas: "Encerrou todas as sessões",
+      noticia_aprovada: "Aprovou e publicou", noticia_excluida: "Excluiu notícia pendente", noticia_despublicada: "Despublicou",
+      noticia_editada: "Editou notícia", imagem_pedida: "Pediu imagem por IA", geracao_pedida: "Pediu geração de notícias",
+      regras_alteradas: "Alterou as regras editoriais", inscrito_removido: "Removeu inscrito da newsletter",
+      usuario_criado: "Cadastrou usuário", usuario_alterado: "Alterou usuário",
+      tema_adicionado: "Adicionou tema", tema_alterado: "Alterou tema", tema_excluido: "Excluiu tema",
+      editoria_criada: "Criou editoria", editoria_alterada: "Alterou editoria",
+    };
+    VIEWS.audit = function () {
+      api("/audit?limit=300").then(function (rows) {
+        $("content").innerHTML = card("Últimas ações no painel",
+          rows.length
+            ? '<div class="table-wrap"><table class="data"><thead><tr><th>Quando</th><th>Quem</th><th>Ação</th><th>Detalhes</th></tr></thead><tbody>' +
+              rows.map(function (r) {
+                var det = r.details;
+                try {
+                  var o = JSON.parse(det);
+                  det = o && typeof o === "object" ? Object.keys(o).map(function (k) { return k + ": " + (Array.isArray(o[k]) ? o[k].join(", ") : o[k]); }).join(" · ") : o;
+                } catch (e) { /* texto simples */ }
+                var warn = /falhou|bloqueado|negado/.test(r.action);
+                return '<tr><td style="white-space:nowrap">' + fmtDate(r.at, true) + "</td><td>" + esc(r.username || "—") + "</td><td>" +
+                  (warn ? '<span class="badge warn">' : "") + esc(ACTIONS[r.action] || r.action) + (warn ? "</span>" : "") + '</td><td class="muted small">' + esc(det || "") + "</td></tr>";
+              }).join("") + "</tbody></table></div>"
+            : '<div class="empty">Nenhuma ação registrada.</div>');
+      }).catch(showError);
+    };
+
+    // ===================== Minha conta =====================
+    VIEWS.account = function () {
+      $("content").innerHTML =
+        '<div class="dash-grid-even">' +
+        card("Seus dados",
+          "<p><strong>" + esc(me.name) + '</strong><br><span class="muted">' + esc(me.username) + " · " + (me.role === "admin" ? "Administrador" : "Editor") + "</span></p>" +
+          '<p class="muted small">Último acesso: ' + fmtDate(me.lastLoginAt, true) + "</p>" +
+          '<button class="btn btn-sm" id="logoutAll"><i class="fa fa-power-off"></i> Encerrar todas as minhas sessões</button>' +
+          '<p class="muted small">Use se você entrou num computador que não é seu.</p>') +
+        card("Trocar senha",
+          '<div class="form-row"><label class="label" for="acCurrent">Senha atual</label><input class="field" id="acCurrent" type="password" autocomplete="current-password" /></div>' +
+          '<div class="form-row"><label class="label" for="acNext">Nova senha</label><input class="field" id="acNext" type="password" autocomplete="new-password" /></div>' +
+          '<div class="form-row"><label class="label" for="acConfirm">Repita a nova senha</label><input class="field" id="acConfirm" type="password" autocomplete="new-password" /></div>' +
+          '<p class="muted small">Mínimo de 10 caracteres, com letras e números.</p>' +
+          '<button class="btn btn-primary" id="acSave"><i class="fa fa-key"></i> Salvar nova senha</button>') +
+        "</div>";
+      $("acSave").addEventListener("click", function () {
+        if ($("acNext").value !== $("acConfirm").value) { toast("As senhas novas não conferem.", true); return; }
+        api("/password", { current: $("acCurrent").value, next: $("acNext").value }).then(function (d) {
+          setToken(d.token); me = d.user; toast("Senha alterada."); go("account");
+        }, function (e) { toast(e.message, true); });
+      });
+      $("logoutAll").addEventListener("click", function () {
+        if (!confirm("Encerrar todas as suas sessões (inclusive esta)?")) return;
+        api("/logout-all", {}).then(function () { logout(false); });
+      });
+    };
+
+    // ===================== Janela (modal) =====================
+    function modal(title, html, actions, onOpen) {
+      actions = actions || [];
+      var bg = document.createElement("div");
+      bg.className = "modal-bg";
+      bg.innerHTML = '<div class="modal" role="dialog" aria-modal="true" aria-label="' + esc(title) + '"><h3>' + esc(title) + "</h3>" + html +
+        '<div class="modal-actions">' + actions.map(function (a, i) {
+          return '<button class="btn btn-sm' + (a.primary ? " btn-primary" : a.danger ? " btn-danger-ghost" : "") + '" data-a="' + i + '">' + esc(a.label) + "</button>";
+        }).join("") + '<button class="btn btn-sm" data-close>Fechar</button></div></div>';
+      document.body.appendChild(bg);
+      var onKey = function (e) { if (e.key === "Escape") close(); };
+      var close = function () { bg.remove(); document.removeEventListener("keydown", onKey); };
+      document.addEventListener("keydown", onKey);
+      bg.addEventListener("click", function (e) {
+        if (e.target === bg || e.target.closest("[data-close]")) { close(); return; }
+        var b = e.target.closest("[data-a]");
+        if (b) actions[Number(b.getAttribute("data-a"))].run(close);
+      });
+      if (onOpen) onOpen(close);
+      var first = bg.querySelector("input, textarea, select");
+      if (first) first.focus();
+    }
+
+    // ===================== Início =====================
+    if (token) {
+      api("/me").then(function (d) { me = d.user; if (me.mustChange) showChange(); else startApp(); }).catch(function () { showLogin(); });
+    } else {
+      showLogin();
+    }
+  })();
   </script>
 </body>
 </html>

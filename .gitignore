@@ -1,3 +1,5 @@
 .claude/
 .wrangler/
 worker/.wrangler/
+worker/.dev.vars
+seed.sql

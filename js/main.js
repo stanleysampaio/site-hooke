@@ -6,6 +6,9 @@
 (function () {
   'use strict';
 
+  // Tradução de textos montados aqui (js/i18n.js); sem ele, fica em pt-BR.
+  var i18n = window.HookeI18n || { t: function (s) { return s; }, lang: 'pt-BR' };
+
   /* ---------- Reveal on scroll ---------- */
   var revealEls = document.querySelectorAll('.m-reveal');
   if ('IntersectionObserver' in window && revealEls.length) {
@@ -24,7 +27,7 @@
 
   /* ---------- Floating utilities: WhatsApp + back-to-top ---------- */
   var wa = document.createElement('a');
-  wa.href = 'https://wa.me/5571999524838?text=' + encodeURIComponent('Olá! Gostaria de solicitar um orçamento com a Hooke.');
+  wa.href = 'https://wa.me/5571999524838?text=' + encodeURIComponent(i18n.t('Olá! Gostaria de solicitar um orçamento com a Hooke.'));
   wa.target = '_blank';
   wa.rel = 'noopener noreferrer';
   wa.className = 'm-float-btn m-whatsapp';
@@ -86,18 +89,26 @@
   }
 
   /* ---------- Mini news slider (hero panel) ---------- */
-  var slides = document.querySelectorAll('.m-news-slide');
-  var dotsWrap = document.getElementById('mNewsDots');
-  if (slides.length) {
+  // Exposto em window.HookeNewsSlider para js/news-mini.js reiniciar o slider
+  // depois de trocar os destaques fixos pelas últimas notícias publicadas.
+  var sliderTimer;
+  function initNewsSlider() {
+    var slides = document.querySelectorAll('.m-news-slide');
+    var dotsWrap = document.getElementById('mNewsDots');
+    clearInterval(sliderTimer);
+    if (dotsWrap) dotsWrap.innerHTML = '';
+    if (!slides.length) return;
+
     var current = 0;
     var dots = [];
+    slides.forEach(function (s, i) { s.classList.toggle('active', i === 0); });
 
     if (dotsWrap) {
       slides.forEach(function (_, i) {
         var d = document.createElement('button');
         d.type = 'button';
         d.className = i === 0 ? 'active' : '';
-        d.setAttribute('aria-label', 'Notícia ' + (i + 1));
+        d.setAttribute('aria-label', i18n.t('Notícia') + ' ' + (i + 1));
         d.addEventListener('click', function () { show(i); restart(); });
         dotsWrap.appendChild(d);
         dots.push(d);
@@ -112,13 +123,14 @@
       if (dots[current]) dots[current].classList.add('active');
     }
 
-    var timer;
     function restart() {
-      clearInterval(timer);
-      timer = setInterval(function () { show((current + 1) % slides.length); }, 5500);
+      clearInterval(sliderTimer);
+      sliderTimer = setInterval(function () { show((current + 1) % slides.length); }, 5500);
     }
     restart();
   }
+  initNewsSlider();
+  window.HookeNewsSlider = initNewsSlider;
 
   /* ---------- Footer year ---------- */
   var yearEl = document.getElementById('mYear');
@@ -138,6 +150,7 @@
         'E-mail: ' + f['email'].value.trim(),
         'Telefone/WhatsApp: ' + (f['phone'].value.trim() || 'não informado'),
         'Setor de interesse: ' + f['sector'].value,
+        'Idioma do site: ' + i18n.lang,
         '',
         'Mensagem:',
         f['message'].value.trim(),
