@@ -3,3 +3,6 @@
 worker/.wrangler/
 worker/.dev.vars
 seed.sql
+
+# Vídeo da home (250 MB): fica só no bucket S3; o GitHub não aceita arquivos > 100 MB.
+video/
