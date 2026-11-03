@@ -27,7 +27,7 @@
 
   /* ---------- Floating utilities: WhatsApp + back-to-top ---------- */
   var wa = document.createElement('a');
-  wa.href = 'https://wa.me/5571999524838?text=' + encodeURIComponent(i18n.t('Olá! Gostaria de solicitar um orçamento com a Hooke.'));
+  wa.href = 'https://wa.me/5534992449665?text=' + encodeURIComponent(i18n.t('Olá! Vim pelo site da Hooke.'));
   wa.target = '_blank';
   wa.rel = 'noopener noreferrer';
   wa.className = 'm-float-btn m-whatsapp';

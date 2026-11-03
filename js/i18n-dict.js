@@ -30,11 +30,11 @@ window.HOOKE_I18N_DICT = {
     'Falar no WhatsApp': { pt: 'Falar pelo WhatsApp', en: 'Chat on WhatsApp', es: 'Hablar por WhatsApp', zh: '通过 WhatsApp 联系' },
     'Voltar ao topo': { en: 'Back to top', es: 'Volver arriba', zh: '返回顶部' },
     'Notícia': { en: 'News', es: 'Noticia', zh: '新闻' },
-    'Olá! Gostaria de solicitar um orçamento com a Hooke.': {
-      pt: 'Olá! Gostaria de pedir um orçamento à Hooke.',
-      en: 'Hello! I would like to request a quote from Hooke.',
-      es: '¡Hola! Me gustaría solicitar un presupuesto a Hooke.',
-      zh: '您好！我想向 Hooke 申请报价。',
+    'Olá! Vim pelo site da Hooke.': {
+      pt: 'Olá! Vim pelo site da Hooke.',
+      en: 'Hello! I came from the Hooke website.',
+      es: '¡Hola! Vengo del sitio web de Hooke.',
+      zh: '您好！我从 Hooke 网站来。',
     },
 
     /* ---------- Rodapé ---------- */
