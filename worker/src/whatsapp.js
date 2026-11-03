@@ -26,14 +26,11 @@ const HANDOFF_HOURS = 24;
 const OFFICE = { days: [1, 2, 3, 4, 5], open: 8, close: 18, label: "de segunda a sexta, das 8h às 18h" };
 
 export const SECTORS = [
-  { id: "mineracao", title: "Mineração", text: "Engenharia e manutenção para elevar a eficiência da sua mina com segurança e alta performance." },
-  { id: "cimento", title: "Cimento", text: "Suporte em mecânica, elétrica e instrumentação, além da otimização de plantas e processos." },
-  { id: "petroleo-gas", title: "Petróleo e Gás", text: "Automação, eficiência energética e segurança, do projeto à manutenção preditiva." },
-  { id: "fertilizantes", title: "Fertilizantes", text: "Automação, manutenção e otimização para aumentar produtividade e reduzir custos." },
-  { id: "metalurgia", title: "Metalurgia", text: "Engenharia mecânica, elétrica e de processos para otimizar linhas metalúrgicas." },
-  { id: "refrigeracao", title: "Refrigeração", text: "Projetos e manutenção de sistemas frigoríficos com eficiência energética." },
-  { id: "alimenticia", title: "Alimentícia", text: "Engenharia e automação garantindo qualidade, rastreabilidade e segurança." },
-  { id: "siderurgia", title: "Siderurgia", text: "Modernização, automação e otimização de processos com foco em eficiência." },
+  { id: "quimica-petroquimica", title: "Química e Petroquímica", text: "Montagem, manutenção e automação em plantas químicas e petroquímicas, com segurança e controle de qualidade." },
+  { id: "alimenticia-bebidas", title: "Alimentícia e Bebidas", text: "Engenharia, utilidades e adequações para linhas de alimentos e bebidas, com rastreabilidade e segurança." },
+  { id: "papel-celulose", title: "Papel e Celulose", text: "Montagem mecânica, tubulações, elétrica e instrumentação para fábricas de papel e celulose." },
+  { id: "mineracao-siderurgia", title: "Mineração e Siderurgia", text: "Estruturas metálicas, montagem de equipamentos e manutenção para minas e usinas siderúrgicas." },
+  { id: "energia-utilities", title: "Energia e Utilities", text: "Instalações elétricas de baixa e média tensão, utilidades e sistemas auxiliares para a indústria." },
 ];
 
 export const DEADLINES = { urgente: "Urgente", "30dias": "Até 30 dias", planejando: "Ainda planejando" };

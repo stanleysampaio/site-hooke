@@ -10,69 +10,60 @@
 // de fora; as buscas cobrem esses setores.
 
 export const DEFAULT_EDITORIAS = [
-  { name: 'Mineração', maxPerRun: 1 },
-  { name: 'Cimento', maxPerRun: 1 },
-  { name: 'Petróleo e Gás', maxPerRun: 1 },
-  { name: 'Fertilizantes', maxPerRun: 1 },
-  { name: 'Metalurgia', maxPerRun: 1 },
-  { name: 'Refrigeração', maxPerRun: 1 },
-  { name: 'Alimentícia', maxPerRun: 1 },
-  { name: 'Siderurgia', maxPerRun: 1 },
-  // Editorias regionais (prioridade editorial da Hooke: Bahia e Minas Gerais).
-  { name: 'Indústria BA e MG', maxPerRun: 2 },
-  { name: 'Infraestrutura', maxPerRun: 1 },
+  // Os 5 segmentos da apresentação institucional (mesmos da página Soluções).
+  { name: 'Química e Petroquímica', maxPerRun: 2 },
+  { name: 'Alimentícia e Bebidas', maxPerRun: 2 },
+  { name: 'Papel e Celulose', maxPerRun: 2 },
+  { name: 'Mineração e Siderurgia', maxPerRun: 2 },
+  { name: 'Energia e Utilities', maxPerRun: 2 },
 ];
 
 const AGENCIA_BRASIL = 'https://agenciabrasil.ebc.com.br/rss/economia/feed.xml';
 const t = (editoria, kind, value, priority = false) => ({ editoria, kind, value, priority });
 
+// Prioridade editorial da Hooke: Bahia e Minas Gerais (buscas com priority).
 export const DEFAULT_THEMES = [
-  t('Mineração', 'rss', 'https://mineracaobrasil.com/feed/'),
-  t('Mineração', 'rss', 'https://www.brasilmineral.com.br/feed'),
-  t('Mineração', 'rss', 'https://revistaminerios.com.br/feed/'),
-  t('Mineração', 'busca', 'mineração mineradora'),
-  t('Mineração', 'busca', 'mineração Bahia', true),
-  t('Mineração', 'busca', 'mineração Minas Gerais', true),
+  t('Química e Petroquímica', 'rss', 'https://petronoticias.com.br/feed/'),
+  t('Química e Petroquímica', 'rss', AGENCIA_BRASIL),
+  t('Química e Petroquímica', 'busca', 'indústria química petroquímica'),
+  t('Química e Petroquímica', 'busca', 'petróleo e gás Petrobras'),
+  t('Química e Petroquímica', 'busca', 'fertilizantes indústria'),
+  t('Química e Petroquímica', 'busca', 'fábrica de fertilizantes'),
+  t('Química e Petroquímica', 'busca', 'Polo Industrial de Camaçari', true),
+  t('Química e Petroquímica', 'busca', 'química petroquímica Bahia', true),
+  t('Química e Petroquímica', 'busca', 'petróleo gás Bahia', true),
+  t('Química e Petroquímica', 'busca', 'fertilizantes Minas Gerais', true),
 
-  t('Cimento', 'rss', 'https://www.cimentoitambe.com.br/feed/'),
-  t('Cimento', 'busca', 'indústria do cimento'),
-  t('Cimento', 'busca', 'cimenteira fábrica de cimento'),
+  t('Alimentícia e Bebidas', 'rss', 'https://www.foodconnection.com.br/feed/'),
+  t('Alimentícia e Bebidas', 'rss', 'https://www.abia.org.br/feed'),
+  t('Alimentícia e Bebidas', 'busca', 'indústria de alimentos'),
+  t('Alimentícia e Bebidas', 'busca', 'indústria de bebidas fábrica cervejaria'),
+  t('Alimentícia e Bebidas', 'busca', 'indústria alimentos bebidas Bahia', true),
+  t('Alimentícia e Bebidas', 'busca', 'indústria alimentos bebidas Minas Gerais', true),
 
-  t('Petróleo e Gás', 'rss', 'https://petronoticias.com.br/feed/'),
-  t('Petróleo e Gás', 'rss', AGENCIA_BRASIL),
-  t('Petróleo e Gás', 'busca', 'petróleo e gás Petrobras'),
-  t('Petróleo e Gás', 'busca', 'petróleo gás Bahia', true),
-  t('Petróleo e Gás', 'busca', 'petróleo gás Minas Gerais', true),
+  t('Papel e Celulose', 'busca', 'papel e celulose indústria'),
+  t('Papel e Celulose', 'busca', 'fábrica de celulose investimento'),
+  t('Papel e Celulose', 'busca', 'celulose Bahia', true),
+  t('Papel e Celulose', 'busca', 'celulose Minas Gerais', true),
 
-  t('Fertilizantes', 'rss', 'https://globorural.globo.com/rss/globorural/'),
-  t('Fertilizantes', 'rss', AGENCIA_BRASIL),
-  t('Fertilizantes', 'busca', 'fertilizantes indústria'),
-  t('Fertilizantes', 'busca', 'fertilizantes potássio fosfato nitrogenados'),
-  t('Fertilizantes', 'busca', 'fábrica de fertilizantes'),
-  t('Fertilizantes', 'busca', 'fertilizantes Bahia', true),
-  t('Fertilizantes', 'busca', 'fertilizantes Minas Gerais', true),
+  t('Mineração e Siderurgia', 'rss', 'https://mineracaobrasil.com/feed/'),
+  t('Mineração e Siderurgia', 'rss', 'https://www.brasilmineral.com.br/feed'),
+  t('Mineração e Siderurgia', 'rss', 'https://revistaminerios.com.br/feed/'),
+  t('Mineração e Siderurgia', 'rss', 'https://www.siderurgiabrasil.com.br/feed/'),
+  t('Mineração e Siderurgia', 'busca', 'mineração mineradora'),
+  t('Mineração e Siderurgia', 'busca', 'siderurgia aço'),
+  t('Mineração e Siderurgia', 'busca', 'indústria do cimento'),
+  t('Mineração e Siderurgia', 'busca', 'metalúrgica fundição'),
+  t('Mineração e Siderurgia', 'busca', 'mineração Bahia', true),
+  t('Mineração e Siderurgia', 'busca', 'mineração Minas Gerais', true),
+  t('Mineração e Siderurgia', 'busca', 'siderurgia Minas Gerais', true),
 
-  t('Metalurgia', 'busca', 'metalurgia indústria'),
-  t('Metalurgia', 'busca', 'metalúrgica fundição'),
-
-  t('Refrigeração', 'rss', 'https://revistadofrio.com.br/feed/'),
-  t('Refrigeração', 'rss', 'https://refrigeracao.net/feed/'),
-  t('Refrigeração', 'busca', 'refrigeração industrial'),
-
-  t('Alimentícia', 'rss', 'https://www.foodconnection.com.br/feed/'),
-  t('Alimentícia', 'rss', 'https://www.abia.org.br/feed'),
-  t('Alimentícia', 'busca', 'indústria de alimentos'),
-
-  t('Siderurgia', 'rss', 'https://www.siderurgiabrasil.com.br/feed/'),
-  t('Siderurgia', 'busca', 'siderurgia aço'),
-
-  t('Indústria BA e MG', 'busca', 'indústria Bahia investimentos', true),
-  t('Indústria BA e MG', 'busca', 'indústria Minas Gerais investimentos', true),
-  t('Indústria BA e MG', 'busca', 'Polo Industrial de Camaçari', true),
-  t('Indústria BA e MG', 'busca', 'FIEB Federação das Indústrias da Bahia', true),
-  t('Indústria BA e MG', 'busca', 'empresas chinesas Bahia', true),
-
-  t('Infraestrutura', 'busca', 'ponte Salvador Itaparica', true),
+  t('Energia e Utilities', 'rss', 'https://revistadofrio.com.br/feed/'),
+  t('Energia e Utilities', 'busca', 'energia indústria subestação geração'),
+  t('Energia e Utilities', 'busca', 'refrigeração industrial'),
+  t('Energia e Utilities', 'busca', 'hidrogênio verde'),
+  t('Energia e Utilities', 'busca', 'energia eólica solar Bahia', true),
+  t('Energia e Utilities', 'busca', 'energia Minas Gerais indústria', true),
 ];
 
 // Busca no Bing Notícias: ordenada por data e restrita ao Brasil/pt-BR. O link
@@ -119,12 +110,9 @@ export function buildCatalog(editorias, themes) {
 // Foto própria da Hooke por setor (as mesmas da página de Soluções): usada
 // até a imagem por IA ficar pronta.
 export const SECTOR_IMAGES = {
-  'Mineração': '/img/services-1.png',
-  'Cimento': '/img/services-2.png',
-  'Petróleo e Gás': '/img/services-3.png',
-  'Fertilizantes': '/img/services-4.png',
-  'Metalurgia': '/img/services-5.png',
-  'Refrigeração': '/img/services-6.png',
-  'Alimentícia': '/img/services-7.png',
-  'Siderurgia': '/img/services-8.png',
+  'Química e Petroquímica': '/img/services-3.png',
+  'Alimentícia e Bebidas': '/img/services-7.png',
+  'Papel e Celulose': '/img/services-4.png',
+  'Mineração e Siderurgia': '/img/services-1.png',
+  'Energia e Utilities': '/img/services-6.png',
 };

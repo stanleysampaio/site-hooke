@@ -9,7 +9,7 @@
  *   node src/run.js --dry-run       não envia nada: grava matérias e imagens em ./out
  *   node src/run.js --check-sources testa os feeds e a extração de texto (não usa a IA)
  *   --limit N                       limita o total de matérias desta execução
- *   --sector "Fertilizantes"        gera só para um setor (nome igual ao de src/sources.js)
+ *   --sector "Papel e Celulose"     gera só para um setor (nome igual ao de src/sources.js)
  *   --ignore-seen                   reavalia links já descartados (pendentes/publicados continuam fora)
  *   --watermark-existing            aplica a marca d'água nas imagens geradas antes dela existir
  *   --enrich-sources                completa título/portal/autor das fontes das notícias existentes
