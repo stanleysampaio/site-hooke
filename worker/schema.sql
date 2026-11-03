@@ -122,3 +122,47 @@ CREATE TABLE IF NOT EXISTS themes (
   created_by TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_themes_editoria ON themes (editoria);
+
+-- ===== Bot de WhatsApp (src/whatsapp.js) =====
+-- Uma linha por pessoa que escreveu: em que passo da conversa ela está e as
+-- respostas do orçamento em andamento (data, JSON). paused_until = até quando
+-- o bot fica quieto (equipe atendendo pelo celular).
+CREATE TABLE IF NOT EXISTS wa_contacts (
+  wa_id TEXT PRIMARY KEY,          -- número com DDI, ex.: 5571999990000
+  name TEXT,                       -- nome do perfil do WhatsApp
+  state TEXT NOT NULL,             -- inicio | servicos | q_* (perguntas do canal) | humano
+  data TEXT NOT NULL DEFAULT '{}',
+  paused_until TEXT,
+  last_in_at TEXT,
+  created_at TEXT NOT NULL
+);
+
+-- Pedidos concluídos no bot (tela WhatsApp do painel), de qualquer canal.
+CREATE TABLE IF NOT EXISTS wa_leads (
+  id TEXT PRIMARY KEY,
+  wa_id TEXT NOT NULL,
+  channel TEXT NOT NULL DEFAULT 'comercial',   -- comercial | sac (CHANNELS em src/whatsapp.js)
+  profile_name TEXT,
+  name TEXT,
+  company TEXT,
+  sector TEXT,
+  location TEXT,
+  subject TEXT,                    -- SAC: Suporte técnico | Dúvida | Reclamação
+  description TEXT,
+  attachments TEXT,                -- JSON: [{type, id, name}] (os arquivos ficam na conversa)
+  deadline TEXT,
+  email TEXT,
+  origin TEXT,                     -- 'site' quando veio do botão do site
+  status TEXT NOT NULL DEFAULT 'novo',   -- novo | em_atendimento | proposta | fechado | descartado
+  notes TEXT,
+  created_at TEXT NOT NULL,
+  updated_at TEXT,
+  updated_by TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_wa_leads_created ON wa_leads (created_at);
+
+-- Ids de mensagens já processadas (a Meta reenvia webhooks; guardados 7 dias).
+CREATE TABLE IF NOT EXISTS wa_seen (
+  id TEXT PRIMARY KEY,
+  at TEXT NOT NULL
+);

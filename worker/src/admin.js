@@ -380,6 +380,33 @@ export async function handleAdmin(request, env, url) {
     return fail("Not found", 404);
   }
 
+  // ---------- WhatsApp (pedidos de orçamento do bot; dados pessoais: só administradores) ----------
+  if (path.startsWith("/whatsapp") && !isAdmin) return fail("Apenas administradores podem ver os contatos do WhatsApp.", 403);
+  if (path === "/whatsapp" && request.method === "GET") {
+    const [leads, contacts, lastWebhook] = await Promise.all([
+      env.DB.prepare("SELECT * FROM wa_leads ORDER BY created_at DESC LIMIT 500").all(),
+      env.DB.prepare("SELECT COUNT(*) AS n FROM wa_contacts WHERE created_at >= ?").bind(daysAgo(29)).first(),
+      getSetting(env, "wa_last_webhook"),
+    ]);
+    return ok({
+      configured: Boolean(env.WA_TOKEN && env.WA_PHONE_NUMBER_ID && env.WA_APP_SECRET && env.WA_VERIFY_TOKEN),
+      lastWebhookAt: lastWebhook ? lastWebhook.value : null,
+      contacts30: contacts.n,
+      leads: leads.results.map((l) => ({ ...l, attachments: JSON.parse(l.attachments || "[]") })),
+    });
+  }
+
+  if (path === "/whatsapp/lead" && request.method === "POST") {
+    const statuses = ["novo", "em_atendimento", "proposta", "fechado", "descartado"];
+    const lead = await env.DB.prepare("SELECT id, name, company, status FROM wa_leads WHERE id = ?").bind(body.id).first();
+    if (!lead) return fail("Pedido não encontrado.", 404);
+    if (body.status !== undefined && !statuses.includes(body.status)) return fail("Situação inválida.");
+    await env.DB.prepare("UPDATE wa_leads SET status = COALESCE(?, status), notes = COALESCE(?, notes), updated_at = ?, updated_by = ? WHERE id = ?")
+      .bind(body.status ?? null, body.notes === undefined ? null : String(body.notes).slice(0, 2000), now(), user.name, lead.id).run();
+    await audit(env, user, "lead_alterado", lead.id, { contato: [lead.name, lead.company].filter(Boolean).join(" — "), situacao: body.status || lead.status });
+    return ok();
+  }
+
   // ---------- Newsletter (e-mails são dados pessoais: só administradores) ----------
   if (path.startsWith("/subscribers") && !isAdmin) return fail("Apenas administradores podem ver os inscritos.", 403);
   if (path === "/subscribers" && request.method === "GET") {

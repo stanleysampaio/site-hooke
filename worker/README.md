@@ -8,6 +8,7 @@ API do feed de notícias na Cloudflare (plano gratuito). Os dados ficam no **D1*
 | `src/index.js` | rotas públicas do site (`/api/news`, `/api/views`, newsletter, `/share/:id`) e do gerador (`/api/ingest/*`, token `INGEST_TOKEN`) |
 | `src/admin.js` | rotas do painel `/admin/news.html` (`/api/admin/*`): notícias, métricas, newsletter, regras editoriais, usuários, histórico |
 | `src/auth.js` | senhas (PBKDF2-SHA256 com sal), sessão assinada (secret `SESSION_SECRET`, 8 h), bloqueio após 5 erros e limite por endereço de rede |
+| `src/whatsapp.js` | bot de WhatsApp (`/api/whatsapp/webhook`): menu, pedido de orçamento, passa a conversa para a equipe. Configuração e custos em `WHATSAPP.md` |
 | `src/db.js` | acesso ao D1 (as alterações usam `json_set`, então duas atualizações da mesma notícia nunca se sobrescrevem) |
 
 A geração das matérias (pesquisa, IA, imagem e tradução) **não roda aqui**. Veja `../news-pipeline/README.md`.

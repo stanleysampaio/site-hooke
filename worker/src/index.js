@@ -8,6 +8,7 @@ import {
   SITE_URL, CORS_HEADERS, json, now, today, listItems, getItem, insertItem, patchItem, viewsMap, getSetting,
 } from "./db.js";
 import { handleAdmin } from "./admin.js";
+import { handleWhatsApp } from "./whatsapp.js";
 
 // Token fixo do pipeline (secret INGEST_TOKEN). Comparação em tempo constante.
 function requireIngest(request, env) {
@@ -202,7 +203,7 @@ async function handleShare(env, id) {
 
 // ---------- HTTP routes ----------
 
-async function handleRequest(request, env) {
+async function handleRequest(request, env, ctx) {
   const url = new URL(request.url);
 
   if (request.method === "OPTIONS") {
@@ -211,6 +212,7 @@ async function handleRequest(request, env) {
 
   if (url.pathname.startsWith("/api/ingest/")) return handleIngest(request, env, url);
   if (url.pathname.startsWith("/api/admin/")) return handleAdmin(request, env, url);
+  if (url.pathname === "/api/whatsapp/webhook") return handleWhatsApp(request, env, ctx);
 
   if (url.pathname.startsWith("/share/") && request.method === "GET") {
     return handleShare(env, decodeURIComponent(url.pathname.slice("/share/".length)));
@@ -273,5 +275,5 @@ async function handleRequest(request, env) {
 }
 
 export default {
-  fetch: (request, env) => handleRequest(request, env),
+  fetch: (request, env, ctx) => handleRequest(request, env, ctx),
 };

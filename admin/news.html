@@ -236,6 +236,7 @@
         <a href="#rules" data-view="rules"><i class="fa fa-book"></i> Regras editoriais</a>
         <a href="#themes" data-view="themes"><i class="fa fa-tags"></i> Temas e fontes</a>
         <div class="nav-title" data-admin>Administração</div>
+        <a href="#whatsapp" data-view="whatsapp" data-admin><i class="fab fa-whatsapp"></i> WhatsApp</a>
         <a href="#newsletter" data-view="newsletter" data-admin><i class="fa fa-envelope-open-text"></i> Newsletter</a>
         <a href="#users" data-view="users" data-admin><i class="fa fa-users"></i> Usuários</a>
         <a href="#audit" data-view="audit" data-admin><i class="fa fa-history"></i> Histórico</a>
@@ -388,10 +389,10 @@
     // ===================== App =====================
     var TITLES = {
       overview: "Visão geral", pending: "Pendentes de aprovação", published: "Notícias publicadas",
-      rules: "Regras editoriais", themes: "Temas e fontes", newsletter: "Newsletter", users: "Usuários", audit: "Histórico de ações", account: "Minha conta",
+      rules: "Regras editoriais", themes: "Temas e fontes", newsletter: "Newsletter", whatsapp: "WhatsApp — pedidos (Comercial e SAC)", users: "Usuários", audit: "Histórico de ações", account: "Minha conta",
     };
     var VIEWS = {};
-    var isAdminView = function (v) { return v === "users" || v === "audit" || v === "newsletter"; };
+    var isAdminView = function (v) { return v === "users" || v === "audit" || v === "newsletter" || v === "whatsapp"; };
 
     function startApp() {
       showOnly("appView");
@@ -864,6 +865,91 @@
       }).catch(showError);
     };
 
+    // ===================== WhatsApp =====================
+    var LEAD_STATUS = { novo: ["Novo", "info"], em_atendimento: ["Em atendimento", "warn"], proposta: ["Proposta enviada", "dark"], fechado: ["Fechado / resolvido", "ok"], descartado: ["Descartado", "danger"] };
+    var LEAD_CHANNEL = { comercial: ["Comercial", "info"], sac: ["SAC", "warn"] };
+    var channelOf = function (l) { return LEAD_CHANNEL[l.channel] ? l.channel : "comercial"; };
+
+    VIEWS.whatsapp = function () {
+      api("/whatsapp").then(function (d) {
+        var leads = d.leads;
+        var open = leads.filter(function (l) { return l.status === "novo" || l.status === "em_atendimento"; }).length;
+        var setup = d.configured
+          ? (d.lastWebhookAt ? '<span class="badge ok">bot ativo</span> <span class="muted small">última mensagem recebida ' + fmtDate(d.lastWebhookAt, true) + "</span>"
+            : '<span class="badge warn">configurado, sem mensagens ainda</span>')
+          : '<span class="badge">aguardando número</span> <span class="muted small">o bot entra no ar quando o número novo for conectado à API da Meta</span>';
+        $("content").innerHTML =
+          '<div class="toolbar">' + setup + '<span class="spacer"></span>' +
+          '<select class="field" id="leadChannel" style="width:auto" aria-label="Filtrar por canal"><option value="">Todos os canais</option>' +
+            Object.keys(LEAD_CHANNEL).map(function (k) { return '<option value="' + k + '">' + LEAD_CHANNEL[k][0] + "</option>"; }).join("") + "</select>" +
+          '<button class="btn btn-sm" id="leadExport"' + (leads.length ? "" : " disabled") + '><i class="fa fa-file-csv"></i> Exportar planilha (CSV)</button></div>' +
+          '<div class="kpis">' +
+          kpi("fa-inbox", "Em aberto", fmtNum(open), "novos ou em atendimento") +
+          kpi("fa-file-signature", "Pedidos no total", fmtNum(leads.length), "concluídos no bot") +
+          kpi("fa-user-friends", "Contatos (30 dias)", fmtNum(d.contacts30), "pessoas que escreveram") +
+          "</div>" +
+          card("Pedidos",
+            '<p class="muted small" style="margin-top:0">A conversa completa (inclusive fotos e arquivos) fica no WhatsApp do celular. Aqui ficam os dados do pedido para acompanhar o andamento. Dados pessoais protegidos pela LGPD.</p>' +
+            (leads.length
+              ? '<div class="table-wrap"><table class="data"><thead><tr><th>Recebido</th><th>Canal</th><th>Contato</th><th>Setor / assunto</th><th>Prazo</th><th>Situação</th><th></th></tr></thead><tbody>' +
+                leads.map(function (l) {
+                  var st = LEAD_STATUS[l.status] || [l.status, ""];
+                  var ch = LEAD_CHANNEL[channelOf(l)];
+                  return '<tr data-channel="' + channelOf(l) + '"><td>' + fmtDate(l.created_at, true) + "</td>" +
+                    '<td><span class="badge ' + ch[1] + '">' + ch[0] + "</span></td>" +
+                    "<td><strong>" + esc(l.name || l.profile_name || "") + '</strong><div class="muted small">' + esc(l.company || "") + "</div></td>" +
+                    "<td>" + esc(l.channel === "sac" ? l.subject || "" : l.sector || "") + '<div class="muted small">' + esc(l.location || "") + "</div></td>" +
+                    "<td>" + esc(l.deadline || "") + "</td>" +
+                    '<td><span class="badge ' + st[1] + '">' + esc(st[0]) + "</span></td>" +
+                    '<td class="num"><button class="btn btn-sm" data-lead="' + esc(l.id) + '"><i class="fa fa-ellipsis-h"></i> Abrir</button></td></tr>';
+                }).join("") + "</tbody></table></div>"
+              : '<div class="empty"><i class="fab fa-whatsapp"></i>Nenhum pedido pelo WhatsApp ainda.</div>'));
+        var byId = {};
+        leads.forEach(function (l) { byId[l.id] = l; });
+
+        $("leadChannel").addEventListener("change", function () {
+          var v = this.value;
+          document.querySelectorAll("#content tr[data-channel]").forEach(function (tr) { tr.hidden = !!v && tr.getAttribute("data-channel") !== v; });
+        });
+
+        $("leadExport").addEventListener("click", function () {
+          var cell = function (v) { return '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"'; };
+          var csv = "recebido_em;canal;nome;empresa;whatsapp;email;setor;local;assunto;prazo;necessidade;anexos;situacao;observacoes\n" + leads.map(function (l) {
+            return [l.created_at, LEAD_CHANNEL[channelOf(l)][0], l.name, l.company, "+" + l.wa_id, l.email, l.sector, l.location, l.subject, l.deadline, l.description, l.attachments.length, (LEAD_STATUS[l.status] || [l.status])[0], l.notes].map(cell).join(";");
+          }).join("\n");
+          var a = document.createElement("a");
+          a.href = URL.createObjectURL(new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8" }));
+          a.download = "pedidos-whatsapp-hooke.csv";
+          a.click();
+        });
+
+        $("content").addEventListener("click", function (e) {
+          var b = e.target.closest("[data-lead]");
+          if (!b) return;
+          var l = byId[b.getAttribute("data-lead")];
+          var row = function (label, value) { return '<div class="form-row"><div class="label">' + esc(label) + "</div><div>" + value + "</div></div>"; };
+          var sac = l.channel === "sac";
+          modal((sac ? "SAC: " : "Comercial: ") + (l.name || "Pedido") + (l.company ? " — " + l.company : ""),
+            row("WhatsApp", '<a href="https://wa.me/' + esc(l.wa_id) + '" target="_blank" rel="noopener">+' + esc(l.wa_id) + "</a>" + (l.profile_name ? ' <span class="muted small">(perfil: ' + esc(l.profile_name) + ")</span>" : "")) +
+            (sac && !l.email ? "" : row("E-mail", l.email ? '<a href="mailto:' + esc(l.email) + '">' + esc(l.email) + "</a>" : '<span class="muted">não informado</span>')) +
+            (sac
+              ? '<div class="grid-2">' + row("Assunto", esc(l.subject || "")) + row("Origem", l.origin === "site" ? "Botão do site" : "Direto no WhatsApp") + "</div>"
+              : '<div class="grid-2">' + row("Setor", esc(l.sector || "")) + row("Local", esc(l.location || "")) + "</div>" +
+                '<div class="grid-2">' + row("Prazo", esc(l.deadline || "")) + row("Origem", l.origin === "site" ? "Botão do site" : "Direto no WhatsApp") + "</div>") +
+            row(sac ? "Descrição" : "Necessidade", '<div style="white-space:pre-wrap">' + esc(l.description || "(ver anexos na conversa)") + "</div>" +
+              (l.attachments.length ? '<div class="muted small">' + l.attachments.length + " anexo(s) na conversa do WhatsApp</div>" : "")) +
+            '<div class="form-row"><label class="label" for="leadStatus">Situação</label><select class="field" id="leadStatus">' +
+              Object.keys(LEAD_STATUS).map(function (k) { return '<option value="' + k + '"' + (k === l.status ? " selected" : "") + ">" + LEAD_STATUS[k][0] + "</option>"; }).join("") + "</select></div>" +
+            '<div class="form-row"><label class="label" for="leadNotes">Observações internas</label><textarea class="field" id="leadNotes" rows="3">' + esc(l.notes || "") + "</textarea></div>" +
+            (l.updated_by ? '<p class="muted small">Última atualização: ' + esc(l.updated_by) + ", " + fmtDate(l.updated_at, true) + "</p>" : ""),
+            [{ label: "Salvar", primary: true, run: function (close) {
+              api("/whatsapp/lead", { id: l.id, status: $("leadStatus").value, notes: $("leadNotes").value })
+                .then(function () { close(); toast("Pedido atualizado."); go("whatsapp"); }, function (er) { toast(er.message, true); });
+            } }]);
+        });
+      }).catch(showError);
+    };
+
     // ===================== Newsletter =====================
     VIEWS.newsletter = function () {
       api("/subscribers").then(function (subs) {
@@ -977,7 +1063,7 @@
       senha_alterada: "Alterou a própria senha", sessoes_encerradas: "Encerrou todas as sessões",
       noticia_aprovada: "Aprovou e publicou", noticia_excluida: "Excluiu notícia pendente", noticia_despublicada: "Despublicou",
       noticia_editada: "Editou notícia", imagem_pedida: "Pediu imagem por IA", geracao_pedida: "Pediu geração de notícias",
-      regras_alteradas: "Alterou as regras editoriais", inscrito_removido: "Removeu inscrito da newsletter",
+      regras_alteradas: "Alterou as regras editoriais", inscrito_removido: "Removeu inscrito da newsletter", lead_alterado: "Atualizou pedido do WhatsApp",
       usuario_criado: "Cadastrou usuário", usuario_alterado: "Alterou usuário",
       tema_adicionado: "Adicionou tema", tema_alterado: "Alterou tema", tema_excluido: "Excluiu tema",
       editoria_criada: "Criou editoria", editoria_alterada: "Alterou editoria",
