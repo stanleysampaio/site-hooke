@@ -92,6 +92,11 @@
   // Exposto em window.HookeNewsSlider para js/news-mini.js reiniciar o slider
   // depois de trocar os destaques fixos pelas últimas notícias publicadas.
   var sliderTimer;
+  var newsStep = function () {};
+  ['mNewsPrev', 'mNewsNext'].forEach(function (id, i) {
+    var b = document.getElementById(id);
+    if (b) b.addEventListener('click', function () { newsStep(i ? 1 : -1); });
+  });
   function initNewsSlider() {
     var slides = document.querySelectorAll('.m-news-slide');
     var dotsWrap = document.getElementById('mNewsDots');
@@ -125,8 +130,11 @@
 
     function restart() {
       clearInterval(sliderTimer);
-      sliderTimer = setInterval(function () { show((current + 1) % slides.length); }, 5500);
+      sliderTimer = setInterval(function () { show((current + 1) % slides.length); }, 6500);
     }
+    // Setas: os botões são fixos no HTML, então liga uma vez só e sempre usa
+    // o slider mais recente (news-mini.js reinicia o slider ao trocar as notícias).
+    newsStep = function (delta) { show((current + delta + slides.length) % slides.length); restart(); };
     restart();
   }
   initNewsSlider();

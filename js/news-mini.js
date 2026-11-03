@@ -1,12 +1,12 @@
 /*
  * Painel "Notícias & Destaques" da home: troca os destaques fixos do HTML pelas
- * 4 últimas notícias publicadas no worker. Se a API falhar ou ainda não houver
+ * 5 últimas notícias publicadas no worker (com a imagem de cada uma). Se a API falhar ou ainda não houver
  * notícia publicada, os destaques fixos continuam no lugar.
  * Carregar depois de js/main.js (usa window.HookeNewsSlider).
  */
 (function () {
   var API_BASE = "https://hooke-news.yelnalts1993.workers.dev";
-  var MAX_ITEMS = 4;
+  var MAX_ITEMS = 5;
   // Versão traduzida da notícia no idioma escolhido no site, quando existir.
   var localize = (window.HookeI18n && window.HookeI18n.localize) || function (it) { return it; };
 
@@ -33,15 +33,19 @@
     }
   }
 
+  var resolveImage = (window.HookeNews && window.HookeNews.resolveImage) || function (p) { return p || "img/atuacao.jpg"; };
+
   function slide(item) {
+    var href = "noticia.html?id=" + encodeURIComponent(item.id);
     return (
-      '<div class="m-news-slide">' +
+      '<article class="m-news-slide">' +
+      '<a class="m-news-img" href="' + href + '" tabindex="-1" aria-hidden="true" style="background-image:url(\'' + escapeHtml(resolveImage(item.image)) + "');\"></a>" +
+      '<div class="m-news-body">' +
       '<span class="m-news-tag">' + escapeHtml(item.sector) + "</span>" +
-      '<h3 class="m-news-title">' + escapeHtml(item.title) + "</h3>" +
+      '<h3 class="m-news-title"><a href="' + href + '">' + escapeHtml(item.title) + "</a></h3>" +
       '<p class="m-news-date"><i class="fa fa-calendar-alt me-1"></i>' + formatDate(item.publishedAt) + "</p>" +
-      '<p class="m-news-excerpt">' + escapeHtml(item.excerpt || item.summary) + "</p>" +
-      '<a href="noticia.html?id=' + encodeURIComponent(item.id) + '" class="m-news-link">Leia mais <i class="fa fa-arrow-right"></i></a>' +
-      "</div>"
+      '<a href="' + href + '" class="m-news-link">Leia mais <i class="fa fa-arrow-right"></i></a>' +
+      "</div></article>"
     );
   }
 
@@ -55,8 +59,8 @@
         .slice(0, MAX_ITEMS)
         .map(localize);
 
-      panel.querySelectorAll(".m-news-slide").forEach(function (el) { el.remove(); });
-      dots.insertAdjacentHTML("beforebegin", latest.map(slide).join(""));
+      var track = panel.querySelector(".m-news-track");
+      track.innerHTML = latest.map(slide).join("");
       if (window.HookeNewsSlider) window.HookeNewsSlider();
     })
     .catch(function () { /* mantém os destaques fixos */ });

@@ -8,16 +8,11 @@
 
   // Cor do "chapéu" de cada editoria (como nos portais: cada seção tem a sua).
   var SECTOR_COLORS = {
-    "Mineração": "#b45309",
-    "Cimento": "#57534e",
-    "Petróleo e Gás": "#0f766e",
-    "Fertilizantes": "#15803d",
-    "Metalurgia": "#475569",
-    "Refrigeração": "#0369a1",
-    "Alimentícia": "#be123c",
-    "Siderurgia": "#9a3412",
-    "Indústria BA e MG": "#6d28d9",
-    "Infraestrutura": "#1d4ed8",
+    "Química e Petroquímica": "#0f766e",
+    "Alimentícia e Bebidas": "#be123c",
+    "Papel e Celulose": "#4d7c0f",
+    "Mineração e Siderurgia": "#b45309",
+    "Energia e Utilities": "#1d4ed8",
   };
 
   function escapeHtml(str) {

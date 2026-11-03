@@ -45,68 +45,96 @@
       <div class="container">
         <div class="m-hero-grid">
           <div>
-            <p class="m-eyebrow on-dark"><i class="fa fa-industry"></i> Engenharia industrial de alta performance</p>
-            <h1 data-i18n="home.hero-title">Segurança, eficiência e <span>alta performance</span> para a sua indústria.</h1>
+            <p class="m-eyebrow on-dark"><i class="fa fa-industry"></i> Soluções de engenharia para grandes indústrias</p>
+            <h1 data-i18n="home.hero-title">Equipes e profissionais <span>altamente especializados</span> para atender sua indústria com segurança, velocidade e eficiência.</h1>
             <p class="lead">
-              Engenharia, manutenção e montagem industrial para mineração, cimento, petróleo e gás,
-              fertilizantes, metalurgia, refrigeração, alimentícia e siderurgia — em todo o Brasil.
+              Engenharia e Projetos, Inspeção e Integridade, Obras e Adequações Industriais, Montagem e
+              Manutenção Industrial, Fabricação e Montagem Mecânica, Instalações Elétricas Industriais,
+              Automação e Instrumentação.
             </p>
             <div class="m-hero-ctas">
               <a href="contact.html" class="m-btn m-btn-yellow"><i class="fa fa-comments"></i> Solicitar Orçamento</a>
               <a href="service.html" class="m-btn m-btn-outline on-dark">Ver Soluções</a>
             </div>
-            <div class="m-hero-stats">
-              <div><strong>8+</strong><span>Anos de experiência</span></div>
-              <div><strong>100+</strong><span>Projetos entregues</span></div>
-              <div><strong>8</strong><span>Setores industriais</span></div>
-              <div><strong>8+</strong><span>Anos sem acidente no trabalho</span></div>
-              <div><strong>BR</strong><span>Presença nacional</span></div>
+            <div class="m-proof">
+              <p class="m-proof-title"><span>Experiência comprovada em campo</span></p>
+              <div class="m-proof-grid">
+                <div class="m-proof-item">
+                  <i class="fa fa-hard-hat" aria-hidden="true"></i>
+                  <div><strong>100+</strong><span>Projetos executados</span></div>
+                </div>
+                <div class="m-proof-item is-featured">
+                  <i class="far fa-clock" aria-hidden="true"></i>
+                  <div><strong>2 milhões</strong><span>Horas-homem trabalhadas</span><em class="m-proof-badge">Nenhum acidente de trabalho</em></div>
+                </div>
+                <div class="m-proof-item">
+                  <i class="fa fa-globe-americas" aria-hidden="true"></i>
+                  <div><strong>Brasil</strong><span>Atuação nacional</span></div>
+                </div>
+              </div>
+              <p class="m-proof-foot">Engenharia, manutenção e montagem industrial desde 2018.</p>
             </div>
           </div>
 
-          <div class="m-hero-panel">
+          <div class="m-hero-side">
+            <!-- Vídeo institucional: card próprio, separado das notícias. -->
             <div class="m-hero-video-wrap">
-              <video class="m-hero-video" playsinline>
+              <span class="m-hero-video-label"><i class="fa fa-video"></i> Conheça a Hooke</span>
+              <video class="m-hero-video" playsinline preload="none" poster="img/hooke-sede.jpg">
                 <source src="video/welcome.mov" type="video/mp4" />
               </video>
               <button id="mHeroPlay" class="m-hero-play" type="button" aria-label="Reproduzir vídeo"><i class="fa fa-play"></i></button>
               <button id="mHeroSound" class="m-hero-sound" type="button" aria-label="Ativar som"><i class="fas fa-volume-mute"></i></button>
             </div>
 
+            <!-- Notícias: carrossel com a imagem de cada matéria (js/news-mini.js troca pelos destaques publicados). -->
             <div class="m-news-mini">
               <div class="m-news-mini-head">
                 <span><i class="fa fa-newspaper me-1"></i> Notícias &amp; Destaques</span>
+                <div class="m-news-nav">
+                  <button type="button" id="mNewsPrev" aria-label="Notícia anterior"><i class="fa fa-chevron-left"></i></button>
+                  <button type="button" id="mNewsNext" aria-label="Próxima notícia"><i class="fa fa-chevron-right"></i></button>
+                  <a href="news.html" class="m-news-all">Ver todas</a>
+                </div>
               </div>
-
-              <div class="m-news-slide active">
-                <span class="m-news-tag">Mineração</span>
-                <h3 class="m-news-title">Hooke expande operações no setor de mineração</h3>
-                <p class="m-news-date"><i class="fa fa-calendar-alt me-1"></i>15 de novembro de 2024</p>
-                <p class="m-news-excerpt">Novas parcerias estratégicas reforçam o compromisso com eficiência e segurança operacional.</p>
-                <a href="news.html" class="m-news-link">Leia mais <i class="fa fa-arrow-right"></i></a>
+              <div class="m-news-track">
+              <article class="m-news-slide active">
+                <a class="m-news-img" href="news.html" style="background-image:url('img/MINERACAO.png');" aria-hidden="true" tabindex="-1"></a>
+                <div class="m-news-body">
+                  <span class="m-news-tag">Mineração</span>
+                  <h3 class="m-news-title"><a href="news.html">Hooke expande operações no setor de mineração</a></h3>
+                  <p class="m-news-date"><i class="fa fa-calendar-alt me-1"></i>15 de novembro de 2024</p>
+                  <a href="news.html" class="m-news-link">Leia mais <i class="fa fa-arrow-right"></i></a>
+                </div>
+              </article>
+              <article class="m-news-slide">
+                <a class="m-news-img" href="news.html" style="background-image:url('img/services-3.png');" aria-hidden="true" tabindex="-1"></a>
+                <div class="m-news-body">
+                  <span class="m-news-tag">Petróleo &amp; Gás</span>
+                  <h3 class="m-news-title"><a href="news.html">Automação em planta de gás concluída com êxito</a></h3>
+                  <p class="m-news-date"><i class="fa fa-calendar-alt me-1"></i>28 de outubro de 2024</p>
+                  <a href="news.html" class="m-news-link">Leia mais <i class="fa fa-arrow-right"></i></a>
+                </div>
+              </article>
+              <article class="m-news-slide">
+                <a class="m-news-img" href="news.html" style="background-image:url('img/services-8.png');" aria-hidden="true" tabindex="-1"></a>
+                <div class="m-news-body">
+                  <span class="m-news-tag">Segurança</span>
+                  <h3 class="m-news-title"><a href="news.html">Hooke conquista certificação de segurança NR-12</a></h3>
+                  <p class="m-news-date"><i class="fa fa-calendar-alt me-1"></i>05 de setembro de 2024</p>
+                  <a href="news.html" class="m-news-link">Leia mais <i class="fa fa-arrow-right"></i></a>
+                </div>
+              </article>
+              <article class="m-news-slide">
+                <a class="m-news-img" href="news.html" style="background-image:url('img/services-5.png');" aria-hidden="true" tabindex="-1"></a>
+                <div class="m-news-body">
+                  <span class="m-news-tag">Inovação</span>
+                  <h3 class="m-news-title"><a href="news.html">Manutenção preditiva em destaque em evento nacional</a></h3>
+                  <p class="m-news-date"><i class="fa fa-calendar-alt me-1"></i>20 de agosto de 2024</p>
+                  <a href="news.html" class="m-news-link">Leia mais <i class="fa fa-arrow-right"></i></a>
+                </div>
+              </article>
               </div>
-              <div class="m-news-slide">
-                <span class="m-news-tag">Petróleo &amp; Gás</span>
-                <h3 class="m-news-title">Automação em planta de gás concluída com êxito</h3>
-                <p class="m-news-date"><i class="fa fa-calendar-alt me-1"></i>28 de outubro de 2024</p>
-                <p class="m-news-excerpt">Projeto de automação industrial entregue em importante planta de processamento no Nordeste.</p>
-                <a href="news.html" class="m-news-link">Leia mais <i class="fa fa-arrow-right"></i></a>
-              </div>
-              <div class="m-news-slide">
-                <span class="m-news-tag">Segurança</span>
-                <h3 class="m-news-title">Hooke conquista certificação de segurança NR-12</h3>
-                <p class="m-news-date"><i class="fa fa-calendar-alt me-1"></i>05 de setembro de 2024</p>
-                <p class="m-news-excerpt">Mais um marco para a Hooke, fortalecendo sua posição como referência em segurança industrial.</p>
-                <a href="news.html" class="m-news-link">Leia mais <i class="fa fa-arrow-right"></i></a>
-              </div>
-              <div class="m-news-slide">
-                <span class="m-news-tag">Inovação</span>
-                <h3 class="m-news-title">Manutenção preditiva em destaque em evento nacional</h3>
-                <p class="m-news-date"><i class="fa fa-calendar-alt me-1"></i>20 de agosto de 2024</p>
-                <p class="m-news-excerpt">A Hooke apresentou soluções inovadoras no maior evento de engenharia industrial do país.</p>
-                <a href="news.html" class="m-news-link">Leia mais <i class="fa fa-arrow-right"></i></a>
-              </div>
-
               <div class="m-news-dots" id="mNewsDots"></div>
             </div>
           </div>
@@ -148,73 +176,49 @@
     <section class="m-section m-section-alt">
       <div class="container">
         <div class="m-section-head center m-reveal">
-          <p class="m-eyebrow">Nossos serviços</p>
-          <h2>Soluções de engenharia para os setores mais exigentes</h2>
+          <p class="m-eyebrow">Segmentos</p>
+          <h2>Segmentos que atendemos</h2>
         </div>
 
-        <div class="m-services-grid">
+        <div class="m-services-grid m-services-grid-5">
           <article class="m-service-card m-reveal">
-            <div class="m-service-img"><img src="img/services-1.png" alt="Mineração" /></div>
+            <div class="m-service-img"><img src="img/services-3.png" alt="Química e Petroquímica" /></div>
             <div class="m-service-body">
-              <h5>Mineração</h5>
-              <p>Engenharia e manutenção para elevar a eficiência da sua mina com segurança e alta performance.</p>
-              <a class="m-service-link" href="service.html#mineracao">Saiba mais <i class="fa fa-arrow-right"></i></a>
+              <h5>Química e Petroquímica</h5>
+              <p>Montagem, manutenção e automação em plantas químicas e petroquímicas, com segurança e controle de qualidade.</p>
+              <a class="m-service-link" href="service.html#quimica-petroquimica">Saiba mais <i class="fa fa-arrow-right"></i></a>
             </div>
           </article>
           <article class="m-service-card m-reveal">
-            <div class="m-service-img"><img src="img/services-2.png" alt="Cimento" /></div>
+            <div class="m-service-img"><img src="img/services-7.png" alt="Alimentícia e Bebidas" /></div>
             <div class="m-service-body">
-              <h5>Cimento</h5>
-              <p>Suporte em mecânica, elétrica e instrumentação, além da otimização de plantas e processos.</p>
-              <a class="m-service-link" href="service.html#cimento">Saiba mais <i class="fa fa-arrow-right"></i></a>
+              <h5>Alimentícia e Bebidas</h5>
+              <p>Engenharia, utilidades e adequações para linhas de alimentos e bebidas, com rastreabilidade e segurança.</p>
+              <a class="m-service-link" href="service.html#alimenticia-bebidas">Saiba mais <i class="fa fa-arrow-right"></i></a>
             </div>
           </article>
           <article class="m-service-card m-reveal">
-            <div class="m-service-img"><img src="img/services-3.png" alt="Petróleo e Gás" /></div>
+            <div class="m-service-img"><img src="img/services-4.png" alt="Papel e Celulose" /></div>
             <div class="m-service-body">
-              <h5>Petróleo e Gás</h5>
-              <p>Automação, eficiência energética e segurança, do projeto à manutenção preditiva.</p>
-              <a class="m-service-link" href="service.html#petroleo-gas">Saiba mais <i class="fa fa-arrow-right"></i></a>
+              <h5>Papel e Celulose</h5>
+              <p>Montagem mecânica, tubulações, elétrica e instrumentação para fábricas de papel e celulose.</p>
+              <a class="m-service-link" href="service.html#papel-celulose">Saiba mais <i class="fa fa-arrow-right"></i></a>
             </div>
           </article>
           <article class="m-service-card m-reveal">
-            <div class="m-service-img"><img src="img/services-4.png" alt="Fertilizantes" /></div>
+            <div class="m-service-img"><img src="img/services-1.png" alt="Mineração e Siderurgia" /></div>
             <div class="m-service-body">
-              <h5>Fertilizantes</h5>
-              <p>Automação, manutenção e otimização para aumentar produtividade e reduzir custos.</p>
-              <a class="m-service-link" href="service.html#fertilizantes">Saiba mais <i class="fa fa-arrow-right"></i></a>
+              <h5>Mineração e Siderurgia</h5>
+              <p>Estruturas metálicas, montagem de equipamentos e manutenção para minas e usinas siderúrgicas.</p>
+              <a class="m-service-link" href="service.html#mineracao-siderurgia">Saiba mais <i class="fa fa-arrow-right"></i></a>
             </div>
           </article>
           <article class="m-service-card m-reveal">
-            <div class="m-service-img"><img src="img/services-5.png" alt="Metalurgia" /></div>
+            <div class="m-service-img"><img src="img/services-6.png" alt="Energia e Utilities" /></div>
             <div class="m-service-body">
-              <h5>Metalurgia</h5>
-              <p>Engenharia mecânica, elétrica e de processos para otimizar linhas metalúrgicas.</p>
-              <a class="m-service-link" href="service.html#metalurgia">Saiba mais <i class="fa fa-arrow-right"></i></a>
-            </div>
-          </article>
-          <article class="m-service-card m-reveal">
-            <div class="m-service-img"><img src="img/services-6.png" alt="Refrigeração" /></div>
-            <div class="m-service-body">
-              <h5>Refrigeração</h5>
-              <p>Projetos e manutenção de sistemas frigoríficos com eficiência energética.</p>
-              <a class="m-service-link" href="service.html#refrigeracao">Saiba mais <i class="fa fa-arrow-right"></i></a>
-            </div>
-          </article>
-          <article class="m-service-card m-reveal">
-            <div class="m-service-img"><img src="img/services-7.png" alt="Alimentícia" /></div>
-            <div class="m-service-body">
-              <h5>Alimentícia</h5>
-              <p>Engenharia e automação garantindo qualidade, rastreabilidade e segurança.</p>
-              <a class="m-service-link" href="service.html#alimenticia">Saiba mais <i class="fa fa-arrow-right"></i></a>
-            </div>
-          </article>
-          <article class="m-service-card m-reveal">
-            <div class="m-service-img"><img src="img/services-8.png" alt="Siderurgia" /></div>
-            <div class="m-service-body">
-              <h5>Siderurgia</h5>
-              <p>Modernização, automação e otimização de processos com foco em eficiência.</p>
-              <a class="m-service-link" href="service.html#siderurgia">Saiba mais <i class="fa fa-arrow-right"></i></a>
+              <h5>Energia e Utilities</h5>
+              <p>Instalações elétricas de baixa e média tensão, utilidades e sistemas auxiliares para a indústria.</p>
+              <a class="m-service-link" href="service.html#energia-utilities">Saiba mais <i class="fa fa-arrow-right"></i></a>
             </div>
           </article>
         </div>
@@ -225,10 +229,10 @@
     <section class="m-section-dark py-5">
       <div class="container py-4">
         <div class="m-stats m-reveal">
-          <div class="m-stat"><strong>8+</strong><span>Anos de experiência</span></div>
+          <div class="m-stat"><strong>8</strong><span>Anos de experiência</span></div>
           <div class="m-stat"><strong>100+</strong><span>Projetos entregues</span></div>
-          <div class="m-stat"><strong>8</strong><span>Setores industriais</span></div>
-          <div class="m-stat"><strong>8+</strong><span>Anos sem acidente no trabalho</span></div>
+          <div class="m-stat"><strong>5</strong><span>Segmentos industriais</span></div>
+          <div class="m-stat"><strong>8</strong><span>Anos sem acidente no trabalho</span></div>
           <div class="m-stat"><strong>BR</strong><span>Presença nacional</span></div>
         </div>
       </div>
@@ -282,20 +286,17 @@
           </div>
           <div class="col-lg-3 col-md-6">
             <h5>Serviços</h5>
-            <a class="m-flink" href="service.html#mineracao">Mineração</a>
-            <a class="m-flink" href="service.html#cimento">Cimento</a>
-            <a class="m-flink" href="service.html#petroleo-gas">Petróleo e Gás</a>
-            <a class="m-flink" href="service.html#fertilizantes">Fertilizantes</a>
-            <a class="m-flink" href="service.html#metalurgia">Metalurgia</a>
-            <a class="m-flink" href="service.html#refrigeracao">Refrigeração</a>
-            <a class="m-flink" href="service.html#alimenticia">Alimentícia</a>
-            <a class="m-flink" href="service.html#siderurgia">Siderurgia</a>
+            <a class="m-flink" href="service.html#quimica-petroquimica">Química e Petroquímica</a>
+            <a class="m-flink" href="service.html#alimenticia-bebidas">Alimentícia e Bebidas</a>
+            <a class="m-flink" href="service.html#papel-celulose">Papel e Celulose</a>
+            <a class="m-flink" href="service.html#mineracao-siderurgia">Mineração e Siderurgia</a>
+            <a class="m-flink" href="service.html#energia-utilities">Energia e Utilities</a>
           </div>
           <div class="col-lg-3 col-md-6">
             <h5>Links Rápidos</h5>
             <a class="m-flink" href="about.html">Quem somos</a>
             <a class="m-flink" href="service.html">Soluções</a>
-            <a class="m-flink" href="location.html">Onde estamos</a>
+            <a class="m-flink" href="location.html">Presença</a>
             <a class="m-flink" href="news.html">Notícias</a>
             <a class="m-flink" href="contact.html">Contato</a>
             <a class="m-flink" href="trabalhe-conosco.html">Trabalhe Conosco</a>
