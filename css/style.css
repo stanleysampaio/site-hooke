@@ -368,15 +368,15 @@ html[lang="zh-CN"] .m-body h4, html[lang="zh-CN"] .m-body h5 {
 
 /* ===== Stats strip ===== */
 /* Faixa de números: mesmo estilo do painel "Experiência comprovada em campo" do topo */
-.m-stats.m-proof { max-width: none; display: grid; grid-template-columns: repeat(5, auto); justify-content: space-between; padding: 26px 30px; }
+.m-stats.m-proof { max-width: none; display: grid; grid-template-columns: repeat(5, auto); justify-content: space-between; padding: 30px 30px; }
 @media (max-width: 1199.98px) { .m-stats.m-proof { grid-template-columns: repeat(3, auto); row-gap: 22px; justify-content: space-around; } }
 @media (max-width: 575.98px) { .m-stats.m-proof { grid-template-columns: 1fr; padding: 18px 18px; row-gap: 14px; } }
-.m-stat { display: flex; align-items: center; gap: 12px; padding: 4px 18px; }
+.m-stat { display: flex; align-items: center; gap: 12px; padding: 4px 14px; }
 .m-stat + .m-stat { border-left: 1px solid rgba(255,255,255,.14); }
 @media (max-width: 1199.98px) { .m-stat + .m-stat { border-left: 0; } }
-.m-stat > i { font-size: 1.9rem; color: var(--m-yellow); flex: 0 0 auto; width: 36px; text-align: center; }
-.m-stat strong { display: block; font-family: "Manrope", sans-serif; font-weight: 800; font-size: 1.9rem; line-height: 1.05; color: var(--m-yellow); }
-.m-stat span { display: block; font-size: 0.82rem; line-height: 1.25; color: var(--m-text-on-dark-muted); max-width: 150px; }
+.m-stat > i { font-size: 2.4rem; color: var(--m-yellow); flex: 0 0 auto; width: 44px; text-align: center; }
+.m-stat strong { display: block; font-family: "Manrope", sans-serif; font-weight: 800; font-size: 2.5rem; line-height: 1.05; color: var(--m-yellow); }
+.m-stat span { display: block; font-size: 0.98rem; line-height: 1.3; color: var(--m-text-on-dark-muted); max-width: 165px; }
 
 /* ===== Service cards grid ===== */
 .m-services-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
@@ -861,3 +861,57 @@ html[lang="zh-CN"] .m-body h4, html[lang="zh-CN"] .m-body h5 {
   .m-services-grid-5 > * { grid-column: span 2; }
   .m-services-grid-5 > :nth-child(4) { grid-column: 2 / span 2; }
 }
+
+/* ===== Presença (location.html) ===== */
+.m-pres { background: radial-gradient(900px 500px at 80% 0%, rgba(255,207,52,.08), transparent 60%), linear-gradient(160deg, var(--m-ink) 0%, #0d0f11 100%); color: #fff; padding: 56px 0 80px; }
+.m-pres-hero { display: grid; grid-template-columns: 1.1fr .9fr; gap: 30px; align-items: center; }
+@media (max-width: 991.98px) { .m-pres-hero { grid-template-columns: 1fr; } }
+.m-pres h1 { color: #fff; font-size: clamp(2.1rem, 4.2vw, 3.4rem); line-height: 1.08; margin: 14px 0 18px; }
+.m-pres h1 span { color: var(--m-yellow); display: block; }
+.m-pres-lead { font-size: 1.12rem; color: rgba(255,255,255,.86); max-width: 520px; margin: 0; }
+.m-pres-map img { width: 100%; max-width: 440px; height: auto; display: block; margin: 0 auto; }
+.m-pres-feats { display: grid; grid-template-columns: repeat(3, 1fr); margin: 34px 0 40px; }
+.m-pres-feat { display: flex; align-items: center; gap: 18px; padding: 6px 26px; font-size: 1.05rem; line-height: 1.35; color: rgba(255,255,255,.9); }
+.m-pres-feat:first-child { padding-left: 0; }
+.m-pres-feat + .m-pres-feat { border-left: 1px solid rgba(255,255,255,.18); }
+.m-pres-feat i { font-size: 2.4rem; color: var(--m-yellow); flex: 0 0 48px; text-align: center; }
+@media (max-width: 767.98px) {
+  .m-pres-feats { grid-template-columns: 1fr; gap: 16px; }
+  .m-pres-feat, .m-pres-feat:first-child { padding: 0; }
+  .m-pres-feat + .m-pres-feat { border-left: 0; }
+}
+.m-bases { display: grid; gap: 26px; }
+.m-base { border: 1px solid rgba(255,255,255,.16); border-radius: var(--m-radius-lg); overflow: hidden; background: #16191d; scroll-margin-top: calc(var(--m-header-h) + 40px); }
+.m-base-img { height: clamp(220px, 30vw, 340px); background: #222 center / cover no-repeat; }
+.m-base-bar { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 26px; padding: 18px 28px; }
+.m-base-bar h2 { margin: 0; font-size: clamp(1.4rem, 2.4vw, 1.9rem); color: #fff; white-space: nowrap; padding-right: 26px; border-right: 1px solid rgba(255,255,255,.2); }
+.m-base-bar h2 i { color: var(--m-yellow); margin-right: 8px; }
+.m-base-bar p { margin: 0; color: rgba(255,255,255,.82); font-size: .98rem; }
+.m-base-btn { border: 2px solid var(--m-yellow); color: var(--m-yellow); border-radius: 999px; padding: 8px 18px; font-weight: 700; font-size: .9rem; text-decoration: none; white-space: nowrap; transition: background .2s, color .2s; }
+.m-base-btn:hover { background: var(--m-yellow); color: var(--m-ink); }
+@media (max-width: 767.98px) {
+  .m-base-bar { grid-template-columns: 1fr; gap: 10px; padding: 16px 18px 20px; }
+  .m-base-bar h2 { border-right: 0; padding-right: 0; }
+  .m-base-btn { justify-self: start; }
+}
+.m-pres-highlights { display: grid; grid-template-columns: repeat(4, 1fr); margin: 40px 0; }
+.m-pres-hl { display: flex; gap: 14px; padding: 6px 22px; }
+.m-pres-hl:first-child { padding-left: 0; }
+.m-pres-hl + .m-pres-hl { border-left: 1px solid rgba(255,255,255,.18); }
+.m-pres-hl i { font-size: 2.1rem; color: var(--m-yellow); flex: 0 0 44px; text-align: center; margin-top: 2px; }
+.m-pres-hl h3 { color: #fff; font-size: 1.08rem; margin: 0 0 4px; }
+.m-pres-hl p { margin: 0; font-size: .88rem; color: rgba(255,255,255,.75); }
+@media (max-width: 991.98px) {
+  .m-pres-highlights { grid-template-columns: 1fr 1fr; row-gap: 24px; }
+  .m-pres-hl:nth-child(3) { border-left: 0; padding-left: 0; }
+}
+@media (max-width: 575.98px) {
+  .m-pres-highlights { grid-template-columns: 1fr; }
+  .m-pres-hl, .m-pres-hl:first-child { padding: 0; border-left: 0 !important; }
+}
+.m-pres-cta { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; padding: 34px 40px; border-radius: var(--m-radius-lg);
+  border: 1px solid rgba(255,255,255,.16); border-left: 6px solid var(--m-yellow);
+  background: linear-gradient(90deg, rgba(13,15,17,.97) 0%, rgba(13,15,17,.85) 45%, rgba(13,15,17,.45) 100%), url("../img/solucoes/case7-estruturas.jpg") center / cover no-repeat; }
+.m-pres-cta h2 { color: #fff; font-style: italic; font-size: clamp(1.6rem, 3vw, 2.3rem); margin: 0 0 6px; }
+.m-pres-cta p { margin: 0; color: rgba(255,255,255,.85); }
+@media (max-width: 575.98px) { .m-pres-cta { padding: 26px 22px; } }
