@@ -852,8 +852,6 @@ html[lang="zh-CN"] .m-body h4, html[lang="zh-CN"] .m-body h5 {
 .m-xcase-body { padding: 18px 20px 22px; }
 .m-xcase-body h3 { font-size: 1.05rem; margin-bottom: 8px; }
 .m-xcase-body p:not(.m-case-num) { color: var(--m-text-muted); font-size: .9rem; margin: 0; }
-.m-team-photo-wide { margin: 0 0 40px; border-radius: var(--m-radius-lg); overflow: hidden; box-shadow: var(--m-shadow-lg); }
-.m-team-photo-wide img { width: 100%; display: block; aspect-ratio: 16 / 9; object-fit: cover; }
 .m-seg-item { scroll-margin-top: calc(var(--m-header-h) + 90px); }
 /* Home: 5 segmentos (3 + 2 centralizados no computador) */
 @media (min-width: 992px) {
