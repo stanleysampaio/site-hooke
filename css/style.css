@@ -367,12 +367,16 @@ html[lang="zh-CN"] .m-body h4, html[lang="zh-CN"] .m-body h5 {
 .m-check-list i { color: var(--m-ink); background: var(--m-yellow); border-radius: 50%; width: 24px; height: 24px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; margin-top: 2px; }
 
 /* ===== Stats strip ===== */
-.m-stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; }
-@media (max-width: 991.98px) { .m-stats { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 767.98px) { .m-stats { grid-template-columns: repeat(2, 1fr); } }
-.m-stat { text-align: center; padding: 26px 12px; border-radius: var(--m-radius); background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); }
-.m-stat strong { display: block; font-family: "Manrope", sans-serif; font-weight: 800; font-size: 2.1rem; color: var(--m-yellow); }
-.m-stat span { font-size: 0.82rem; color: var(--m-text-on-dark-muted); }
+/* Faixa de números: mesmo estilo do painel "Experiência comprovada em campo" do topo */
+.m-stats.m-proof { max-width: none; display: grid; grid-template-columns: repeat(5, auto); justify-content: space-between; padding: 26px 30px; }
+@media (max-width: 1199.98px) { .m-stats.m-proof { grid-template-columns: repeat(3, auto); row-gap: 22px; justify-content: space-around; } }
+@media (max-width: 575.98px) { .m-stats.m-proof { grid-template-columns: 1fr; padding: 18px 18px; row-gap: 14px; } }
+.m-stat { display: flex; align-items: center; gap: 12px; padding: 4px 18px; }
+.m-stat + .m-stat { border-left: 1px solid rgba(255,255,255,.14); }
+@media (max-width: 1199.98px) { .m-stat + .m-stat { border-left: 0; } }
+.m-stat > i { font-size: 1.9rem; color: var(--m-yellow); flex: 0 0 auto; width: 36px; text-align: center; }
+.m-stat strong { display: block; font-family: "Manrope", sans-serif; font-weight: 800; font-size: 1.9rem; line-height: 1.05; color: var(--m-yellow); }
+.m-stat span { display: block; font-size: 0.82rem; line-height: 1.25; color: var(--m-text-on-dark-muted); max-width: 150px; }
 
 /* ===== Service cards grid ===== */
 .m-services-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
