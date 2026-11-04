@@ -915,10 +915,10 @@ window.HOOKE_I18N_DICT = {
 
   html: {
     'home.hero-title': {
-      pt: 'Equipas e profissionais <span>altamente especializados</span> para servir a sua indústria com segurança, rapidez e eficiência.',
-      en: '<span>Highly specialized</span> teams and professionals serving your industry with safety, speed and efficiency.',
-      es: 'Equipos y profesionales <span>altamente especializados</span> para atender a su industria con seguridad, rapidez y eficiencia.',
-      zh: '<span>高度专业化</span>的团队与专家，以安全、快速、高效服务您的企业。',
+      pt: 'Profissionais <span>altamente especializados</span> para servir com segurança, rapidez e eficiência.',
+      en: '<span>Highly specialized</span> professionals delivering safety, speed and efficiency.',
+      es: 'Profesionales <span>altamente especializados</span> para atender con seguridad, rapidez y eficiencia.',
+      zh: '<span>高度专业化</span>的专家团队，以安全、快速、高效提供服务。',
     },
     'cv.consent': {
       pt: 'Autorizo a Hooke a armazenar os meus dados e currículo para fins de recrutamento e seleção, nos termos da LGPD (Lei brasileira 13.709/2018). Posso solicitar a eliminação a qualquer momento através do e-mail <a href="mailto:comercial@hookengenharia.com.br">comercial@hookengenharia.com.br</a>.',
