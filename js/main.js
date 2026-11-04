@@ -169,4 +169,16 @@
         + '&body=' + encodeURIComponent(body);
     });
   }
+
+  // Soluções: no celular, os cases adicionais começam recolhidos (só com JS ativo).
+  var xcaseGrid = document.querySelector('.m-xcase-grid');
+  var xcaseMore = document.getElementById('mXcaseMore');
+  if (xcaseGrid && xcaseMore) {
+    xcaseGrid.classList.add('is-collapsed');
+    xcaseMore.addEventListener('click', function () {
+      xcaseGrid.classList.remove('is-collapsed');
+      var next = xcaseGrid.children[2];
+      if (next) { next.setAttribute('tabindex', '-1'); next.focus({ preventScroll: true }); }
+    });
+  }
 })();

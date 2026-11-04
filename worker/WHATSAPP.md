@@ -83,7 +83,7 @@ novo pedido por e-mail via SES, praticamente grátis, quando o SES da newsletter
 ## Passo a passo até o bot entrar no ar
 
 1. **Comprar o chip** e ativar o número no app **WhatsApp Business** (não no WhatsApp comum). Cadastrar
-   nome "Hooke Soluções em Engenharia", logo, endereço, site e horário. Usar normalmente com clientes
+   nome "Hooke Soluções de Engenharia", logo, endereço, site e horário. Usar normalmente com clientes
    reais. Contas novas não são liberadas para coexistência na hora, e o histórico de uso conta.
 2. **Business Manager (Portfólio empresarial) da Hooke** em business.facebook.com, com CNPJ, e iniciar a
    **verificação da empresa** (documento e domínio hookengenharia.com.br). Pode levar dias.

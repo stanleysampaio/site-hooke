@@ -326,8 +326,8 @@ async function onMessage(env, msg, profileName) {
     c.paused_until = null;
     c.data = { origem: c.data.origem };
     await sendMenu(env, waId, isNew
-      ? "Olá! 👋 Aqui é a *Hooke Soluções em Engenharia*."
-      : "Olá de novo! 👋 Aqui é a *Hooke Soluções em Engenharia*.");
+      ? "Olá! 👋 Aqui é a *Hooke Soluções de Engenharia*."
+      : "Olá de novo! 👋 Aqui é a *Hooke Soluções de Engenharia*.");
     return saveContact(env, c);
   }
 

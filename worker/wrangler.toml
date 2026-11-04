@@ -15,3 +15,10 @@ database_id = "281acc54-e237-4731-b8df-cef50484cab2"
 [[kv_namespaces]]
 binding = "NEWS_KV"
 id = "644af31eb80a4920bb1da76762032474"
+
+# Workers Logs: mantém no deploy o que foi ligado no painel da Cloudflare.
+[observability.logs]
+enabled = true
+head_sampling_rate = 1
+invocation_logs = true
+persist = true

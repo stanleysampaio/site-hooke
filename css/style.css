@@ -761,6 +761,12 @@ html[lang="zh-CN"] .m-body h4, html[lang="zh-CN"] .m-body h5 {
 .m-newsletter input::placeholder { color: rgba(255,255,255,0.5); }
 .m-footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); margin-top: 46px; padding-top: 22px; font-size: 0.82rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
 .m-footer-bottom a { color: rgba(255,255,255,0.85); }
+.m-footer-legal { margin-top: 10px; font-size: 0.75rem; opacity: 0.75; }
+.m-footer-legal a { color: inherit; text-decoration: underline; }
+.m-legal h2 { font-size: 1.3rem; margin: 32px 0 10px; }
+.m-legal h2:first-child { margin-top: 0; }
+.m-legal ul { padding-left: 20px; margin-bottom: 16px; }
+.m-legal li { margin-bottom: 8px; }
 
 /* ===== Floating utilities: switch, whatsapp, back-to-top ===== */
 .m-float-btn {
@@ -812,6 +818,14 @@ html[lang="zh-CN"] .m-body h4, html[lang="zh-CN"] .m-body h5 {
 .m-team-in:hover { transform: scale(1.08); color: #fff; }
 .m-team-info h3 { font-size: 1.05rem; margin: 0; color: var(--m-ink); }
 .m-team-role { margin: 2px 0 0; font-size: .82rem; color: rgba(20, 23, 26, .72); }
+/* Transição suave do branco de "Membros" para o escuro de "Parcerias". */
+#equipe { padding-bottom: 36px; }
+.m-fade-to-dark {
+  height: clamp(110px, 14vw, 200px);
+  background: linear-gradient(180deg, var(--m-surface) 0%, #d9dadb 25%, #8f9194 55%, #43474b 80%, var(--m-ink) 100%);
+}
+#parcerias { background: linear-gradient(180deg, var(--m-ink) 0%, #0d0f11 100%); }
+.m-team-photo img { object-position: 50% 0; }
 .m-section-dark .m-team-card { background: rgba(255, 255, 255, .04); border-color: rgba(255, 255, 255, .1); box-shadow: none; }
 .m-section-dark .m-team-photo { background: radial-gradient(circle at 30% 20%, #3a4149 0%, #1d2126 70%); }
 
@@ -913,3 +927,69 @@ html[lang="zh-CN"] .m-body h4, html[lang="zh-CN"] .m-body h5 {
 .m-pres-cta h2 { color: #fff; font-style: italic; font-size: clamp(1.6rem, 3vw, 2.3rem); margin: 0 0 6px; }
 .m-pres-cta p { margin: 0; color: rgba(255,255,255,.85); }
 @media (max-width: 575.98px) { .m-pres-cta { padding: 26px 22px; } }
+
+/* ===== Ajustes de celular ===== */
+.m-xcase-more { display: none; margin-top: 24px; text-align: center; }
+.m-offcanvas-panel a.m-btn-yellow { color: var(--m-ink); }
+
+@media (max-width: 767.98px) {
+  /* Cabeçalho sólido e mais baixo: o vidro translúcido ficava cinza sobre fundo claro. */
+  .m-navbar { background: var(--m-ink); backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .m-section { padding: 52px 0; }
+  .m-section-head { margin-bottom: 30px; }
+  .m-footer { padding: 48px 0 84px; }
+  .m-footer-bottom { margin-top: 30px; }
+
+  /* Sem o "voltar ao topo", e com o WhatsApp menor, sobra mais conteúdo visível. */
+  .m-back-to-top { display: none; }
+  .m-whatsapp { right: 14px; bottom: 16px; width: 48px; height: 48px; font-size: 1.2rem; }
+
+  /* Foto sobreposta dentro da tela e com espaço para o texto logo abaixo. */
+  .m-about-media { margin-bottom: 28px; }
+  .m-about-media .m-img-front { width: 84%; }
+  .m-about-media .m-img-back { width: 50%; right: 0; border-width: 4px; }
+
+  /* As fotos dos segmentos têm faixas amarelas nas laterais: o zoom as corta. */
+  .m-service-card .m-service-img { height: 170px; }
+  .m-service-card .m-service-img img { transform: scale(1.22); }
+  .m-service-card:hover .m-service-img img { transform: scale(1.22); }
+
+  /* E-mail longo não pode estourar o cartão. */
+  .m-info-cards { grid-template-columns: minmax(0, 1fr); }
+  .m-info-card { overflow-wrap: anywhere; }
+  .m-info-card > div { min-width: 0; }
+  .m-info-card h5 { font-size: 0.98rem; overflow-wrap: anywhere; }
+
+  .m-news-mini-head { flex-wrap: wrap; }
+
+  /* Soluções: mostra 2 cases adicionais; o botão libera os demais. */
+  .m-xcase-grid.is-collapsed > :nth-child(n+3) { display: none; }
+  .m-xcase-grid.is-collapsed + .m-xcase-more { display: block; }
+  .m-news-nav { margin-left: auto; }
+}
+
+@media (max-width: 575.98px) {
+  /* O gutter do Bootstrap (g-5) passava da largura da tela. */
+  .row.g-5 { --bs-gutter-x: 1.5rem; --bs-gutter-y: 2rem; }
+
+  .m-hero h1 { font-size: 1.8rem; }
+  .m-hero p.lead { font-size: 1rem; }
+  .m-page-header { padding: 40px 0 34px; }
+  .m-form-card { padding: 24px 18px; }
+
+  /* Rodapé: Serviços e Links Rápidos lado a lado, para encurtar a página. */
+  .m-footer .row.g-5 > :nth-child(2),
+  .m-footer .row.g-5 > :nth-child(3) { flex: 0 0 50%; width: 50%; max-width: 50%; }
+  .m-footer a.m-flink { font-size: 0.86rem; }
+  .m-newsletter input { flex: 1 1 auto; width: 100%; min-width: 0; }
+  .m-newsletter button { flex-shrink: 0; }
+
+  /* Equipe: 2 colunas no lugar de cartões enormes, um por tela. */
+  .m-team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; max-width: none; margin: 0; }
+  .m-team-photo { aspect-ratio: 1 / 1; }
+  .m-team-photo span { font-size: 2rem; }
+  .m-team-info h3 { font-size: 0.85rem; }
+
+  /* O último segmento, quando sobra sozinho, ocupa a linha inteira. */
+  .m-seg-grid > :last-child:nth-child(odd) { grid-column: 1 / -1; }
+}

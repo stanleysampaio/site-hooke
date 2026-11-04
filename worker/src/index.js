@@ -182,7 +182,7 @@ async function handleShare(env, id) {
 <title>${escapeAttr(item.title)} — Hooke Notícias</title>
 <meta name="description" content="${escapeAttr(description)}">
 <meta property="og:type" content="article">
-<meta property="og:site_name" content="Hooke Soluções em Engenharia">
+<meta property="og:site_name" content="Hooke Soluções de Engenharia">
 <meta property="og:title" content="${escapeAttr(item.title)}">
 <meta property="og:description" content="${escapeAttr(description)}">
 <meta property="og:image" content="${escapeAttr(image)}">

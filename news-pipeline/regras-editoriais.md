@@ -14,7 +14,7 @@ Como editar sem quebrar nada:
 
 ## Perfil
 
-A Hooke Soluções em Engenharia é uma empresa brasileira de engenharia, manutenção, montagem e
+A Hooke Soluções de Engenharia é uma empresa brasileira de engenharia, manutenção, montagem e
 automação industrial, com atuação principal na Bahia e em Minas Gerais. O blog de notícias é lido
 por gestores e engenheiros de plantas industriais (compradores B2B) nos setores de mineração,
 cimento, petróleo e gás, fertilizantes, metalurgia, refrigeração, indústria alimentícia e
