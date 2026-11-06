@@ -25,15 +25,31 @@
     revealEls.forEach(function (el) { el.classList.add('is-visible'); });
   }
 
+  /* ---------- Carrossel de marcas: a segunda cópia faz a emenda do giro infinito ---------- */
+  var brands = document.getElementById('mBrands');
+  if (brands) {
+    var track = brands.querySelector('.m-brands-track');
+    Array.prototype.slice.call(track.children).forEach(function (item) {
+      var clone = item.cloneNode(true);
+      clone.setAttribute('aria-hidden', 'true');
+      clone.querySelector('img').alt = '';
+      track.appendChild(clone);
+    });
+    brands.classList.add('is-ready');
+  }
+
   /* ---------- Floating utilities: WhatsApp + back-to-top ---------- */
   var wa = document.createElement('a');
-  wa.href = 'https://wa.me/5571999524838?text=' + encodeURIComponent(i18n.t('Olá! Vim pelo site da Hooke.'));
+  wa.href = 'https://wa.me/5534992449665?text=' + encodeURIComponent(i18n.t('Olá! Vim pelo site da Hooke.'));
   wa.target = '_blank';
   wa.rel = 'noopener noreferrer';
   wa.className = 'm-float-btn m-whatsapp';
   wa.setAttribute('aria-label', 'Falar no WhatsApp');
   wa.innerHTML = '<i class="fab fa-whatsapp"></i>';
   document.body.appendChild(wa);
+
+  // Botões de WhatsApp da página: mesma mensagem, no idioma do visitante.
+  document.querySelectorAll('[data-wa-link]').forEach(function (a) { a.href = wa.href; });
 
   var top = document.createElement('button');
   top.type = 'button';
@@ -143,32 +159,6 @@
   /* ---------- Footer year ---------- */
   var yearEl = document.getElementById('mYear');
   if (yearEl) { yearEl.textContent = new Date().getFullYear(); }
-
-  /* ---------- Formulário de contato/orçamento (envia por e-mail) ---------- */
-  // Site 100% estático, sem backend: o envio abre o cliente de e-mail do
-  // visitante com os dados preenchidos, endereçado a comercial@hookengenharia.com.br.
-  var contactForm = document.getElementById('mContactForm');
-  if (contactForm) {
-    contactForm.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var f = contactForm.elements;
-      var subject = 'Solicitação de orçamento — ' + (f['sector'].value || 'Site Hooke');
-      var body = [
-        'Nome: ' + f['name'].value.trim(),
-        'E-mail: ' + f['email'].value.trim(),
-        'Telefone/WhatsApp: ' + (f['phone'].value.trim() || 'não informado'),
-        'Setor de interesse: ' + f['sector'].value,
-        'Idioma do site: ' + i18n.lang,
-        '',
-        'Mensagem:',
-        f['message'].value.trim(),
-      ].join('\n');
-
-      window.location.href = 'mailto:comercial@hookengenharia.com.br'
-        + '?subject=' + encodeURIComponent(subject)
-        + '&body=' + encodeURIComponent(body);
-    });
-  }
 
   // Soluções: no celular, os cases adicionais começam recolhidos (só com JS ativo).
   var xcaseGrid = document.querySelector('.m-xcase-grid');

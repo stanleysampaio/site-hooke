@@ -790,7 +790,8 @@
             '<span class="muted small" style="margin-right:auto;margin-left:10px">' + themes.filter(function (t) { return t.active; }).length + " tema(s) ativo(s) · " + e.generated30 + " geradas · " + e.approved30 + " aprovadas em 30 dias</span>" +
             (canEdit
               ? '<label class="small muted" style="font-weight:600">Notícias:</label><select class="field" style="width:auto;padding:6px 8px" data-ed-max="' + esc(e.name) + '">' + maxOptions(e.maxPerRun) + "</select>" +
-                '<button class="btn btn-sm" data-ed-active="' + esc(e.name) + '" data-v="' + (e.active ? 0 : 1) + '" data-max="' + e.maxPerRun + '">' + (e.active ? "Pausar editoria" : "Reativar editoria") + "</button>"
+                '<button class="btn btn-sm" data-ed-active="' + esc(e.name) + '" data-v="' + (e.active ? 0 : 1) + '" data-max="' + e.maxPerRun + '">' + (e.active ? "Pausar editoria" : "Reativar editoria") + "</button>" +
+                '<button class="btn btn-sm btn-danger-ghost" data-ed-del="' + esc(e.name) + '" data-news="' + e.newsCount + '"><i class="fa fa-trash"></i> Excluir editoria</button>'
               : '<span class="badge">' + (e.maxPerRun || "nenhuma") + (e.maxPerRun ? " por dia" : "") + "</span>") +
             "</div>";
           var addForm = canEdit
@@ -813,7 +814,7 @@
         if (canEdit) {
           $("newEditoria").addEventListener("click", function () {
             modal("Nova editoria",
-              '<p class="muted small" style="margin-top:0">A editoria vira uma aba nova na página de Notícias, com cor própria, e o nome é traduzido automaticamente junto com as notícias.</p>' +
+              '<p class="muted small" style="margin-top:0">A editoria vira uma aba na página de Notícias quando a primeira notícia dela for publicada, com cor própria, e o nome é traduzido automaticamente junto com as notícias.</p>' +
               '<div class="form-row"><label class="label" for="neName">Nome (curto, como uma seção de portal)</label><input class="field" id="neName" maxlength="40" placeholder="Ex.: Energia Solar" /></div>' +
               '<div class="form-row"><label class="label" for="neMax">Notícias por dia</label><select class="field" id="neMax">' + maxOptions(1) + "</select></div>" +
               '<p class="muted small">Depois de criar, adicione os temas que o gerador deve procurar nela.</p>',
@@ -835,6 +836,20 @@
             var on = b.getAttribute("data-v") === "1";
             if (!on && !confirm("Pausar a editoria " + name + "? O gerador para de trazer notícias dela (as já publicadas continuam no site).")) return;
             api("/editorias/save", { name: name, maxPerRun: Number(b.getAttribute("data-max")), active: on }).then(function () { reload(on ? "Editoria reativada." : "Editoria pausada."); }, oops);
+          } else if (b.hasAttribute("data-ed-del")) {
+            var delName = b.getAttribute("data-ed-del");
+            var delNews = Number(b.getAttribute("data-news"));
+            var others = data.editorias.filter(function (x) { return x.name !== delName; });
+            modal("Excluir editoria",
+              "<p>A editoria <strong>" + esc(delName) + "</strong> e os temas dela serão excluídos. Esta ação não pode ser desfeita.</p>" +
+              (delNews
+                ? '<div class="form-row"><label class="label" for="edMoveTo">Mover ' + delNews + (delNews === 1 ? " notícia" : " notícias") + " para</label>" +
+                  '<select class="field" id="edMoveTo">' + others.map(function (x) { return '<option value="' + esc(x.name) + '">' + esc(x.name) + "</option>"; }).join("") + "</select></div>" +
+                  '<p class="muted small">As publicadas continuam no site, agora na editoria escolhida. Se quiser tirar alguma do ar, use Despublicar na tela Publicadas.</p>'
+                : '<p class="muted small">Nenhuma notícia será afetada.</p>'),
+              [{ label: "Excluir editoria", primary: true, run: function (close) {
+                api("/editorias/delete", { name: delName, moveTo: delNews ? $("edMoveTo").value : undefined }).then(function () { close(); reload("Editoria excluída."); }, oops);
+              } }]);
           } else if (b.hasAttribute("data-t-prio")) {
             api("/themes/update", { id: b.getAttribute("data-t-prio"), priority: b.getAttribute("data-v") === "1" }).then(function () { reload(); }, oops);
           } else if (b.hasAttribute("data-t-active")) {
@@ -1066,7 +1081,7 @@
       regras_alteradas: "Alterou as regras editoriais", inscrito_removido: "Removeu inscrito da newsletter", lead_alterado: "Atualizou pedido do WhatsApp",
       usuario_criado: "Cadastrou usuário", usuario_alterado: "Alterou usuário",
       tema_adicionado: "Adicionou tema", tema_alterado: "Alterou tema", tema_excluido: "Excluiu tema",
-      editoria_criada: "Criou editoria", editoria_alterada: "Alterou editoria",
+      editoria_criada: "Criou editoria", editoria_alterada: "Alterou editoria", editoria_excluida: "Excluiu editoria",
     };
     VIEWS.audit = function () {
       api("/audit?limit=300").then(function (rows) {

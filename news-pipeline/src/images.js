@@ -8,30 +8,30 @@ let s3 = null;
 
 const WIDTH = 1200;
 const HEIGHT = 675;
-// Logo amarelo da Hooke (cópia de img/logo_amarela.png do site).
+// Logo da Hooke (cópia de img/logo_amarela.png do site). Só o formato é usado:
+// a cor vem de buildWatermark.
 const WATERMARK = path.join(config.root, 'assets', 'watermark.png');
+// O nome "HOOKE" ocupa esta fração da altura do arquivo; o resto é o subtítulo,
+// que fica ilegível em tamanho pequeno.
+const LOGO_NAME_HEIGHT = 0.82;
+const WATERMARK_OPACITY = 0.55;
 let watermarkPromise = null;
 
-// Marca d'água: logo no canto inferior direito, sobre uma faixa escura
-// translúcida para continuar legível em fotos claras.
+// Marca d'água: logo branco translúcido no canto inferior direito, sem fundo.
 async function buildWatermark() {
-  const logoWidth = 150;
-  const logo = await sharp(WATERMARK).resize({ width: logoWidth }).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
-  for (let i = 3; i < logo.data.length; i += 4) logo.data[i] = Math.round(logo.data[i] * 0.92);
+  const logoWidth = 170;
+  const margin = 26;
+  const meta = await sharp(WATERMARK).metadata();
+  const name = await sharp(WATERMARK)
+    .extract({ left: 0, top: 0, width: meta.width, height: Math.round(meta.height * LOGO_NAME_HEIGHT) })
+    .toBuffer();
+  const logo = await sharp(name).resize({ width: logoWidth }).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+  for (let i = 0; i < logo.data.length; i += 4) {
+    logo.data[i] = logo.data[i + 1] = logo.data[i + 2] = 255;
+    logo.data[i + 3] = Math.round(logo.data[i + 3] * WATERMARK_OPACITY);
+  }
   const logoPng = await sharp(logo.data, { raw: logo.info }).png().toBuffer();
-
-  const padX = 16, padY = 12, margin = 22;
-  const w = logo.info.width + padX * 2;
-  const h = logo.info.height + padY * 2;
-  const plate = Buffer.from(
-    `<svg width="${w}" height="${h}"><rect width="${w}" height="${h}" rx="12" fill="#14171a" fill-opacity="0.45"/></svg>`
-  );
-  const left = WIDTH - w - margin;
-  const top = HEIGHT - h - margin;
-  return [
-    { input: plate, left, top },
-    { input: logoPng, left: left + padX, top: top + padY },
-  ];
+  return [{ input: logoPng, left: WIDTH - logo.info.width - margin, top: HEIGHT - logo.info.height - margin }];
 }
 
 // Padroniza para o formato dos cards do site (16:9), aplica a marca d'água da

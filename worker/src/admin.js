@@ -263,7 +263,7 @@ export async function handleAdmin(request, env, url) {
   // ---------- Temas e fontes (todos veem; só administradores mudam) ----------
   if (path === "/themes" && request.method === "GET") {
     const since = daysAgo(29);
-    const [eds, ths, stats, sectorStats] = await Promise.all([
+    const [eds, ths, stats, sectorStats, newsTotals] = await Promise.all([
       env.DB.prepare("SELECT * FROM editorias ORDER BY sort, name").all(),
       env.DB.prepare("SELECT * FROM themes ORDER BY created_at").all(),
       env.DB.prepare(`SELECT json_extract(data, '$.themeId') AS tid, COUNT(*) AS generated,
@@ -272,13 +272,17 @@ export async function handleAdmin(request, env, url) {
       env.DB.prepare(`SELECT json_extract(data, '$.sector') AS sector, COUNT(*) AS generated,
         SUM(CASE WHEN status = 'published' THEN 1 ELSE 0 END) AS approved
         FROM items WHERE created_at >= ? GROUP BY sector`).bind(since).all(),
+      env.DB.prepare(`SELECT json_extract(data, '$.sector') AS sector, COUNT(*) AS n
+        FROM items WHERE status != 'rejected' GROUP BY sector`).all(),
     ]);
     const byTheme = Object.fromEntries(stats.results.filter((s) => s.tid).map((s) => [s.tid, s]));
     const bySector = Object.fromEntries(sectorStats.results.map((s) => [s.sector, s]));
+    const newsBySector = Object.fromEntries(newsTotals.results.map((s) => [s.sector, s.n]));
     return ok({
       editorias: eds.results.map((e) => ({
         name: e.name, maxPerRun: e.max_per_run, active: !!e.active,
         generated30: (bySector[e.name] || {}).generated || 0, approved30: (bySector[e.name] || {}).approved || 0,
+        newsCount: newsBySector[e.name] || 0,
       })),
       themes: ths.results.map((t) => ({
         id: t.id, editoria: t.editoria, kind: t.kind, value: t.value, priority: !!t.priority, active: !!t.active,
@@ -375,6 +379,45 @@ export async function handleAdmin(request, env, url) {
         await audit(env, user, "editoria_criada", null, { editoria: name, por_dia: max });
       }
       return ok();
+    }
+
+    // Exclui uma editoria e os temas dela. Notícias não ficam órfãs: pendentes e
+    // publicadas passam para outra editoria (moveTo), senão a aba antiga continuaria no site.
+    if (path === "/editorias/delete" && request.method === "POST") {
+      const ed = await env.DB.prepare("SELECT name FROM editorias WHERE name = ?").bind(body.name).first();
+      if (!ed) return fail("Editoria não encontrada.", 404);
+      // Sem nenhum tema no banco, o gerador volta à lista padrão e recriaria as editorias excluídas.
+      const left = await env.DB.prepare("SELECT COUNT(*) AS n FROM themes WHERE editoria != ? AND active = 1").bind(ed.name).first();
+      if (!left.n) return fail("Não é possível excluir: nenhuma outra editoria tem tema ativo. Adicione um tema em outra editoria antes.");
+
+      const { results: news } = await env.DB.prepare("SELECT id, data FROM items WHERE status != 'rejected' AND json_extract(data, '$.sector') = ?").bind(ed.name).all();
+      const updates = [];
+      let target = null;
+      if (news.length) {
+        target = await env.DB.prepare("SELECT name FROM editorias WHERE name = ? AND name != ?").bind(body.moveTo, ed.name).first();
+        if (!target) return fail(`Esta editoria tem ${news.length} notícia(s). Escolha para qual editoria movê-las.`);
+        // Reaproveita o nome já traduzido da editoria de destino; sem ele, o site mostra o nome em português.
+        const sample = await env.DB.prepare("SELECT data FROM items WHERE json_extract(data, '$.sector') = ? AND json_extract(data, '$.translations') IS NOT NULL LIMIT 1").bind(target.name).first();
+        const names = sample ? JSON.parse(sample.data).translations || {} : {};
+        for (const row of news) {
+          const item = JSON.parse(row.data);
+          item.sector = target.name;
+          for (const [lang, tr] of Object.entries(item.translations || {})) {
+            if (!tr) continue;
+            if (names[lang] && names[lang].sector) tr.sector = names[lang].sector;
+            else delete tr.sector;
+          }
+          updates.push(env.DB.prepare("UPDATE items SET data = ? WHERE id = ?").bind(JSON.stringify(item), row.id));
+        }
+      }
+      const themes = await env.DB.prepare("SELECT COUNT(*) AS n FROM themes WHERE editoria = ?").bind(ed.name).first();
+      await env.DB.batch([
+        ...updates,
+        env.DB.prepare("DELETE FROM themes WHERE editoria = ?").bind(ed.name),
+        env.DB.prepare("DELETE FROM editorias WHERE name = ?").bind(ed.name),
+      ]);
+      await audit(env, user, "editoria_excluida", null, { editoria: ed.name, temas_excluidos: themes.n, noticias_movidas: news.length, destino: target ? target.name : null });
+      return ok({ ok: true, moved: news.length });
     }
 
     return fail("Not found", 404);
