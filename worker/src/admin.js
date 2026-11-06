@@ -101,7 +101,7 @@ async function metrics(env, days) {
 function validateRules(text) {
   const t = String(text || "");
   if (t.length < 200) return "O texto das regras está curto demais.";
-  if (t.length > 40000) return "O texto das regras está longo demais (máx. 40.000 caracteres).";
+  if (t.length > 100000) return "O texto das regras está longo demais (máx. 100.000 caracteres).";
   const missing = RULE_SECTIONS.filter((s) => !new RegExp(`^##\\s+${s}\\s*$`, "mi").test(t));
   if (missing.length) return `Faltam as seções: ${missing.map((s) => `"## ${s}"`).join(", ")}. Mantenha os títulos das seções.`;
   return null;
