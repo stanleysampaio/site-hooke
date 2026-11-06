@@ -26,4 +26,12 @@ if [ "${1:-}" = "install" ]; then
 fi
 
 mkdir -p data
-exec flock -n /tmp/hooke-news-pipeline.lock "${DOCKER[@]}" "$IMAGE" node src/run.js "$@"
+# O timer de pedidos também dispara às 09:00: a execução diária espera a trava em
+# vez de falhar. O pedido do painel, se a encontrar ocupada, sai sem erro e fica
+# na fila para a próxima verificação (5 min).
+if [ "${1:-}" = "--if-requested" ]; then
+  LOCK=(flock -n -E 0)
+else
+  LOCK=(flock -w 1800)
+fi
+exec "${LOCK[@]}" /tmp/hooke-news-pipeline.lock "${DOCKER[@]}" "$IMAGE" node src/run.js "$@"

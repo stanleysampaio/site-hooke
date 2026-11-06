@@ -60,7 +60,7 @@ async function loadCatalog() {
 async function checkSources() {
   await loadCatalog();
   const { feeds } = await fetchAllFeeds(catalog.sources);
-  for (const [url, { items, error }] of Object.entries(feeds)) {
+  for (const [url, { items, error, via }] of Object.entries(feeds)) {
     if (error) { log(`ERRO  ${url}: ${error}`); continue; }
     const newest = items.map((i) => i.date).filter(Boolean).sort().pop();
     let extraction = '-';
@@ -72,7 +72,7 @@ async function checkSources() {
         extraction = `falha ao ler matéria: ${err.message}`;
       }
     }
-    log(`OK    ${url}: ${items.length} itens, mais recente ${newest || '?'}; ${extraction}`);
+    log(`OK    ${url} [${via}]: ${items.length} itens, mais recente ${newest || '?'}; ${extraction}`);
   }
 }
 
